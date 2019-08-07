@@ -39,7 +39,7 @@
   axios.defaults.crossDomain = true;
 
   onMount(async () => {
-    events = await axios.get(`https://api.meetup.com/Web3-Melbourne/events?key=${process.env.MEETUP_API_KEY}&sign=true&page=6`);
+    events = await axios.get('https://api.meetup.com/Web3-Melbourne/events?key=' + process.env.MEETUP_API_KEY + '&sign=true&page=6');
     // events = [
     //   {
     //     "created": 1551324199000,
