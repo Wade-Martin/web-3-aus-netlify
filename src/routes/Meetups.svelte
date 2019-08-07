@@ -36,12 +36,10 @@
   import axios from 'axios';
   let events = false;
   
-  const config = {
-    headers: {'Access-Control-Allow-Origin': '*'}
-  };
+  axios.defaults.crossDomain = true;
 
   onMount(async () => {
-    events = await axios.get('https://api.meetup.com/Web3-Melbourne/events?&sign=true&photo-host=public&page=6', config);
+    events = await axios.get('https://api.meetup.com/Web3-Melbourne/events?&sign=true&photo-host=public&page=6');
     // events = [
     //   {
     //     "created": 1551324199000,
