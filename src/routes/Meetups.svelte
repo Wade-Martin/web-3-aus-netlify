@@ -48,7 +48,7 @@
 
   const getMelbEvents = async () => {
     try{
-      events = await axios.get(`https://api.meetup.com/Web3-Melbourne/events?key=${config.melbWeb3}&sign=true&page=6`);
+      events = await axios.get(`https://api.meetup.com/Web3-Melbourne/events?key=${process.env.MEETUP_API_KEY}&sign=true&page=6`);
     } catch (error) {
       console.log(error)
     }
