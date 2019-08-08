@@ -1545,7 +1545,7 @@ var app = (function () {
       return dif / 1000;
     }
 
-    var process$1 = {
+    var process = {
       nextTick: nextTick,
       title: title,
       browser: browser,
@@ -2002,7 +2002,7 @@ var app = (function () {
     function getDefaultAdapter() {
       var adapter;
       // Only Node.JS has a process variable that is of [[Class]] process
-      if (typeof process$1 !== 'undefined' && Object.prototype.toString.call(process$1) === '[object process]') {
+      if (typeof process !== 'undefined' && Object.prototype.toString.call(process) === '[object process]') {
         // For node use HTTP adapter
         adapter = xhr;
       } else if (typeof XMLHttpRequest !== 'undefined') {
@@ -2500,11 +2500,11 @@ var app = (function () {
     				each_blocks[i].c();
     			}
     			attr(div0, "class", "grid svelte-m44ux6");
-    			add_location(div0, file$1, 82, 6, 1714);
+    			add_location(div0, file$1, 82, 6, 1769);
     			attr(div1, "class", "grid-container svelte-m44ux6");
-    			add_location(div1, file$1, 81, 4, 1679);
+    			add_location(div1, file$1, 81, 4, 1734);
     			attr(div2, "class", "container svelte-m44ux6");
-    			add_location(div2, file$1, 80, 2, 1651);
+    			add_location(div2, file$1, 80, 2, 1706);
     		},
 
     		m: function mount(target, anchor) {
@@ -2557,7 +2557,7 @@ var app = (function () {
     	return {
     		c: function create() {
     			div = element("div");
-    			add_location(div, file$1, 76, 2, 1625);
+    			add_location(div, file$1, 76, 2, 1680);
     		},
 
     		m: function mount(target, anchor) {
@@ -2599,14 +2599,14 @@ var app = (function () {
     			a = element("a");
     			t12 = text(t12_value);
     			t13 = space();
-    			add_location(h3, file$1, 85, 12, 1880);
-    			add_location(br, file$1, 86, 30, 1932);
-    			add_location(p, file$1, 86, 12, 1914);
+    			add_location(h3, file$1, 85, 12, 1935);
+    			add_location(br, file$1, 86, 30, 1987);
+    			add_location(p, file$1, 86, 12, 1969);
     			attr(a, "target", "_blank");
     			attr(a, "href", a_href_value = ctx.link);
-    			add_location(a, file$1, 87, 12, 2001);
+    			add_location(a, file$1, 87, 12, 2056);
     			attr(div, "class", "card svelte-m44ux6");
-    			add_location(div, file$1, 84, 8, 1849);
+    			add_location(div, file$1, 84, 8, 1904);
     		},
 
     		m: function mount(target, anchor) {
@@ -2697,12 +2697,12 @@ var app = (function () {
     			t7 = space();
     			if_block.c();
     			if_block_anchor = empty();
-    			add_location(h2, file$1, 68, 0, 1395);
-    			add_location(p0, file$1, 70, 2, 1451);
-    			add_location(p1, file$1, 71, 2, 1502);
-    			add_location(p2, file$1, 72, 2, 1549);
+    			add_location(h2, file$1, 68, 0, 1450);
+    			add_location(p0, file$1, 70, 2, 1506);
+    			add_location(p1, file$1, 71, 2, 1557);
+    			add_location(p2, file$1, 72, 2, 1604);
     			attr(div, "class", "selectLocation svelte-m44ux6");
-    			add_location(div, file$1, 69, 0, 1420);
+    			add_location(div, file$1, 69, 0, 1475);
 
     			dispose = [
     				listen(p0, "click", ctx.getMelbEvents),
@@ -2773,7 +2773,7 @@ var app = (function () {
 
       const getMelbEvents = async () => {
         try{
-          $$invalidate('events', events = await axios$1.get(`https://api.meetup.com/Web3-Melbourne/events?key=${process.env.MEETUP_API_KEY}&sign=true&page=6`));
+          $$invalidate('events', events = await axios$1.get("https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890&callback=noop&fields=event_hosts&sig=9a0f25530150caf171cd1ebd6b2f5227fd1bcd48"));
         } catch (error) {
           console.log(error);
         }

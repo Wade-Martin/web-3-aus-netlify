@@ -18,8 +18,6 @@ export default {
 		file: 'public/bundle.js'
 	},
 	plugins: [
-		globals(),
-		builtins(),
 		json({
       // All JSON files will be parsed by default,
       // but you can also specifically include/exclude files
@@ -60,6 +58,8 @@ export default {
 			dedupe: importee => importee === 'svelte' || importee.startsWith('svelte/')
 		}),
 		commonjs(),
+		globals(),
+		builtins(),
 
 		// Watch the `public` directory and refresh the
 		// browser on changes when not in production
