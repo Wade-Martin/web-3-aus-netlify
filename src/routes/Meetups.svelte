@@ -44,9 +44,9 @@
 
   axios.defaults.withCredentials = true;
   
-  const headers = headers: {
+  const headers = { headers: {
     "Access-Control-Allow-Origin": "*"
-  }
+  }}
 
   const getMelbEvents = async () => {
     try{
