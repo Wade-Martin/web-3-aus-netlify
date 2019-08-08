@@ -41,13 +41,16 @@
   import {link} from 'svelte-spa-router'
   import axios from 'axios';
   let events = false;
-  axios.defaults.withCredentials = true;
-  axios.defaults.crossDomain = true;
 
+  axios.defaults.withCredentials = true;
+  
+  const headers = headers: {
+    "Access-Control-Allow-Origin": "*"
+  }
 
   const getMelbEvents = async () => {
     try{
-      events = await axios.get("https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890&callback=noop&fields=event_hosts&sig=9a0f25530150caf171cd1ebd6b2f5227fd1bcd48");
+      events = await axios.get("https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890&callback=noop&fields=event_hosts&sig=9a0f25530150caf171cd1ebd6b2f5227fd1bcd48", headers);
     } catch (error) {
       console.log(error)
     }
