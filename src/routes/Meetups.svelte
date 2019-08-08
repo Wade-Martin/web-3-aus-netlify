@@ -45,7 +45,7 @@
   let events = false;
 
   const getMelbEvents = async () => {
-    events = await jsonp('https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890', null, (err, data) => {
+    response = await jsonp('https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890', null, (err, data) => {
       if (err) {
         console.error(err.message);
       } else {
@@ -53,6 +53,8 @@
         return data;
       }
     });
+    events = response.data
+    return events
   }
   
 
@@ -77,7 +79,7 @@
     
 {#if !events}
   <div>
-
+    <p>Please select your City</p>
   </div>
 {:else}
   <div class="container">
