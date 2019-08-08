@@ -55,23 +55,7 @@ export default {
 			browser: true,
 			dedupe: importee => importee === 'svelte' || importee.startsWith('svelte/')
 		}),
-		commonjs({
-			// non-CommonJS modules will be ignored, but you can also
-			// specifically include/exclude files
-			include: 'node_modules/**',  // Default: undefined
-			browser: true,
-			preferBuiltins: false,
-			// if true then uses of `global` won't be dealt with by this plugin
-			ignoreGlobal: false,  // Default: false
-
-			// if false then skip sourceMap generation for CommonJS modules
-			sourceMap: false  // Default: true
-
-			// explicitly specify unresolvable named exports
-			// (see below for more details)
-			// namedExports: { './module.js': ['foo', 'bar' ] }  // Default: undefined
-		}),
-
+		commonjs(),
 
 		// Watch the `public` directory and refresh the
 		// browser on changes when not in production
