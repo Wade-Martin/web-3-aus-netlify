@@ -16,7 +16,7 @@ export default {
 		name: 'app',
 		file: 'public/bundle.js'
 	},
-	plugins: [ß
+	plugins: [
 		json({
       // All JSON files will be parsed by default,
       // but you can also specifically include/exclude files
