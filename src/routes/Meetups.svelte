@@ -49,6 +49,7 @@
       if (err) {
         console.error(err.message);
       } else {
+        console.log(data)
         return data;
       }
     });
