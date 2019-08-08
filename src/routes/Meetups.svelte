@@ -25,9 +25,6 @@
   .grid {
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    width: 60%;
-    height: 800px;
-    border: black 1px dotted;
   }
 
   .card {
