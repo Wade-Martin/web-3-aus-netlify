@@ -52,11 +52,12 @@
       if (err) {
         console.error(err.message);
       } else {
-        console.log(data)
         events.data = data.data;
-        events.loaded = true; 
+        events.loaded = true;
+        console.log('events.data:', events.data)
       }
     });
+    
   }
   
 
