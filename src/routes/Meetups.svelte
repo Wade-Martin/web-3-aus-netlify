@@ -41,7 +41,7 @@
   import {link} from 'svelte-spa-router'
   import axios from 'axios';
   let events = false;
-  
+  axios.defaults.withCredentials = true;
   axios.defaults.crossDomain = true;
 
 
