@@ -44,13 +44,16 @@
 
   const getMelbEvents = async () => {
     try{
-      events = await axios.get("https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890", 
-      { headers: 
-        {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json',
+      events = await axios("https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890", 
+      { 
+        method: 'GET',
+        mode: 'no-cors',
+        headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
         },
-        withCredentials: true
+        withCredentials: true,
+        credentials: 'same-origin'
       });
     } catch (error) {
       console.log(error)
