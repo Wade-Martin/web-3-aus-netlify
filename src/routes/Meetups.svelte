@@ -42,15 +42,16 @@
   import axios from 'axios';
   let events = false;
 
-  axios.defaults.withCredentials = true;
-  
-  const headers = { headers: {
-    "Access-Control-Allow-Origin": "*"
-  }}
-
   const getMelbEvents = async () => {
     try{
-      events = await axios.get("https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890", headers);
+      events = await axios.get("https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890", 
+      { headers: 
+        {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true
+      });
     } catch (error) {
       console.log(error)
     }
