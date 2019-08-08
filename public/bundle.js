@@ -64,6 +64,10 @@ var app = (function () {
     function empty() {
         return text('');
     }
+    function listen(node, event, handler, options) {
+        node.addEventListener(event, handler, options);
+        return () => node.removeEventListener(event, handler, options);
+    }
     function attr(node, attribute, value) {
         if (value == null)
             node.removeAttribute(attribute);
@@ -85,14 +89,6 @@ var app = (function () {
     let current_component;
     function set_current_component(component) {
         current_component = component;
-    }
-    function get_current_component() {
-        if (!current_component)
-            throw new Error(`Function called outside component initialization`);
-        return current_component;
-    }
-    function onMount(fn) {
-        get_current_component().$$.on_mount.push(fn);
     }
 
     const dirty_components = [];
@@ -1349,6 +1345,232 @@ var app = (function () {
       return !!(value && value.__CANCEL__);
     };
 
+    var global$1 = (typeof global !== "undefined" ? global :
+                typeof self !== "undefined" ? self :
+                typeof window !== "undefined" ? window : {});
+
+    // shim for using process in browser
+    // based off https://github.com/defunctzombie/node-process/blob/master/browser.js
+
+    function defaultSetTimout() {
+        throw new Error('setTimeout has not been defined');
+    }
+    function defaultClearTimeout () {
+        throw new Error('clearTimeout has not been defined');
+    }
+    var cachedSetTimeout = defaultSetTimout;
+    var cachedClearTimeout = defaultClearTimeout;
+    if (typeof global$1.setTimeout === 'function') {
+        cachedSetTimeout = setTimeout;
+    }
+    if (typeof global$1.clearTimeout === 'function') {
+        cachedClearTimeout = clearTimeout;
+    }
+
+    function runTimeout(fun) {
+        if (cachedSetTimeout === setTimeout) {
+            //normal enviroments in sane situations
+            return setTimeout(fun, 0);
+        }
+        // if setTimeout wasn't available but was latter defined
+        if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+            cachedSetTimeout = setTimeout;
+            return setTimeout(fun, 0);
+        }
+        try {
+            // when when somebody has screwed with setTimeout but no I.E. maddness
+            return cachedSetTimeout(fun, 0);
+        } catch(e){
+            try {
+                // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+                return cachedSetTimeout.call(null, fun, 0);
+            } catch(e){
+                // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+                return cachedSetTimeout.call(this, fun, 0);
+            }
+        }
+
+
+    }
+    function runClearTimeout(marker) {
+        if (cachedClearTimeout === clearTimeout) {
+            //normal enviroments in sane situations
+            return clearTimeout(marker);
+        }
+        // if clearTimeout wasn't available but was latter defined
+        if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+            cachedClearTimeout = clearTimeout;
+            return clearTimeout(marker);
+        }
+        try {
+            // when when somebody has screwed with setTimeout but no I.E. maddness
+            return cachedClearTimeout(marker);
+        } catch (e){
+            try {
+                // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+                return cachedClearTimeout.call(null, marker);
+            } catch (e){
+                // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+                // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+                return cachedClearTimeout.call(this, marker);
+            }
+        }
+
+
+
+    }
+    var queue = [];
+    var draining = false;
+    var currentQueue;
+    var queueIndex = -1;
+
+    function cleanUpNextTick() {
+        if (!draining || !currentQueue) {
+            return;
+        }
+        draining = false;
+        if (currentQueue.length) {
+            queue = currentQueue.concat(queue);
+        } else {
+            queueIndex = -1;
+        }
+        if (queue.length) {
+            drainQueue();
+        }
+    }
+
+    function drainQueue() {
+        if (draining) {
+            return;
+        }
+        var timeout = runTimeout(cleanUpNextTick);
+        draining = true;
+
+        var len = queue.length;
+        while(len) {
+            currentQueue = queue;
+            queue = [];
+            while (++queueIndex < len) {
+                if (currentQueue) {
+                    currentQueue[queueIndex].run();
+                }
+            }
+            queueIndex = -1;
+            len = queue.length;
+        }
+        currentQueue = null;
+        draining = false;
+        runClearTimeout(timeout);
+    }
+    function nextTick(fun) {
+        var args = new Array(arguments.length - 1);
+        if (arguments.length > 1) {
+            for (var i = 1; i < arguments.length; i++) {
+                args[i - 1] = arguments[i];
+            }
+        }
+        queue.push(new Item(fun, args));
+        if (queue.length === 1 && !draining) {
+            runTimeout(drainQueue);
+        }
+    }
+    // v8 likes predictible objects
+    function Item(fun, array) {
+        this.fun = fun;
+        this.array = array;
+    }
+    Item.prototype.run = function () {
+        this.fun.apply(null, this.array);
+    };
+    var title = 'browser';
+    var platform = 'browser';
+    var browser = true;
+    var env = {};
+    var argv = [];
+    var version = ''; // empty string to avoid regexp issues
+    var versions = {};
+    var release = {};
+    var config = {};
+
+    function noop$1() {}
+
+    var on = noop$1;
+    var addListener = noop$1;
+    var once = noop$1;
+    var off = noop$1;
+    var removeListener = noop$1;
+    var removeAllListeners = noop$1;
+    var emit = noop$1;
+
+    function binding(name) {
+        throw new Error('process.binding is not supported');
+    }
+
+    function cwd () { return '/' }
+    function chdir (dir) {
+        throw new Error('process.chdir is not supported');
+    }function umask() { return 0; }
+
+    // from https://github.com/kumavis/browser-process-hrtime/blob/master/index.js
+    var performance = global$1.performance || {};
+    var performanceNow =
+      performance.now        ||
+      performance.mozNow     ||
+      performance.msNow      ||
+      performance.oNow       ||
+      performance.webkitNow  ||
+      function(){ return (new Date()).getTime() };
+
+    // generate timestamp or delta
+    // see http://nodejs.org/api/process.html#process_process_hrtime
+    function hrtime(previousTimestamp){
+      var clocktime = performanceNow.call(performance)*1e-3;
+      var seconds = Math.floor(clocktime);
+      var nanoseconds = Math.floor((clocktime%1)*1e9);
+      if (previousTimestamp) {
+        seconds = seconds - previousTimestamp[0];
+        nanoseconds = nanoseconds - previousTimestamp[1];
+        if (nanoseconds<0) {
+          seconds--;
+          nanoseconds += 1e9;
+        }
+      }
+      return [seconds,nanoseconds]
+    }
+
+    var startTime = new Date();
+    function uptime() {
+      var currentTime = new Date();
+      var dif = currentTime - startTime;
+      return dif / 1000;
+    }
+
+    var process = {
+      nextTick: nextTick,
+      title: title,
+      browser: browser,
+      env: env,
+      argv: argv,
+      version: version,
+      versions: versions,
+      on: on,
+      addListener: addListener,
+      once: once,
+      off: off,
+      removeListener: removeListener,
+      removeAllListeners: removeAllListeners,
+      emit: emit,
+      binding: binding,
+      cwd: cwd,
+      chdir: chdir,
+      umask: umask,
+      hrtime: hrtime,
+      platform: platform,
+      release: release,
+      config: config,
+      uptime: uptime
+    };
+
     var normalizeHeaderName = function normalizeHeaderName(headers, normalizedName) {
       utils.forEach(headers, function processHeader(value, name) {
         if (name !== normalizedName && name.toUpperCase() === normalizedName.toUpperCase()) {
@@ -2239,6 +2461,10 @@ var app = (function () {
 
     var axios$1 = axios_1;
 
+    var config$1 = {
+      melbWeb3: process.env.MEETUP_API_KEY
+    };
+
     /* src/routes/Meetups.svelte generated by Svelte v3.7.1 */
 
     const file$1 = "src/routes/Meetups.svelte";
@@ -2256,9 +2482,9 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (192:0) {:else}
+    // (81:0) {:else}
     function create_else_block(ctx) {
-    	var div2, h2, t_1, div1, div0;
+    	var div2, div1, div0;
 
     	var each_value = ctx.events;
 
@@ -2271,28 +2497,22 @@ var app = (function () {
     	return {
     		c: function create() {
     			div2 = element("div");
-    			h2 = element("h2");
-    			h2.textContent = "Upcoming Events";
-    			t_1 = space();
     			div1 = element("div");
     			div0 = element("div");
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
-    			add_location(h2, file$1, 193, 4, 14632);
-    			attr(div0, "class", "grid svelte-duhup7");
-    			add_location(div0, file$1, 195, 6, 14696);
-    			attr(div1, "class", "grid-container svelte-duhup7");
-    			add_location(div1, file$1, 194, 4, 14661);
-    			attr(div2, "class", "container svelte-duhup7");
-    			add_location(div2, file$1, 192, 2, 14604);
+    			attr(div0, "class", "grid svelte-m44ux6");
+    			add_location(div0, file$1, 83, 6, 1740);
+    			attr(div1, "class", "grid-container svelte-m44ux6");
+    			add_location(div1, file$1, 82, 4, 1705);
+    			attr(div2, "class", "container svelte-m44ux6");
+    			add_location(div2, file$1, 81, 2, 1677);
     		},
 
     		m: function mount(target, anchor) {
     			insert(target, div2, anchor);
-    			append(div2, h2);
-    			append(div2, t_1);
     			append(div2, div1);
     			append(div1, div0);
 
@@ -2334,15 +2554,14 @@ var app = (function () {
     	};
     }
 
-    // (190:0) {#if !events}
+    // (77:0) {#if !events}
     function create_if_block(ctx) {
     	var div;
 
     	return {
     		c: function create() {
     			div = element("div");
-    			div.textContent = "Loading...";
-    			add_location(div, file$1, 190, 2, 14572);
+    			add_location(div, file$1, 77, 2, 1651);
     		},
 
     		m: function mount(target, anchor) {
@@ -2359,7 +2578,7 @@ var app = (function () {
     	};
     }
 
-    // (197:7) {#each events as { name, group, link, description, local_date, local_time, venue, how_to_find_us }
+    // (85:7) {#each events as { name, group, link, description, local_date, local_time, venue, how_to_find_us }
     function create_each_block(ctx) {
     	var div, h3, t0_value = ctx.group.name, t0, t1, p, t2, t3_value = ctx.name, t3, t4, br, t5, t6_value = ctx.venue.name, t6, t7, t8_value = ctx.local_date, t8, t9, t10_value = ctx.local_time, t10, t11, a, t12_value = ctx.link, t12, a_href_value, t13;
 
@@ -2384,14 +2603,14 @@ var app = (function () {
     			a = element("a");
     			t12 = text(t12_value);
     			t13 = space();
-    			add_location(h3, file$1, 198, 12, 14862);
-    			add_location(br, file$1, 199, 30, 14914);
-    			add_location(p, file$1, 199, 12, 14896);
+    			add_location(h3, file$1, 86, 12, 1906);
+    			add_location(br, file$1, 87, 30, 1958);
+    			add_location(p, file$1, 87, 12, 1940);
     			attr(a, "target", "_blank");
     			attr(a, "href", a_href_value = ctx.link);
-    			add_location(a, file$1, 200, 12, 14983);
-    			attr(div, "class", "card svelte-duhup7");
-    			add_location(div, file$1, 197, 8, 14831);
+    			add_location(a, file$1, 88, 12, 2027);
+    			attr(div, "class", "card svelte-m44ux6");
+    			add_location(div, file$1, 85, 8, 1875);
     		},
 
     		m: function mount(target, anchor) {
@@ -2455,7 +2674,7 @@ var app = (function () {
     }
 
     function create_fragment$2(ctx) {
-    	var if_block_anchor;
+    	var h2, t1, div, p0, t3, p1, t5, p2, t7, if_block_anchor, dispose;
 
     	function select_block_type(ctx) {
     		if (!ctx.events) return create_if_block;
@@ -2467,8 +2686,33 @@ var app = (function () {
 
     	return {
     		c: function create() {
+    			h2 = element("h2");
+    			h2.textContent = "Upcoming Events";
+    			t1 = space();
+    			div = element("div");
+    			p0 = element("p");
+    			p0.textContent = "Melbourne Events";
+    			t3 = space();
+    			p1 = element("p");
+    			p1.textContent = "Sydney Events";
+    			t5 = space();
+    			p2 = element("p");
+    			p2.textContent = "Brisbane Events";
+    			t7 = space();
     			if_block.c();
     			if_block_anchor = empty();
+    			add_location(h2, file$1, 69, 0, 1421);
+    			add_location(p0, file$1, 71, 2, 1477);
+    			add_location(p1, file$1, 72, 2, 1528);
+    			add_location(p2, file$1, 73, 2, 1575);
+    			attr(div, "class", "selectLocation svelte-m44ux6");
+    			add_location(div, file$1, 70, 0, 1446);
+
+    			dispose = [
+    				listen(p0, "click", ctx.getMelbEvents),
+    				listen(p1, "click", ctx.getSydEvents),
+    				listen(p2, "click", ctx.getBrisEvents)
+    			];
     		},
 
     		l: function claim(nodes) {
@@ -2476,6 +2720,15 @@ var app = (function () {
     		},
 
     		m: function mount(target, anchor) {
+    			insert(target, h2, anchor);
+    			insert(target, t1, anchor);
+    			insert(target, div, anchor);
+    			append(div, p0);
+    			append(div, t3);
+    			append(div, p1);
+    			append(div, t5);
+    			append(div, p2);
+    			insert(target, t7, anchor);
     			if_block.m(target, anchor);
     			insert(target, if_block_anchor, anchor);
     		},
@@ -2497,11 +2750,20 @@ var app = (function () {
     		o: noop,
 
     		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(h2);
+    				detach(t1);
+    				detach(div);
+    				detach(t7);
+    			}
+
     			if_block.d(detaching);
 
     			if (detaching) {
     				detach(if_block_anchor);
     			}
+
+    			run_all(dispose);
     		}
     	};
     }
@@ -2509,155 +2771,33 @@ var app = (function () {
     function instance$1($$self, $$props, $$invalidate) {
     	
       let events = false;
+      
+      axios$1.defaults.crossDomain = true;
 
-      onMount(async () => {
-        $$invalidate('events', events = await axios$1.get('https://api.meetup.com/Web3-Melbourne/events?&sign=true&photo-host=public&page=6'));
-        // events = [
-        //   {
-        //     "created": 1551324199000,
-        //     "duration": 10800000,
-        //     "id": "lpgpsqyzlbkb",
-        //     "name": "Weekly Web3 Hack - ConsenSys's Barry Earsman",
-        //     "rsvp_limit": 45,
-        //     "date_in_series_pattern": false,
-        //     "status": "upcoming",
-        //     "time": 1565164800000,
-        //     "local_date": "2019-08-07",
-        //     "local_time": "18:00",
-        //     "updated": 1562735528000,
-        //     "utc_offset": 36000000,
-        //     "waitlist_count": 0,
-        //     "yes_rsvp_count": 16,
-        //     "venue": {
-        //         "id": 25826135,
-        //         "name": "RMIT University Building 88",
-        //         "lat": -37.808780670166016,
-        //         "lon": 144.9609375,
-        //         "repinned": true,
-        //         "address_1": "Level 3, 440 Elizabeth Street ",
-        //         "city": "Melbourne",
-        //         "country": "au",
-        //         "localized_country_name": "Australia"
-        //     },
-        //     "group": {
-        //         "created": 1490146710000,
-        //         "name": "Web3 Melbourne",
-        //         "id": 22966256,
-        //         "join_mode": "open",
-        //         "lat": -37.810001373291016,
-        //         "lon": 144.9600067138672,
-        //         "urlname": "Web3-Melbourne",
-        //         "who": "Web3 Wizards",
-        //         "localized_location": "Melbourne, Australia",
-        //         "state": "",
-        //         "country": "au",
-        //         "region": "en_US",
-        //         "timezone": "Australia/Melbourne"
-        //     },
-        //     "link": "https://www.meetup.com/Web3-Melbourne/events/lpgpsqyzlbkb/",
-        //     "description": "<p>Tonight, ConsenSys's Barry Earsman will dial in to demo a prototype dApp called Mona Lease. It's designed to allow co-working space owners (like Barry) to make simple rental agreements with members, and have membership fees charged in Ether by the month, week, day or even by the minute. It makes use of a simple Oracle to keep a smart contract updated with the current exchange rate between ETH and AUD.</p> <p>Here's a little more about Barry:</p> <p>Barry is a seasoned developer who has worked in a series of start-ups through and beyond the dot-com boom. He works as a solution architect and developer in ConsenSys Solutions, and is currently working on a decentralised securities exchange in Singapore.</p> <p>An activist within the Transition Town movement, he believes in the potential for decentralised technologies to create, enhance and empower human communities through the formation of new patterns of self-organisation.</p> <p>Barry is a founder of a small co-working space in a town of the Sunshine Coast hinterland.</p> <p>He holds a Bachelor of Informatics from Griffith University.</p> <p>Presentation will start around 7pm.<br/>______________________________________________________________________________</p> <p>Normal Hack Bio:</p> <p>Are you interested in Web3 technologies like blockchains, smart contracts and other decentralised systems? Do you want to meet other curious people or even learn to build on Web3 tech?</p> <p>Well you’ve found the perfect entry point. The Web3 Weekly Hack is an informal gathering of Melbourne’s Web3 devs, hobbyists and learners. There’s no real agenda unless otherwise stated, it's a self directed evening of discussion, coding and fun. We like to sound out our ideas, interrogate problems and build funky stuff.</p> <p>Hosted by Tom Nash and Alexander Ramsey. Tom is a software engineer who has been working with Smart Contracts and Ethereum since November 2016 and Alex has a background in startups and building odd things.</p> <p>We are limited to 30 registrations per hack as the core community of 10-25 Web3 Wizards aren’t usually represented on the attending list and we want to ensure the event will still fit inside the venue. If you want to find a community of people whose purpose is to build and learn instead of speculate, then it’s right here.</p> <p>At the Web3 Weekly Hack you can do things like:<br/>- Find high quality information and start your journey into Web3<br/>- Find people who can introduce you to the broader Australian community.<br/>- Learn how to set up your environment for Smart Contract development<br/>- Learn best practises for developing, like automated tests (they’re super fun trust me) and automatic migrations<br/>- Receive a high level overviews of what’s possible on Ethereum and the challenges you might face in a project<br/>- Make friends!</p> <p>Check out our Learning resources: <a href=\"https://github.com/Web3-Melbourne/learning-resources\" class=\"linkified\">https://github.com/Web3-Melbourne/learning-resources</a><br/>Supported by flexdapps (<a href=\"http://flexdapps.com/\" class=\"linkified\">http://flexdapps.com/</a>), typehuman (<a href=\"http://typehuman.com/\" class=\"linkified\">http://typehuman.com/</a>), consensys (<a href=\"http://consensys.net/\" class=\"linkified\">http://consensys.net/</a>) and RMIT University (<a href=\"https://www.rmit.edu.au/\" class=\"linkified\">https://www.rmit.edu.au/</a>)</p> <p>Also please join the Discord group where we chat about meetups past, present and future, as well as a bunch of other things like hackathons/news/general scheming: <a href=\"https://discord.gg/HVS7BVE\" class=\"linkified\">https://discord.gg/HVS7BVE</a></p> ",
-        //     "how_to_find_us": "Floor 3, room 28",
-        //     "visibility": "public",
-        //     "member_pay_fee": false
-        //   }, 
-        //   {
-        //     "created": 1551324199000,
-        //     "duration": 10800000,
-        //     "id": "lpgpsqyzlbsb",
-        //     "name": "Weekly Web3 Hack",
-        //     "rsvp_limit": 45,
-        //     "date_in_series_pattern": false,
-        //     "status": "upcoming",
-        //     "time": 1565769600000,
-        //     "local_date": "2019-08-14",
-        //     "local_time": "18:00",
-        //     "updated": 1551324199000,
-        //     "utc_offset": 36000000,
-        //     "waitlist_count": 0,
-        //     "yes_rsvp_count": 4,
-        //     "venue": {
-        //         "id": 25826135,
-        //         "name": "RMIT University Building 88",
-        //         "lat": -37.808780670166016,
-        //         "lon": 144.9609375,
-        //         "repinned": true,
-        //         "address_1": "Level 3, 440 Elizabeth Street ",
-        //         "city": "Melbourne",
-        //         "country": "au",
-        //         "localized_country_name": "Australia"
-        //     },
-        //     "group": {
-        //         "created": 1490146710000,
-        //         "name": "Web3 Melbourne",
-        //         "id": 22966256,
-        //         "join_mode": "open",
-        //         "lat": -37.810001373291016,
-        //         "lon": 144.9600067138672,
-        //         "urlname": "Web3-Melbourne",
-        //         "who": "Web3 Wizards",
-        //         "localized_location": "Melbourne, Australia",
-        //         "state": "",
-        //         "country": "au",
-        //         "region": "en_US",
-        //         "timezone": "Australia/Melbourne"
-        //     },
-        //     "link": "https://www.meetup.com/Web3-Melbourne/events/lpgpsqyzlbsb/",
-        //     "description": "<p>Are you interested in Web3 technologies like blockchains, smart contracts and other decentralised systems? Do you want to meet other curious people or even learn to build on Web3 tech?</p> <p>Well you’ve found the perfect entry point. The Web3 Weekly Hack is an informal gathering of Melbourne’s Web3 devs, hobbyists and learners. There’s no real agenda unless otherwise stated, it's a self directed evening of discussion, coding and fun. We like to sound out our ideas, interrogate problems and build funky stuff.</p> <p>Hosted by Tom Nash and Alexander Ramsey. Tom is a software engineer who has been working with Smart Contracts and Ethereum since November 2016 and Alex has a background in startups and building odd things.</p> <p>We are limited to 30 registrations per hack as the core community of 10-25 Web3 Wizards aren’t usually represented on the attending list and we want to ensure the event will still fit inside the venue. If you want to find a community of people whose purpose is to build and learn instead of speculate, then it’s right here.</p> <p>At the Web3 Weekly Hack you can do things like:<br/>- Find high quality information and start your journey into Web3<br/>- Find people who can introduce you to the broader Australian community.<br/>- Learn how to set up your environment for Smart Contract development<br/>- Learn best practises for developing, like automated tests (they’re super fun trust me) and automatic migrations<br/>- Receive a high level overviews of what’s possible on Ethereum and the challenges you might face in a project<br/>- Make friends!</p> <p>Check out our Learning resources: <a href=\"https://github.com/Web3-Melbourne/learning-resources\" class=\"linkified\">https://github.com/Web3-Melbourne/learning-resources</a><br/>Supported by flexdapps (<a href=\"http://flexdapps.com/\" class=\"linkified\">http://flexdapps.com/</a>), typehuman (<a href=\"http://typehuman.com/\" class=\"linkified\">http://typehuman.com/</a>), consensys (<a href=\"http://consensys.net/\" class=\"linkified\">http://consensys.net/</a>) and RMIT University (<a href=\"https://www.rmit.edu.au/\" class=\"linkified\">https://www.rmit.edu.au/</a>)</p> <p>Also please join the Discord group where we chat about meetups past, present and future, as well as a bunch of other things like hackathons/news/general scheming: <a href=\"https://discord.gg/HVS7BVE\" class=\"linkified\">https://discord.gg/HVS7BVE</a></p> ",
-        //     "how_to_find_us": "Floor 3, room 28",
-        //     "visibility": "public",
-        //     "member_pay_fee": false
-        //   },
-        //   {
-        //     "created": 1551324199000,
-        //     "duration": 10800000,
-        //     "id": "lpgpsqyzlbcc",
-        //     "name": "Weekly Web3 Hack",
-        //     "rsvp_limit": 45,
-        //     "date_in_series_pattern": false,
-        //     "status": "upcoming",
-        //     "time": 1566374400000,
-        //     "local_date": "2019-08-21",
-        //     "local_time": "18:00",
-        //     "updated": 1551324199000,
-        //     "utc_offset": 36000000,
-        //     "waitlist_count": 0,
-        //     "yes_rsvp_count": 0,
-        //     "venue": {
-        //         "id": 25826135,
-        //         "name": "RMIT University Building 88",
-        //         "lat": -37.808780670166016,
-        //         "lon": 144.9609375,
-        //         "repinned": true,
-        //         "address_1": "Level 3, 440 Elizabeth Street ",
-        //         "city": "Melbourne",
-        //         "country": "au",
-        //         "localized_country_name": "Australia"
-        //     },
-        //     "group": {
-        //         "created": 1490146710000,
-        //         "name": "Web3 Melbourne",
-        //         "id": 22966256,
-        //         "join_mode": "open",
-        //         "lat": -37.810001373291016,
-        //         "lon": 144.9600067138672,
-        //         "urlname": "Web3-Melbourne",
-        //         "who": "Web3 Wizards",
-        //         "localized_location": "Melbourne, Australia",
-        //         "state": "",
-        //         "country": "au",
-        //         "region": "en_US",
-        //         "timezone": "Australia/Melbourne"
-        //     },
-        //     "link": "https://www.meetup.com/Web3-Melbourne/events/lpgpsqyzlbcc/",
-        //     "description": "<p>Are you interested in Web3 technologies like blockchains, smart contracts and other decentralised systems? Do you want to meet other curious people or even learn to build on Web3 tech?</p> <p>Well you’ve found the perfect entry point. The Web3 Weekly Hack is an informal gathering of Melbourne’s Web3 devs, hobbyists and learners. There’s no real agenda unless otherwise stated, it's a self directed evening of discussion, coding and fun. We like to sound out our ideas, interrogate problems and build funky stuff.</p> <p>Hosted by Tom Nash and Alexander Ramsey. Tom is a software engineer who has been working with Smart Contracts and Ethereum since November 2016 and Alex has a background in startups and building odd things.</p> <p>We are limited to 30 registrations per hack as the core community of 10-25 Web3 Wizards aren’t usually represented on the attending list and we want to ensure the event will still fit inside the venue. If you want to find a community of people whose purpose is to build and learn instead of speculate, then it’s right here.</p> <p>At the Web3 Weekly Hack you can do things like:<br/>- Find high quality information and start your journey into Web3<br/>- Find people who can introduce you to the broader Australian community.<br/>- Learn how to set up your environment for Smart Contract development<br/>- Learn best practises for developing, like automated tests (they’re super fun trust me) and automatic migrations<br/>- Receive a high level overviews of what’s possible on Ethereum and the challenges you might face in a project<br/>- Make friends!</p> <p>Check out our Learning resources: <a href=\"https://github.com/Web3-Melbourne/learning-resources\" class=\"linkified\">https://github.com/Web3-Melbourne/learning-resources</a><br/>Supported by flexdapps (<a href=\"http://flexdapps.com/\" class=\"linkified\">http://flexdapps.com/</a>), typehuman (<a href=\"http://typehuman.com/\" class=\"linkified\">http://typehuman.com/</a>), consensys (<a href=\"http://consensys.net/\" class=\"linkified\">http://consensys.net/</a>) and RMIT University (<a href=\"https://www.rmit.edu.au/\" class=\"linkified\">https://www.rmit.edu.au/</a>)</p> <p>Also please join the Discord group where we chat about meetups past, present and future, as well as a bunch of other things like hackathons/news/general scheming: <a href=\"https://discord.gg/HVS7BVE\" class=\"linkified\">https://discord.gg/HVS7BVE</a></p> ",
-        //     "how_to_find_us": "Floor 3, room 28",
-        //     "visibility": "public",
-        //     "member_pay_fee": false
-        //   }
-        // ]
-    	});
 
-    	return { events };
+      const getMelbEvents = async () => {
+        try{
+          $$invalidate('events', events = await axios$1.get(`https://api.meetup.com/Web3-Melbourne/events?key=${config$1.melbWeb3}&sign=true&page=6`));
+        } catch (error) {
+          console.log(error);
+        }
+        
+      };
+
+       const getSydEvents = async () => {
+        // events = await axios.get('https://api.meetup.com/Web3-Melbourne/events?key=' + process.env.MEETUP_API_KEY + '&sign=true&page=6');
+      };
+      
+       const getBrisEvents = async () => {
+        // events = await axios.get('https://api.meetup.com/Web3-Melbourne/events?key=' + process.env.MEETUP_API_KEY + '&sign=true&page=6');
+      };
+
+    	return {
+    		events,
+    		getMelbEvents,
+    		getSydEvents,
+    		getBrisEvents
+    	};
     }
 
     class Meetups extends SvelteComponentDev {
@@ -3158,9 +3298,6 @@ var app = (function () {
 
     const app = new App({
     	target: document.body,
-    	props: {
-    		name: 'world'
-    	}
     });
 
     return app;
