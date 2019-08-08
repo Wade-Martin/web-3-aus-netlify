@@ -1,6 +1,5 @@
 import svelte from 'rollup-plugin-svelte';
 import resolve from 'rollup-plugin-node-resolve';
-import replace from 'rollup-plugin-replace';
 import commonjs from 'rollup-plugin-commonjs';
 import globals from 'rollup-plugin-node-globals';
 import livereload from 'rollup-plugin-livereload';
@@ -17,10 +16,7 @@ export default {
 		name: 'app',
 		file: 'public/bundle.js'
 	},
-	plugins: [
-		replace({
-      ENVIRONMENT: JSON.stringify('production')
-    }),
+	plugins: [ß
 		json({
       // All JSON files will be parsed by default,
       // but you can also specifically include/exclude files
