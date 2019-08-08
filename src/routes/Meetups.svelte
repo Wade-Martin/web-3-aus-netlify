@@ -42,19 +42,21 @@
   import axios from 'axios';
   import jsonp from 'jsonp';
 
-  let events = false;
+  let events = {
+    loaded: false,
+    data: null
+  }
 
   const getMelbEvents = async () => {
-    response = await jsonp('https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890', null, (err, data) => {
+    await jsonp('https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890', null, (err, data) => {
       if (err) {
         console.error(err.message);
       } else {
         console.log(data)
-        return data;
+        events.data = data.data;
+        events.loaded = true; 
       }
     });
-    events = response.data
-    return events
   }
   
 
@@ -77,7 +79,7 @@
   <p on:click={getBrisEvents}>Brisbane Events</p>
 </div>
     
-{#if !events}
+{#if !events.loaded}
   <div>
     <p>Please select your City</p>
   </div>
