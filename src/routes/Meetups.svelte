@@ -40,26 +40,20 @@
 <script>
   import {link} from 'svelte-spa-router'
   import axios from 'axios';
+  import jsonp from 'jsonp';
+
   let events = false;
 
   const getMelbEvents = async () => {
-    try{
-      events = await axios("https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890", 
-      { 
-        method: 'GET',
-        mode: 'no-cors',
-        headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json',
-        },
-        withCredentials: true,
-        credentials: 'same-origin'
-      });
-    } catch (error) {
-      console.log(error)
-    }
-    
+    events = await jsonp('https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890', null, (err, data) => {
+      if (err) {
+        console.error(err.message);
+      } else {
+        return data;
+      }
+    });
   }
+  
 
    const getSydEvents = async () => {
     // events = await axios.get('https://api.meetup.com/Web3-Melbourne/events?key=' + process.env.MEETUP_API_KEY + '&sign=true&page=6');
