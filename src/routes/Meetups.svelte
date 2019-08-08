@@ -25,6 +25,9 @@
   .grid {
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr;
+    width: 60%;
+    height: 800px;
+    border: black 1px dotted;
   }
 
   .card {
@@ -88,7 +91,7 @@
   <div class="container">
     <div class="grid-container">
       <div class="grid">
-	      {#each events as { name, group, link, description, local_date, local_time, venue, how_to_find_us } }
+	      {#each events.data as { name, group, link, description, local_date, local_time, venue, how_to_find_us } }
 		      <div class="card">
             <h3>{group.name}</h3>
             <p>Meetup: {name} <br>@ {venue.name} on {local_date} at {local_time}</p>  
