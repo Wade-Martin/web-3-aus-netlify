@@ -50,7 +50,7 @@
 
   const getMelbEvents = async () => {
     try{
-      events = await axios.get("https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890&callback=noop&fields=event_hosts&sig=9a0f25530150caf171cd1ebd6b2f5227fd1bcd48", headers);
+      events = await axios.get("https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890", headers);
     } catch (error) {
       console.log(error)
     }
