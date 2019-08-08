@@ -40,7 +40,6 @@
 <script>
   import {link} from 'svelte-spa-router'
   import axios from 'axios';
-  import config from "../config.js";
   let events = false;
   
   axios.defaults.crossDomain = true;
