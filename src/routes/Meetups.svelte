@@ -1,5 +1,4 @@
 <style>
-
   .selectLocation {
     display: flex;
     justify-content: space-between;
@@ -16,31 +15,23 @@
     align-items: center;
   }
 
-  .grid-container {
+  .flex-container {
     width: 60%;
     display: flex;
     justify-content: center;
    }
 
-  .grid {
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+  .flex {
+    display: flex;
+    flex-wrap: wrap;
   }
-
-  .card {
-    border: black 1px solid;
-    width: 100%;
-    height: 250px;
-    margin: 10px;
-    padding-left: 10px; 
-  }
-
 </style>
 
 <script>
   import {link} from 'svelte-spa-router'
   import axios from 'axios';
   import jsonp from 'jsonp';
+  import EventCard from './EventCard.svelte'
 
   let events = {
     loaded: false,
@@ -59,7 +50,6 @@
     });
     
   }
-  
 
    const getSydEvents = async () => {
     // events = await axios.get('https://api.meetup.com/Web3-Melbourne/events?key=' + process.env.MEETUP_API_KEY + '&sign=true&page=6');
@@ -68,8 +58,6 @@
    const getBrisEvents = async () => {
     // events = await axios.get('https://api.meetup.com/Web3-Melbourne/events?key=' + process.env.MEETUP_API_KEY + '&sign=true&page=6');
   }
-
-  
 </script>
 
 
@@ -86,14 +74,10 @@
   </div>
 {:else}
   <div class="container">
-    <div class="grid-container">
-      <div class="grid">
-	      {#each events.data as { name, group, link, description, local_date, local_time, venue, how_to_find_us } }
-		      <div class="card">
-            <h3>{group.name}</h3>
-            <p>Meetup: {name} <br>@ {venue.name} on {local_date} at {local_time}</p>  
-            <a target="_blank" href="{link}">{link}</a>
-          </div>
+    <div class="flex-container">
+      <div class="flex">
+	      {#each events.data as event }
+		      <EventCard {...event}/>
 	      {/each}
       </div>  
     </div>

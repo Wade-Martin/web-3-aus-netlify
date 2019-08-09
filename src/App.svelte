@@ -18,3 +18,5 @@
 
 <NavBar />
 <Router {routes} />
+<Footer />
+ 
