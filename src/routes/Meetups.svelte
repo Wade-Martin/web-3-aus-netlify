@@ -61,20 +61,26 @@
 </script>
 
 
-<h2>Upcoming Events</h2>
-<div class="selectLocation">
-  <p on:click={getMelbEvents}>Melbourne Events</p>
-  <p on:click={getSydEvents}>Sydney Events</p>
-  <p on:click={getBrisEvents}>Brisbane Events</p>
-</div>
+
     
 {#if !events.loaded}
-  <div>
-    <p>Please select your City</p>
+  <div class="container">
+    <div class="flex-container">
+      <h2>Upcoming Events</h2>
+      <div class="selectLocation">
+        <h3 on:click={getMelbEvents}>Melbourne Events</h3>
+        <h3 on:click={getSydEvents}>Sydney Events</h3>
+        <h3 on:click={getBrisEvents}>Brisbane Events</h3>
+      </div>
+      <div>
+        <h3>Please select your City</h3>
+      </div>
+    </div>
   </div>
 {:else}
   <div class="container">
     <div class="flex-container">
+      <h2>Upcoming Events</h2>
       <div class="flex">
 	      {#each events.data as event }
 		      <EventCard {...event}/>
