@@ -1,10 +1,4 @@
 <style>
-  .selectLocation {
-    display: flex;
-    justify-content: space-between;
-    align-items: center; 
-  }
-
   .container {
     font-family: 'Space Mono', monospace;;
     width: 100%;
@@ -19,9 +13,25 @@
     width: 60%;
     display: flex;
     justify-content: center;
+    align-items: center;
+    flex-direction: column;
    }
 
-  .flex {
+   .flex-container-location-select {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+   }
+
+   .selectLocation {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-evenly; 
+  }
+
+  .flex-events {
     display: flex;
     flex-wrap: wrap;
   }
@@ -65,15 +75,15 @@
     
 {#if !events.loaded}
   <div class="container">
-    <div class="flex-container">
+    <div class="flex-container-location-select">
       <h2>Upcoming Events</h2>
-      <div class="selectLocation">
-        <h3 on:click={getMelbEvents}>Melbourne Events</h3>
-        <h3 on:click={getSydEvents}>Sydney Events</h3>
-        <h3 on:click={getBrisEvents}>Brisbane Events</h3>
-      </div>
       <div>
         <h3>Please select your City</h3>
+      </div>
+      <div class="selectLocation">
+        <p on:click={getMelbEvents}>Melbourne</p>
+        <p on:click={getSydEvents}>Sydney</p>
+        <p on:click={getBrisEvents}>Brisbane</p>
       </div>
     </div>
   </div>
@@ -81,11 +91,11 @@
   <div class="container">
     <div class="flex-container">
       <h2>Upcoming Events</h2>
-      <div class="flex">
+      <div class="flex-events">
 	      {#each events.data as event }
 		      <EventCard {...event}/>
 	      {/each}
-      </div>  
+      </div>
     </div>
   </div>
 {/if}
