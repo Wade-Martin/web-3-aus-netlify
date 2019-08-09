@@ -4,19 +4,35 @@
 	import Footer from './Footer.svelte';
 	import Home from './routes/Home.svelte';
 	import Humans from './routes/Humans.svelte';
+	import Events from './routes/Events.svelte'
 
 	const routes = {
     '/': Home,
  
-    '/board': Humans, 
+		'/board': Humans,
+		
+		'/events': Events,
+		
 }
 
 </script>
 
 <style>
+	.main {	
+		overflow: auto;
+  	position: absolute;
+  	top: 60px;
+  	left: 0;
+  	right: 0;
+  	bottom: 0;		
+	}
 </style>
 
 <NavBar />
-<Router {routes} />
-<Footer />
+<div class="main">
+	<Router {routes} />
+	<Footer />
+</div>
+	
+
  

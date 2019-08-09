@@ -5,24 +5,31 @@
 <style>
   @import url('https://fonts.googleapis.com/css?family=Space+Mono:400,400i,700,700i&display=swap');
 
-  .grid {
+  .profile-wrapper {
     font-family: 'Space Mono', monospace;
-    display: grid;
-    grid-template-rows: auto;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 5px;
   }
-  /* img {
+  img {
     size: 400px 400px;
-  } */
-
-  .picture {
-    width: 400px;
-    height: 400px;
-    border: 1px black solid;
+    margin: 10px;
   }
+
+  .profile {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly; 
+  }
+
+  .text {
+    width: 60%;
+  }
+
 </style>
 
-<div class="grid">
-  <div class="profile-right" style="grid-template-columns:auto 36%">
+<div class="profile-wrapper">
+  <div class="profile">
     <div class="text">
       <h2>James Zaki</h2>
       <h4>Blockchain/IoT Engineer and Consultant</h4>
@@ -33,13 +40,13 @@
       </p>
     </div>
     <div class="picture">
-      <!-- <img src={src} alt="notw cover"/> -->
+      <img src="https://web3australia.org/wp-content/uploads/2019/03/jz.jpg" alt="notw cover"/>
     </div>
   </div>
 
-  <div class="profile-left" style="grid-template-columns:36% auto">
-    <div class="picture">
-      <!-- <img src={src} alt="three triangles"/> -->
+  <div class="profile" style="grid-template-columns:36% auto">
+    <div>
+      <img src="https://web3australia.org/wp-content/uploads/2019/03/RJp9gIJl_400x400.jpg" alt="notw cover"/>
     </div>
     <div class="text">
       <h2>Ellie Rennie</h2>
@@ -50,7 +57,7 @@
     </div>
   </div>
 
-  <div class="profile-right" style="grid-template-columns:36% auto">
+  <div class="profile" style="grid-template-columns:36% auto">
     <div class="text">
       <h2>Bok Khoo</h2>
       <h4>Decentralised Future Fund</h4>
@@ -59,13 +66,13 @@
       </p>
     </div>
     <div class="picture">
-      <!-- <img src={src} alt="three triangles"/> -->
+      <img src="https://web3australia.org/wp-content/uploads/2019/03/bokky-1.jpg" alt="notw cover"/>
     </div>
   </div>
 
-  <div class="profile-left" style="grid-template-columns:auto 36%">
+  <div class="profile" style="grid-template-columns:auto 36%">
     <div class="picture">
-      <!-- <img src={src} alt="three triangles"/> -->
+      <img src="https://web3australia.org/wp-content/uploads/2019/03/tom.jpg" alt="notw cover"/>
     </div>
     <div class="text">
       <h2>Thomas Nash</h2>
@@ -76,7 +83,7 @@
     </div>
   </div>
 
-  <div class="profile-right" style="grid-template-columns:36% auto">
+  <div class="profile" style="grid-template-columns:36% auto">
     <div class="text">
       <h2>Bonnie Yiu</h2>
       <h4>Co-Founder, Consulere</h4>
@@ -88,13 +95,13 @@
       </p>
     </div>
     <div class="picture">
-      <!-- <img src={src} alt="three triangles"/> -->
+      <img src="https://web3australia.org/wp-content/uploads/2019/03/bonnie.jpg" alt="notw cover"/>      
     </div>
   </div>
 
-  <div class="profile-left" style="grid-template-columns:auto 36%">
+  <div class="profile" style="grid-template-columns:auto 36%">
     <div class="picture">
-      <!-- <img src={src} alt="three triangles"/> -->
+      <img src="https://web3australia.org/wp-content/uploads/2019/03/james.jpg" alt="notw cover"/>      
     </div>
     <div class="text">
       <h2>James Eddington</h2>
@@ -105,7 +112,7 @@
     </div>
   </div>
 
-  <div class="profile-right" style="grid-template-columns:36% auto">
+  <div class="profile" style="grid-template-columns:36% auto">
     <div class="text">
       <h2>Alexander Ramsey</h2>
       <h4>CEO & Co-Founder, Flex Dapps</h4>
@@ -114,7 +121,7 @@
       </p>
     </div>
     <div class="picture">
-      <!-- <img src={src} alt="three triangles"/> -->
+      <img src="https://web3australia.org/wp-content/uploads/2019/03/Alex-1-BW.jpg" alt="notw cover"/>       
     </div>
   </div>
 </div>

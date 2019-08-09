@@ -94,10 +94,31 @@ var app = (function () {
     function set_style(node, key, value) {
         node.style.setProperty(key, value);
     }
+    function select_option(select, value) {
+        for (let i = 0; i < select.options.length; i += 1) {
+            const option = select.options[i];
+            if (option.__value === value) {
+                option.selected = true;
+                return;
+            }
+        }
+    }
+    function select_value(select) {
+        const selected_option = select.querySelector(':checked') || select.options[0];
+        return selected_option && selected_option.__value;
+    }
 
     let current_component;
     function set_current_component(component) {
         current_component = component;
+    }
+    function get_current_component() {
+        if (!current_component)
+            throw new Error(`Function called outside component initialization`);
+        return current_component;
+    }
+    function onMount(fn) {
+        get_current_component().$$.on_mount.push(fn);
     }
 
     const dirty_components = [];
@@ -835,7 +856,7 @@ var app = (function () {
     const file = "src/NavBar.svelte";
 
     function create_fragment$1(ctx) {
-    	var div1, nav, a0, link_action, t_1, div0, a1, link_action_1;
+    	var div1, nav, a0, link_action, t1, div0, a1, link_action_1, t3, a2, link_action_2;
 
     	return {
     		c: function create() {
@@ -843,22 +864,28 @@ var app = (function () {
     			nav = element("nav");
     			a0 = element("a");
     			a0.textContent = "Web3 Australia";
-    			t_1 = space();
+    			t1 = space();
     			div0 = element("div");
     			a1 = element("a");
-    			a1.textContent = "Humans";
+    			a1.textContent = "Events";
+    			t3 = space();
+    			a2 = element("a");
+    			a2.textContent = "Humans";
     			attr(a0, "href", "/");
-    			attr(a0, "class", "navbar-brand svelte-x99ug2");
-    			add_location(a0, file, 36, 4, 639);
-    			attr(a1, "href", "/board");
-    			attr(a1, "class", "svelte-x99ug2");
-    			add_location(a1, file, 38, 6, 733);
+    			attr(a0, "class", "navbar-brand svelte-1op86hv");
+    			add_location(a0, file, 34, 4, 595);
+    			attr(a1, "href", "/events");
+    			attr(a1, "class", "svelte-1op86hv");
+    			add_location(a1, file, 36, 6, 689);
+    			attr(a2, "href", "/board");
+    			attr(a2, "class", "svelte-1op86hv");
+    			add_location(a2, file, 37, 6, 733);
     			attr(div0, "class", "main-nav");
-    			add_location(div0, file, 37, 4, 704);
-    			attr(nav, "class", "svelte-x99ug2");
-    			add_location(nav, file, 35, 2, 629);
-    			attr(div1, "class", "navbar svelte-x99ug2");
-    			add_location(div1, file, 34, 0, 606);
+    			add_location(div0, file, 35, 4, 660);
+    			attr(nav, "class", "svelte-1op86hv");
+    			add_location(nav, file, 33, 2, 585);
+    			attr(div1, "class", "navbar svelte-1op86hv");
+    			add_location(div1, file, 32, 0, 562);
     		},
 
     		l: function claim(nodes) {
@@ -870,10 +897,13 @@ var app = (function () {
     			append(div1, nav);
     			append(nav, a0);
     			link_action = link.call(null, a0) || {};
-    			append(nav, t_1);
+    			append(nav, t1);
     			append(nav, div0);
     			append(div0, a1);
     			link_action_1 = link.call(null, a1) || {};
+    			append(div0, t3);
+    			append(div0, a2);
+    			link_action_2 = link.call(null, a2) || {};
     		},
 
     		p: noop,
@@ -887,6 +917,7 @@ var app = (function () {
 
     			if (link_action && typeof link_action.destroy === 'function') link_action.destroy();
     			if (link_action_1 && typeof link_action_1.destroy === 'function') link_action_1.destroy();
+    			if (link_action_2 && typeof link_action_2.destroy === 'function') link_action_2.destroy();
     		}
     	};
     }
@@ -903,7 +934,7 @@ var app = (function () {
     const file$1 = "src/Footer.svelte";
 
     function create_fragment$2(ctx) {
-    	var div2, div1, div0, h3, t1, p, t3, a;
+    	var div2, div1, div0, h3, t1, p, t2, br, t3, a;
 
     	return {
     		c: function create() {
@@ -914,20 +945,23 @@ var app = (function () {
     			h3.textContent = "Contact Us";
     			t1 = space();
     			p = element("p");
-    			p.textContent = "Send us a message";
+    			t2 = text("Send us a message");
+    			br = element("br");
     			t3 = space();
     			a = element("a");
     			a.textContent = "hello@web3australia.org";
-    			add_location(h3, file$1, 30, 8, 525);
-    			attr(p, "class", "text-right svelte-1qhewud");
-    			add_location(p, file$1, 31, 8, 553);
+    			add_location(h3, file$1, 32, 8, 593);
+    			add_location(br, file$1, 34, 27, 671);
     			attr(a, "href", "mailto:hello@web3australia.com");
-    			add_location(a, file$1, 34, 8, 625);
-    			add_location(div0, file$1, 29, 6, 511);
-    			attr(div1, "class", "container svelte-1qhewud");
-    			add_location(div1, file$1, 28, 4, 481);
-    			attr(div2, "class", "foot-nav svelte-1qhewud");
-    			add_location(div2, file$1, 27, 0, 454);
+    			add_location(a, file$1, 35, 10, 686);
+    			attr(p, "class", "text-right svelte-1qyqpim");
+    			add_location(p, file$1, 33, 8, 621);
+    			attr(div0, "class", "contact svelte-1qyqpim");
+    			add_location(div0, file$1, 31, 6, 563);
+    			attr(div1, "class", "container svelte-1qyqpim");
+    			add_location(div1, file$1, 30, 4, 533);
+    			attr(div2, "class", "foot-nav svelte-1qyqpim");
+    			add_location(div2, file$1, 29, 0, 506);
     		},
 
     		l: function claim(nodes) {
@@ -941,8 +975,10 @@ var app = (function () {
     			append(div0, h3);
     			append(div0, t1);
     			append(div0, p);
-    			append(div0, t3);
-    			append(div0, a);
+    			append(p, t2);
+    			append(p, br);
+    			append(p, t3);
+    			append(p, a);
     		},
 
     		p: noop,
@@ -3211,22 +3247,42 @@ var app = (function () {
 
     const file$3 = "src/routes/Meetups.svelte";
 
-    function get_each_context(ctx, list, i) {
+    function get_each_context_1(ctx, list, i) {
     	const child_ctx = Object.create(ctx);
     	child_ctx.event = list[i];
     	return child_ctx;
     }
 
-    // (90:0) {:else}
-    function create_else_block(ctx) {
-    	var div2, div1, h2, t_1, div0, current;
+    function get_each_context_2(ctx, list, i) {
+    	const child_ctx = Object.create(ctx);
+    	child_ctx.location = list[i];
+    	return child_ctx;
+    }
 
-    	var each_value = ctx.events.data;
+    function get_each_context(ctx, list, i) {
+    	const child_ctx = Object.create(ctx);
+    	child_ctx.location = list[i];
+    	return child_ctx;
+    }
+
+    // (111:0) {:else}
+    function create_else_block(ctx) {
+    	var div3, div1, h2, t1, div0, select, t2, div2, current, dispose;
+
+    	var each_value_2 = ctx.locations;
+
+    	var each_blocks_1 = [];
+
+    	for (var i = 0; i < each_value_2.length; i += 1) {
+    		each_blocks_1[i] = create_each_block_2(get_each_context_2(ctx, each_value_2, i));
+    	}
+
+    	var each_value_1 = ctx.events.data;
 
     	var each_blocks = [];
 
-    	for (var i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+    	for (var i = 0; i < each_value_1.length; i += 1) {
+    		each_blocks[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
     	}
 
     	const out = i => transition_out(each_blocks[i], 1, 1, () => {
@@ -3235,66 +3291,116 @@ var app = (function () {
 
     	return {
     		c: function create() {
-    			div2 = element("div");
+    			div3 = element("div");
     			div1 = element("div");
     			h2 = element("h2");
     			h2.textContent = "Upcoming Events";
-    			t_1 = space();
+    			t1 = space();
     			div0 = element("div");
+    			select = element("select");
+
+    			for (var i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].c();
+    			}
+
+    			t2 = space();
+    			div2 = element("div");
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
-    			add_location(h2, file$3, 92, 6, 2111);
-    			attr(div0, "class", "flex-events svelte-du9ill");
-    			add_location(div0, file$3, 93, 6, 2142);
-    			attr(div1, "class", "flex-container svelte-du9ill");
-    			add_location(div1, file$3, 91, 4, 2076);
-    			attr(div2, "class", "container svelte-du9ill");
-    			add_location(div2, file$3, 90, 2, 2048);
+    			add_location(h2, file$3, 113, 6, 2613);
+    			if (ctx.selected === void 0) add_render_callback(() => ctx.select_change_handler_1.call(select));
+    			add_location(select, file$3, 115, 8, 2681);
+    			attr(div0, "class", "selectLocation svelte-du9ill");
+    			add_location(div0, file$3, 114, 6, 2644);
+    			attr(div1, "class", "flex-container-location-select svelte-du9ill");
+    			add_location(div1, file$3, 112, 4, 2562);
+    			attr(div2, "class", "flex-events svelte-du9ill");
+    			add_location(div2, file$3, 124, 4, 2919);
+    			attr(div3, "class", "container svelte-du9ill");
+    			add_location(div3, file$3, 111, 2, 2534);
+
+    			dispose = [
+    				listen(select, "change", ctx.select_change_handler_1),
+    				listen(select, "change", ctx.getEvents)
+    			];
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, div2, anchor);
-    			append(div2, div1);
+    			insert(target, div3, anchor);
+    			append(div3, div1);
     			append(div1, h2);
-    			append(div1, t_1);
+    			append(div1, t1);
     			append(div1, div0);
+    			append(div0, select);
+
+    			for (var i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].m(select, null);
+    			}
+
+    			select_option(select, ctx.selected);
+
+    			append(div3, t2);
+    			append(div3, div2);
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(div0, null);
+    				each_blocks[i].m(div2, null);
     			}
 
     			current = true;
     		},
 
     		p: function update(changed, ctx) {
-    			if (changed.events) {
-    				each_value = ctx.events.data;
+    			if (changed.locations) {
+    				each_value_2 = ctx.locations;
 
-    				for (var i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context(ctx, each_value, i);
+    				for (var i = 0; i < each_value_2.length; i += 1) {
+    					const child_ctx = get_each_context_2(ctx, each_value_2, i);
+
+    					if (each_blocks_1[i]) {
+    						each_blocks_1[i].p(changed, child_ctx);
+    					} else {
+    						each_blocks_1[i] = create_each_block_2(child_ctx);
+    						each_blocks_1[i].c();
+    						each_blocks_1[i].m(select, null);
+    					}
+    				}
+
+    				for (; i < each_blocks_1.length; i += 1) {
+    					each_blocks_1[i].d(1);
+    				}
+    				each_blocks_1.length = each_value_2.length;
+    			}
+
+    			if (changed.selected) select_option(select, ctx.selected);
+
+    			if (changed.events) {
+    				each_value_1 = ctx.events.data;
+
+    				for (var i = 0; i < each_value_1.length; i += 1) {
+    					const child_ctx = get_each_context_1(ctx, each_value_1, i);
 
     					if (each_blocks[i]) {
     						each_blocks[i].p(changed, child_ctx);
     						transition_in(each_blocks[i], 1);
     					} else {
-    						each_blocks[i] = create_each_block(child_ctx);
+    						each_blocks[i] = create_each_block_1(child_ctx);
     						each_blocks[i].c();
     						transition_in(each_blocks[i], 1);
-    						each_blocks[i].m(div0, null);
+    						each_blocks[i].m(div2, null);
     					}
     				}
 
     				group_outros();
-    				for (i = each_value.length; i < each_blocks.length; i += 1) out(i);
+    				for (i = each_value_1.length; i < each_blocks.length; i += 1) out(i);
     				check_outros();
     			}
     		},
 
     		i: function intro(local) {
     			if (current) return;
-    			for (var i = 0; i < each_value.length; i += 1) transition_in(each_blocks[i]);
+    			for (var i = 0; i < each_value_1.length; i += 1) transition_in(each_blocks[i]);
 
     			current = true;
     		},
@@ -3308,90 +3414,148 @@ var app = (function () {
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(div2);
-    			}
-
-    			destroy_each(each_blocks, detaching);
-    		}
-    	};
-    }
-
-    // (76:0) {#if !events.loaded}
-    function create_if_block(ctx) {
-    	var div3, div2, h2, t1, div0, h3, t3, div1, p0, t5, p1, t7, p2, dispose;
-
-    	return {
-    		c: function create() {
-    			div3 = element("div");
-    			div2 = element("div");
-    			h2 = element("h2");
-    			h2.textContent = "Upcoming Events";
-    			t1 = space();
-    			div0 = element("div");
-    			h3 = element("h3");
-    			h3.textContent = "Please select your City";
-    			t3 = space();
-    			div1 = element("div");
-    			p0 = element("p");
-    			p0.textContent = "Melbourne";
-    			t5 = space();
-    			p1 = element("p");
-    			p1.textContent = "Sydney";
-    			t7 = space();
-    			p2 = element("p");
-    			p2.textContent = "Brisbane";
-    			add_location(h2, file$3, 78, 6, 1734);
-    			add_location(h3, file$3, 80, 8, 1779);
-    			add_location(div0, file$3, 79, 6, 1765);
-    			add_location(p0, file$3, 83, 8, 1868);
-    			add_location(p1, file$3, 84, 8, 1918);
-    			add_location(p2, file$3, 85, 8, 1964);
-    			attr(div1, "class", "selectLocation svelte-du9ill");
-    			add_location(div1, file$3, 82, 6, 1831);
-    			attr(div2, "class", "flex-container-location-select svelte-du9ill");
-    			add_location(div2, file$3, 77, 4, 1683);
-    			attr(div3, "class", "container svelte-du9ill");
-    			add_location(div3, file$3, 76, 2, 1655);
-
-    			dispose = [
-    				listen(p0, "click", ctx.getMelbEvents),
-    				listen(p1, "click", ctx.getSydEvents),
-    				listen(p2, "click", ctx.getBrisEvents)
-    			];
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert(target, div3, anchor);
-    			append(div3, div2);
-    			append(div2, h2);
-    			append(div2, t1);
-    			append(div2, div0);
-    			append(div0, h3);
-    			append(div2, t3);
-    			append(div2, div1);
-    			append(div1, p0);
-    			append(div1, t5);
-    			append(div1, p1);
-    			append(div1, t7);
-    			append(div1, p2);
-    		},
-
-    		p: noop,
-    		i: noop,
-    		o: noop,
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
     				detach(div3);
     			}
+
+    			destroy_each(each_blocks_1, detaching);
+
+    			destroy_each(each_blocks, detaching);
 
     			run_all(dispose);
     		}
     	};
     }
 
-    // (95:7) {#each events.data as event }
-    function create_each_block(ctx) {
+    // (96:0) {#if !events.loaded}
+    function create_if_block(ctx) {
+    	var div2, div1, h2, t_1, div0, select, dispose;
+
+    	var each_value = ctx.locations;
+
+    	var each_blocks = [];
+
+    	for (var i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+    	}
+
+    	return {
+    		c: function create() {
+    			div2 = element("div");
+    			div1 = element("div");
+    			h2 = element("h2");
+    			h2.textContent = "Upcoming Events";
+    			t_1 = space();
+    			div0 = element("div");
+    			select = element("select");
+
+    			for (var i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+    			add_location(h2, file$3, 98, 6, 2214);
+    			if (ctx.selected === void 0) add_render_callback(() => ctx.select_change_handler.call(select));
+    			add_location(select, file$3, 100, 8, 2282);
+    			attr(div0, "class", "selectLocation svelte-du9ill");
+    			add_location(div0, file$3, 99, 6, 2245);
+    			attr(div1, "class", "flex-container-location-select svelte-du9ill");
+    			add_location(div1, file$3, 97, 4, 2161);
+    			attr(div2, "class", "container svelte-du9ill");
+    			add_location(div2, file$3, 96, 2, 2133);
+
+    			dispose = [
+    				listen(select, "change", ctx.select_change_handler),
+    				listen(select, "change", ctx.getEvents)
+    			];
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div2, anchor);
+    			append(div2, div1);
+    			append(div1, h2);
+    			append(div1, t_1);
+    			append(div1, div0);
+    			append(div0, select);
+
+    			for (var i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(select, null);
+    			}
+
+    			select_option(select, ctx.selected);
+    		},
+
+    		p: function update(changed, ctx) {
+    			if (changed.locations) {
+    				each_value = ctx.locations;
+
+    				for (var i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(changed, child_ctx);
+    					} else {
+    						each_blocks[i] = create_each_block(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(select, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+    				each_blocks.length = each_value.length;
+    			}
+
+    			if (changed.selected) select_option(select, ctx.selected);
+    		},
+
+    		i: noop,
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div2);
+    			}
+
+    			destroy_each(each_blocks, detaching);
+
+    			run_all(dispose);
+    		}
+    	};
+    }
+
+    // (117:8) {#each locations as location}
+    function create_each_block_2(ctx) {
+    	var option, t0_value = ctx.location.id, t0, t1, option_value_value;
+
+    	return {
+    		c: function create() {
+    			option = element("option");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			option.__value = option_value_value = ctx.location.id;
+    			option.value = option.__value;
+    			add_location(option, file$3, 117, 9, 2783);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, option, anchor);
+    			append(option, t0);
+    			append(option, t1);
+    		},
+
+    		p: function update(changed, ctx) {
+    			option.value = option.__value;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(option);
+    			}
+    		}
+    	};
+    }
+
+    // (126:5) {#each events.data as event }
+    function create_each_block_1(ctx) {
     	var current;
 
     	var eventcard_spread_levels = [
@@ -3435,6 +3599,38 @@ var app = (function () {
 
     		d: function destroy(detaching) {
     			destroy_component(eventcard, detaching);
+    		}
+    	};
+    }
+
+    // (102:8) {#each locations as location}
+    function create_each_block(ctx) {
+    	var option, t0_value = ctx.location.id, t0, t1, option_value_value;
+
+    	return {
+    		c: function create() {
+    			option = element("option");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			option.__value = option_value_value = ctx.location.id;
+    			option.value = option.__value;
+    			add_location(option, file$3, 102, 9, 2384);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, option, anchor);
+    			append(option, t0);
+    			append(option, t1);
+    		},
+
+    		p: function update(changed, ctx) {
+    			option.value = option.__value;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(option);
+    			}
     		}
     	};
     }
@@ -3524,32 +3720,58 @@ var app = (function () {
         data: null
       };
 
-      const getMelbEvents = async () => {
-        await jsonp_1('https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890', null, (err, data) => {
-          if (err) {
-            console.error(err.message);
-          } else {
-            events.data = data.data; $$invalidate('events', events);
-            events.loaded = true; $$invalidate('events', events);
-            console.log('events.data:', events.data);
-          }
-        });
-        
+    	let locations = [
+        { id: 'Select Your City'},
+    		{ id: 'Melbourne'},
+    		{ id: 'Sydney'},
+    		{ id: 'Brisbane'}
+    	];
+
+    	let selected;
+
+      const getEvents = async () => {
+        switch (selected) {
+          case 'Melbourne':
+            await jsonp_1('https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890', null, (err, data) => {
+              if (err) {
+                console.error(err.message);
+              } else {
+                events.data = data.data; $$invalidate('events', events);
+                events.loaded = true; $$invalidate('events', events);
+                console.log('events.data:', events.data);
+              }
+            }); 
+            break;
+          case 'Sydney':
+              console.log('call sydney meetup api request');
+            break;
+          case 'Brisbane':
+              console.log('call brisbane meetup api request');
+            break;
+          default:
+              console.log('this is the default');
+        }
       };
 
-       const getSydEvents = async () => {
-        // events = await axios.get('https://api.meetup.com/Web3-Melbourne/events?key=' + process.env.MEETUP_API_KEY + '&sign=true&page=6');
-      };
-      
-       const getBrisEvents = async () => {
-        // events = await axios.get('https://api.meetup.com/Web3-Melbourne/events?key=' + process.env.MEETUP_API_KEY + '&sign=true&page=6');
-      };
+    	function select_change_handler() {
+    		selected = select_value(this);
+    		$$invalidate('selected', selected);
+    		$$invalidate('locations', locations);
+    	}
+
+    	function select_change_handler_1() {
+    		selected = select_value(this);
+    		$$invalidate('selected', selected);
+    		$$invalidate('locations', locations);
+    	}
 
     	return {
     		events,
-    		getMelbEvents,
-    		getSydEvents,
-    		getBrisEvents
+    		locations,
+    		selected,
+    		getEvents,
+    		select_change_handler,
+    		select_change_handler_1
     	};
     }
 
@@ -4216,7 +4438,7 @@ var app = (function () {
     const file$6 = "src/routes/ProfileGrid.svelte";
 
     function create_fragment$8(ctx) {
-    	var div21, div2, div0, h20, t1, h40, t3, p0, t4, br0, t5, br1, t6, t7, div1, t8, div5, div3, t9, div4, h21, t11, h41, t13, p1, t15, div8, div6, h22, t17, h42, t19, p2, t21, div7, t22, div11, div9, t23, div10, h23, t25, h43, t27, p3, t29, div14, div12, h24, t31, h44, t33, p4, t35, p5, t37, div13, t38, div17, div15, t39, div16, h25, t41, h45, t43, p6, t45, div20, div18, h26, t47, h46, t49, p7, t51, div19;
+    	var div21, div2, div0, h20, t1, h40, t3, p0, t4, br0, t5, br1, t6, t7, div1, img0, t8, div5, div3, img1, t9, div4, h21, t11, h41, t13, p1, t15, div8, div6, h22, t17, h42, t19, p2, t21, div7, img2, t22, div11, div9, img3, t23, div10, h23, t25, h43, t27, p3, t29, div14, div12, h24, t31, h44, t33, p4, t35, p5, t37, div13, img4, t38, div17, div15, img5, t39, div16, h25, t41, h45, t43, p6, t45, div20, div18, h26, t47, h46, t49, p7, t51, div19, img6;
 
     	return {
     		c: function create() {
@@ -4237,9 +4459,11 @@ var app = (function () {
     			t6 = text("\n        As organiser of the OzBerry IoT MeetUp and smart-contract developer/auditor, James is exploring applications using IoT and Blockchain technologies that can positively impact society.");
     			t7 = space();
     			div1 = element("div");
+    			img0 = element("img");
     			t8 = space();
     			div5 = element("div");
     			div3 = element("div");
+    			img1 = element("img");
     			t9 = space();
     			div4 = element("div");
     			h21 = element("h2");
@@ -4263,9 +4487,11 @@ var app = (function () {
     			p2.textContent = "Bok Khoo, or BokkyPooBah, is an actuary and software developer working in the Ethereum ecosystem. He is one of the early and top contributors to Ethereum.StackExchange.com. He assisted in the reconciliation of refunds to the original token holders in the pioneer decentralised autonomous organisation, The DAO. He has conducted 39 public Ethereum smart contract audits, and built the early and primitive decentralised exchange CryptoDerivatives.Market in Nov 2016. He helped establish the Decentralised Future Fund DAO that funded the representation of 10 Australian Ethereum community members at conferences worldwide in 2018. He has also released some very nice open source Ethereum smart contract libraries like the Gas-Efficient Solidity DateTime Library and BokkyPooBah’s Red-Black Binary Search Tree Library.";
     			t21 = space();
     			div7 = element("div");
+    			img2 = element("img");
     			t22 = space();
     			div11 = element("div");
     			div9 = element("div");
+    			img3 = element("img");
     			t23 = space();
     			div10 = element("div");
     			h23 = element("h2");
@@ -4292,9 +4518,11 @@ var app = (function () {
     			p5.textContent = "Prior to that Bonnie was an Associate at international law firms in Sydney and Silicon Valley, specialising in Financial Services and Venture Capital laws.";
     			t37 = space();
     			div13 = element("div");
+    			img4 = element("img");
     			t38 = space();
     			div17 = element("div");
     			div15 = element("div");
+    			img5 = element("img");
     			t39 = space();
     			div16 = element("div");
     			h25 = element("h2");
@@ -4318,81 +4546,108 @@ var app = (function () {
     			p7.textContent = "Alexander is a serial company founder and community builder who has worked in emerging industries including game development, esports, 3D systems and immersive media, with experience that encompasses commercial operations, programming, design and community engagement. Alex is currently the CEO and Co-founder of Flex Dapps, an Australian software development company specialising in decentralised applications. He is also a community organiser of Web3 Melbourne, a grassroots technology-agnostic developer community.";
     			t51 = space();
     			div19 = element("div");
-    			add_location(h20, file$6, 26, 6, 517);
-    			add_location(h40, file$6, 27, 6, 543);
-    			add_location(br0, file$6, 29, 185, 786);
-    			add_location(br1, file$6, 30, 119, 910);
-    			add_location(p0, file$6, 28, 6, 597);
-    			attr(div0, "class", "text");
-    			add_location(div0, file$6, 25, 4, 492);
-    			attr(div1, "class", "picture svelte-aoxikw");
-    			add_location(div1, file$6, 34, 4, 1132);
-    			attr(div2, "class", "profile-right");
-    			set_style(div2, "grid-template-columns", "auto 36%");
-    			add_location(div2, file$6, 24, 2, 421);
-    			attr(div3, "class", "picture svelte-aoxikw");
-    			add_location(div3, file$6, 40, 4, 1296);
-    			add_location(h21, file$6, 44, 6, 1412);
-    			add_location(h41, file$6, 45, 6, 1440);
-    			add_location(p1, file$6, 46, 6, 1507);
-    			attr(div4, "class", "text");
-    			add_location(div4, file$6, 43, 4, 1387);
-    			attr(div5, "class", "profile-left");
+    			img6 = element("img");
+    			add_location(h20, file$6, 33, 6, 560);
+    			add_location(h40, file$6, 34, 6, 586);
+    			add_location(br0, file$6, 36, 185, 829);
+    			add_location(br1, file$6, 37, 119, 953);
+    			add_location(p0, file$6, 35, 6, 640);
+    			attr(div0, "class", "text svelte-1o2gl64");
+    			add_location(div0, file$6, 32, 4, 535);
+    			attr(img0, "src", "https://web3australia.org/wp-content/uploads/2019/03/jz.jpg");
+    			attr(img0, "alt", "notw cover");
+    			attr(img0, "class", "svelte-1o2gl64");
+    			add_location(img0, file$6, 42, 6, 1203);
+    			attr(div1, "class", "picture");
+    			add_location(div1, file$6, 41, 4, 1175);
+    			attr(div2, "class", "profile svelte-1o2gl64");
+    			add_location(div2, file$6, 31, 2, 509);
+    			attr(img1, "src", "https://web3australia.org/wp-content/uploads/2019/03/RJp9gIJl_400x400.jpg");
+    			attr(img1, "alt", "notw cover");
+    			attr(img1, "class", "svelte-1o2gl64");
+    			add_location(img1, file$6, 48, 6, 1393);
+    			add_location(div3, file$6, 47, 4, 1381);
+    			add_location(h21, file$6, 51, 6, 1537);
+    			add_location(h41, file$6, 52, 6, 1565);
+    			add_location(p1, file$6, 53, 6, 1632);
+    			attr(div4, "class", "text svelte-1o2gl64");
+    			add_location(div4, file$6, 50, 4, 1512);
+    			attr(div5, "class", "profile svelte-1o2gl64");
     			set_style(div5, "grid-template-columns", "36% auto");
-    			add_location(div5, file$6, 39, 2, 1226);
-    			add_location(h22, file$6, 54, 6, 1981);
-    			add_location(h42, file$6, 55, 6, 2005);
-    			add_location(p2, file$6, 56, 6, 2046);
-    			attr(div6, "class", "text");
-    			add_location(div6, file$6, 53, 4, 1956);
-    			attr(div7, "class", "picture svelte-aoxikw");
-    			add_location(div7, file$6, 60, 4, 2899);
-    			attr(div8, "class", "profile-right");
+    			add_location(div5, file$6, 46, 2, 1316);
+    			add_location(h22, file$6, 61, 6, 2100);
+    			add_location(h42, file$6, 62, 6, 2124);
+    			add_location(p2, file$6, 63, 6, 2165);
+    			attr(div6, "class", "text svelte-1o2gl64");
+    			add_location(div6, file$6, 60, 4, 2075);
+    			attr(img2, "src", "https://web3australia.org/wp-content/uploads/2019/03/bokky-1.jpg");
+    			attr(img2, "alt", "notw cover");
+    			attr(img2, "class", "svelte-1o2gl64");
+    			add_location(img2, file$6, 68, 6, 3046);
+    			attr(div7, "class", "picture");
+    			add_location(div7, file$6, 67, 4, 3018);
+    			attr(div8, "class", "profile svelte-1o2gl64");
     			set_style(div8, "grid-template-columns", "36% auto");
-    			add_location(div8, file$6, 52, 2, 1885);
-    			attr(div9, "class", "picture svelte-aoxikw");
-    			add_location(div9, file$6, 66, 4, 3068);
-    			add_location(h23, file$6, 70, 6, 3184);
-    			add_location(h43, file$6, 71, 6, 3211);
-    			add_location(p3, file$6, 72, 6, 3255);
-    			attr(div10, "class", "text");
-    			add_location(div10, file$6, 69, 4, 3159);
-    			attr(div11, "class", "profile-left");
+    			add_location(div8, file$6, 59, 2, 2010);
+    			attr(img3, "src", "https://web3australia.org/wp-content/uploads/2019/03/tom.jpg");
+    			attr(img3, "alt", "notw cover");
+    			attr(img3, "class", "svelte-1o2gl64");
+    			add_location(img3, file$6, 74, 6, 3257);
+    			attr(div9, "class", "picture");
+    			add_location(div9, file$6, 73, 4, 3229);
+    			add_location(h23, file$6, 77, 6, 3388);
+    			add_location(h43, file$6, 78, 6, 3415);
+    			add_location(p3, file$6, 79, 6, 3459);
+    			attr(div10, "class", "text svelte-1o2gl64");
+    			add_location(div10, file$6, 76, 4, 3363);
+    			attr(div11, "class", "profile svelte-1o2gl64");
     			set_style(div11, "grid-template-columns", "auto 36%");
-    			add_location(div11, file$6, 65, 2, 2998);
-    			add_location(h24, file$6, 80, 6, 3782);
-    			add_location(h44, file$6, 81, 6, 3808);
-    			add_location(p4, file$6, 82, 6, 3845);
-    			add_location(p5, file$6, 85, 6, 4218);
-    			attr(div12, "class", "text");
-    			add_location(div12, file$6, 79, 4, 3757);
-    			attr(div13, "class", "picture svelte-aoxikw");
-    			add_location(div13, file$6, 89, 4, 4412);
-    			attr(div14, "class", "profile-right");
+    			add_location(div11, file$6, 72, 2, 3164);
+    			add_location(h24, file$6, 87, 6, 3980);
+    			add_location(h44, file$6, 88, 6, 4006);
+    			add_location(p4, file$6, 89, 6, 4043);
+    			add_location(p5, file$6, 92, 6, 4416);
+    			attr(div12, "class", "text svelte-1o2gl64");
+    			add_location(div12, file$6, 86, 4, 3955);
+    			attr(img4, "src", "https://web3australia.org/wp-content/uploads/2019/03/bonnie.jpg");
+    			attr(img4, "alt", "notw cover");
+    			attr(img4, "class", "svelte-1o2gl64");
+    			add_location(img4, file$6, 97, 6, 4638);
+    			attr(div13, "class", "picture");
+    			add_location(div13, file$6, 96, 4, 4610);
+    			attr(div14, "class", "profile svelte-1o2gl64");
     			set_style(div14, "grid-template-columns", "36% auto");
-    			add_location(div14, file$6, 78, 2, 3686);
-    			attr(div15, "class", "picture svelte-aoxikw");
-    			add_location(div15, file$6, 95, 4, 4581);
-    			add_location(h25, file$6, 99, 6, 4697);
-    			add_location(h45, file$6, 100, 6, 4728);
-    			add_location(p6, file$6, 101, 6, 4754);
-    			attr(div16, "class", "text");
-    			add_location(div16, file$6, 98, 4, 4672);
-    			attr(div17, "class", "profile-left");
+    			add_location(div14, file$6, 85, 2, 3890);
+    			attr(img5, "src", "https://web3australia.org/wp-content/uploads/2019/03/james.jpg");
+    			attr(img5, "alt", "notw cover");
+    			attr(img5, "class", "svelte-1o2gl64");
+    			add_location(img5, file$6, 103, 6, 4854);
+    			attr(div15, "class", "picture");
+    			add_location(div15, file$6, 102, 4, 4826);
+    			add_location(h25, file$6, 106, 6, 4993);
+    			add_location(h45, file$6, 107, 6, 5024);
+    			add_location(p6, file$6, 108, 6, 5050);
+    			attr(div16, "class", "text svelte-1o2gl64");
+    			add_location(div16, file$6, 105, 4, 4968);
+    			attr(div17, "class", "profile svelte-1o2gl64");
     			set_style(div17, "grid-template-columns", "auto 36%");
-    			add_location(div17, file$6, 94, 2, 4511);
-    			add_location(h26, file$6, 109, 6, 5198);
-    			add_location(h46, file$6, 110, 6, 5230);
-    			add_location(p7, file$6, 111, 6, 5274);
-    			attr(div18, "class", "text");
-    			add_location(div18, file$6, 108, 4, 5173);
-    			attr(div19, "class", "picture svelte-aoxikw");
-    			add_location(div19, file$6, 115, 4, 5830);
-    			attr(div20, "class", "profile-right");
+    			add_location(div17, file$6, 101, 2, 4761);
+    			add_location(h26, file$6, 116, 6, 5488);
+    			add_location(h46, file$6, 117, 6, 5520);
+    			add_location(p7, file$6, 118, 6, 5564);
+    			attr(div18, "class", "text svelte-1o2gl64");
+    			add_location(div18, file$6, 115, 4, 5463);
+    			attr(img6, "src", "https://web3australia.org/wp-content/uploads/2019/03/Alex-1-BW.jpg");
+    			attr(img6, "alt", "notw cover");
+    			attr(img6, "class", "svelte-1o2gl64");
+    			add_location(img6, file$6, 123, 6, 6148);
+    			attr(div19, "class", "picture");
+    			add_location(div19, file$6, 122, 4, 6120);
+    			attr(div20, "class", "profile svelte-1o2gl64");
     			set_style(div20, "grid-template-columns", "36% auto");
-    			add_location(div20, file$6, 107, 2, 5102);
-    			attr(div21, "class", "grid svelte-aoxikw");
-    			add_location(div21, file$6, 23, 0, 400);
+    			add_location(div20, file$6, 114, 2, 5398);
+    			attr(div21, "class", "profile-wrapper svelte-1o2gl64");
+    			add_location(div21, file$6, 30, 0, 477);
     		},
 
     		l: function claim(nodes) {
@@ -4415,9 +4670,11 @@ var app = (function () {
     			append(p0, t6);
     			append(div2, t7);
     			append(div2, div1);
+    			append(div1, img0);
     			append(div21, t8);
     			append(div21, div5);
     			append(div5, div3);
+    			append(div3, img1);
     			append(div5, t9);
     			append(div5, div4);
     			append(div4, h21);
@@ -4435,9 +4692,11 @@ var app = (function () {
     			append(div6, p2);
     			append(div8, t21);
     			append(div8, div7);
+    			append(div7, img2);
     			append(div21, t22);
     			append(div21, div11);
     			append(div11, div9);
+    			append(div9, img3);
     			append(div11, t23);
     			append(div11, div10);
     			append(div10, h23);
@@ -4457,9 +4716,11 @@ var app = (function () {
     			append(div12, p5);
     			append(div14, t37);
     			append(div14, div13);
+    			append(div13, img4);
     			append(div21, t38);
     			append(div21, div17);
     			append(div17, div15);
+    			append(div15, img5);
     			append(div17, t39);
     			append(div17, div16);
     			append(div16, h25);
@@ -4477,6 +4738,7 @@ var app = (function () {
     			append(div18, p7);
     			append(div20, t51);
     			append(div20, div19);
+    			append(div19, img6);
     		},
 
     		p: noop,
@@ -4503,13 +4765,14 @@ var app = (function () {
     const file$7 = "src/routes/Humans.svelte";
 
     function create_fragment$9(ctx) {
-    	var div, h1, t_1, p0, p1, current;
+    	var div1, div0, h1, t_1, p0, p1, current;
 
     	var profilegrid = new ProfileGrid({ $$inline: true });
 
     	return {
     		c: function create() {
-    			div = element("div");
+    			div1 = element("div");
+    			div0 = element("div");
     			h1 = element("h1");
     			h1.textContent = "Committee of Management";
     			t_1 = space();
@@ -4517,12 +4780,14 @@ var app = (function () {
     			p0.textContent = "The Web3 Australia’s committee of management totals 7 humans and includes academics, entrepreneurs, technologists and software developers.";
     			p1 = element("p");
     			profilegrid.$$.fragment.c();
-    			attr(h1, "class", "svelte-nen51u");
-    			add_location(h1, file$7, 35, 2, 591);
-    			add_location(p0, file$7, 36, 2, 626);
-    			add_location(p1, file$7, 36, 143, 767);
-    			attr(div, "class", "container svelte-nen51u");
-    			add_location(div, file$7, 34, 0, 565);
+    			attr(h1, "class", "svelte-vfojje");
+    			add_location(h1, file$7, 43, 4, 772);
+    			add_location(p0, file$7, 44, 4, 809);
+    			add_location(p1, file$7, 44, 145, 950);
+    			attr(div0, "class", "content-container svelte-vfojje");
+    			add_location(div0, file$7, 42, 2, 736);
+    			attr(div1, "class", "container svelte-vfojje");
+    			add_location(div1, file$7, 41, 0, 710);
     		},
 
     		l: function claim(nodes) {
@@ -4530,11 +4795,12 @@ var app = (function () {
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, div, anchor);
-    			append(div, h1);
-    			append(div, t_1);
-    			append(div, p0);
-    			append(div, p1);
+    			insert(target, div1, anchor);
+    			append(div1, div0);
+    			append(div0, h1);
+    			append(div0, t_1);
+    			append(div0, p0);
+    			append(div0, p1);
     			mount_component(profilegrid, p1, null);
     			current = true;
     		},
@@ -4555,7 +4821,7 @@ var app = (function () {
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(div);
+    				detach(div1);
     			}
 
     			destroy_component(profilegrid);
@@ -4570,10 +4836,593 @@ var app = (function () {
     	}
     }
 
-    /* src/App.svelte generated by Svelte v3.7.1 */
+    /* src/routes/Melbourne.svelte generated by Svelte v3.7.1 */
+
+    const file$8 = "src/routes/Melbourne.svelte";
+
+    function get_each_context$1(ctx, list, i) {
+    	const child_ctx = Object.create(ctx);
+    	child_ctx.event = list[i];
+    	return child_ctx;
+    }
+
+    // (59:4) {:else}
+    function create_else_block$1(ctx) {
+    	var div, current;
+
+    	var each_value = ctx.events.data;
+
+    	var each_blocks = [];
+
+    	for (var i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
+    	}
+
+    	const out = i => transition_out(each_blocks[i], 1, 1, () => {
+    		each_blocks[i] = null;
+    	});
+
+    	return {
+    		c: function create() {
+    			div = element("div");
+
+    			for (var i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+    			attr(div, "class", "flex-events svelte-du9ill");
+    			add_location(div, file$8, 59, 6, 1082);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div, anchor);
+
+    			for (var i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div, null);
+    			}
+
+    			current = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			if (changed.events) {
+    				each_value = ctx.events.data;
+
+    				for (var i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$1(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(changed, child_ctx);
+    						transition_in(each_blocks[i], 1);
+    					} else {
+    						each_blocks[i] = create_each_block$1(child_ctx);
+    						each_blocks[i].c();
+    						transition_in(each_blocks[i], 1);
+    						each_blocks[i].m(div, null);
+    					}
+    				}
+
+    				group_outros();
+    				for (i = each_value.length; i < each_blocks.length; i += 1) out(i);
+    				check_outros();
+    			}
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			for (var i = 0; i < each_value.length; i += 1) transition_in(each_blocks[i]);
+
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			each_blocks = each_blocks.filter(Boolean);
+    			for (let i = 0; i < each_blocks.length; i += 1) transition_out(each_blocks[i]);
+
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div);
+    			}
+
+    			destroy_each(each_blocks, detaching);
+    		}
+    	};
+    }
+
+    // (57:4) {#if !events.loaded}
+    function create_if_block$1(ctx) {
+    	var p;
+
+    	return {
+    		c: function create() {
+    			p = element("p");
+    			p.textContent = "Loading...";
+    			add_location(p, file$8, 57, 6, 1046);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, p, anchor);
+    		},
+
+    		p: noop,
+    		i: noop,
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(p);
+    			}
+    		}
+    	};
+    }
+
+    // (61:7) {#each events.data as event }
+    function create_each_block$1(ctx) {
+    	var current;
+
+    	var eventcard_spread_levels = [
+    		ctx.event
+    	];
+
+    	let eventcard_props = {};
+    	for (var i = 0; i < eventcard_spread_levels.length; i += 1) {
+    		eventcard_props = assign(eventcard_props, eventcard_spread_levels[i]);
+    	}
+    	var eventcard = new EventCard({ props: eventcard_props, $$inline: true });
+
+    	return {
+    		c: function create() {
+    			eventcard.$$.fragment.c();
+    		},
+
+    		m: function mount(target, anchor) {
+    			mount_component(eventcard, target, anchor);
+    			current = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			var eventcard_changes = changed.events ? get_spread_update(eventcard_spread_levels, [
+    				ctx.event
+    			]) : {};
+    			eventcard.$set(eventcard_changes);
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(eventcard.$$.fragment, local);
+
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			transition_out(eventcard.$$.fragment, local);
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			destroy_component(eventcard, detaching);
+    		}
+    	};
+    }
 
     function create_fragment$a(ctx) {
-    	var t0, t1, current;
+    	var div1, div0, h2, t_1, current_block_type_index, if_block, current;
+
+    	var if_block_creators = [
+    		create_if_block$1,
+    		create_else_block$1
+    	];
+
+    	var if_blocks = [];
+
+    	function select_block_type(ctx) {
+    		if (!ctx.events.loaded) return 0;
+    		return 1;
+    	}
+
+    	current_block_type_index = select_block_type(ctx);
+    	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+
+    	return {
+    		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			h2 = element("h2");
+    			h2.textContent = "Upcoming Events";
+    			t_1 = space();
+    			if_block.c();
+    			add_location(h2, file$8, 55, 4, 990);
+    			attr(div0, "class", "flex-container-location-select svelte-du9ill");
+    			add_location(div0, file$8, 54, 2, 939);
+    			attr(div1, "class", "container svelte-du9ill");
+    			add_location(div1, file$8, 53, 0, 913);
+    		},
+
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div1, anchor);
+    			append(div1, div0);
+    			append(div0, h2);
+    			append(div0, t_1);
+    			if_blocks[current_block_type_index].m(div0, null);
+    			current = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			var previous_block_index = current_block_type_index;
+    			current_block_type_index = select_block_type(ctx);
+    			if (current_block_type_index === previous_block_index) {
+    				if_blocks[current_block_type_index].p(changed, ctx);
+    			} else {
+    				group_outros();
+    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+    					if_blocks[previous_block_index] = null;
+    				});
+    				check_outros();
+
+    				if_block = if_blocks[current_block_type_index];
+    				if (!if_block) {
+    					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block.c();
+    				}
+    				transition_in(if_block, 1);
+    				if_block.m(div0, null);
+    			}
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div1);
+    			}
+
+    			if_blocks[current_block_type_index].d();
+    		}
+    	};
+    }
+
+    function instance$3($$self, $$props, $$invalidate) {
+    	
+
+      let { events = {
+        loaded: false,
+        data: null
+      } } = $$props;
+
+    	const writable_props = ['events'];
+    	Object.keys($$props).forEach(key => {
+    		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<Melbourne> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$set = $$props => {
+    		if ('events' in $$props) $$invalidate('events', events = $$props.events);
+    	};
+
+    	return { events };
+    }
+
+    class Melbourne extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$3, create_fragment$a, safe_not_equal, ["events"]);
+    	}
+
+    	get events() {
+    		throw new Error("<Melbourne>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set events(value) {
+    		throw new Error("<Melbourne>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/routes/Sydney.svelte generated by Svelte v3.7.1 */
+
+    function create_fragment$b(ctx) {
+    	return {
+    		c: noop,
+
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+
+    		m: noop,
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: noop
+    	};
+    }
+
+    class Sydney extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, null, create_fragment$b, safe_not_equal, []);
+    	}
+    }
+
+    /* src/routes/Brisbane.svelte generated by Svelte v3.7.1 */
+
+    function create_fragment$c(ctx) {
+    	return {
+    		c: noop,
+
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+
+    		m: noop,
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: noop
+    	};
+    }
+
+    class Brisbane extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, null, create_fragment$c, safe_not_equal, []);
+    	}
+    }
+
+    /* src/routes/Events.svelte generated by Svelte v3.7.1 */
+
+    const file$9 = "src/routes/Events.svelte";
+
+    function get_each_context$2(ctx, list, i) {
+    	const child_ctx = Object.create(ctx);
+    	child_ctx.city = list[i];
+    	return child_ctx;
+    }
+
+    // (95:1) {#each cities as city}
+    function create_each_block$2(ctx) {
+    	var button, t_value = ctx.city.name, t;
+
+    	return {
+    		c: function create() {
+    			button = element("button");
+    			t = text(t_value);
+    			attr(button, "class", "tablinks svelte-gokt3s");
+    			attr(button, "onclick", ctx.handleClick);
+    			add_location(button, file$9, 95, 4, 2062);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, button, anchor);
+    			append(button, t);
+    		},
+
+    		p: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(button);
+    			}
+    		}
+    	};
+    }
+
+    function create_fragment$d(ctx) {
+    	var div, t, switch_instance_anchor, current;
+
+    	var each_value = ctx.cities;
+
+    	var each_blocks = [];
+
+    	for (var i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block$2(get_each_context$2(ctx, each_value, i));
+    	}
+
+    	var switch_value = ctx.selected.component;
+
+    	function switch_props(ctx) {
+    		return {
+    			props: { events: ctx.events },
+    			$$inline: true
+    		};
+    	}
+
+    	if (switch_value) {
+    		var switch_instance = new switch_value(switch_props(ctx));
+    	}
+
+    	return {
+    		c: function create() {
+    			div = element("div");
+
+    			for (var i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t = space();
+    			if (switch_instance) switch_instance.$$.fragment.c();
+    			switch_instance_anchor = empty();
+    			attr(div, "class", "tab svelte-gokt3s");
+    			add_location(div, file$9, 93, 0, 2016);
+    		},
+
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div, anchor);
+
+    			for (var i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div, null);
+    			}
+
+    			insert(target, t, anchor);
+
+    			if (switch_instance) {
+    				mount_component(switch_instance, target, anchor);
+    			}
+
+    			insert(target, switch_instance_anchor, anchor);
+    			current = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			if (changed.handleClick || changed.cities) {
+    				each_value = ctx.cities;
+
+    				for (var i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$2(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(changed, child_ctx);
+    					} else {
+    						each_blocks[i] = create_each_block$2(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(div, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+    				each_blocks.length = each_value.length;
+    			}
+
+    			var switch_instance_changes = {};
+    			if (changed.events) switch_instance_changes.events = ctx.events;
+
+    			if (switch_value !== (switch_value = ctx.selected.component)) {
+    				if (switch_instance) {
+    					group_outros();
+    					const old_component = switch_instance;
+    					transition_out(old_component.$$.fragment, 1, 0, () => {
+    						destroy_component(old_component, 1);
+    					});
+    					check_outros();
+    				}
+
+    				if (switch_value) {
+    					switch_instance = new switch_value(switch_props(ctx));
+
+    					switch_instance.$$.fragment.c();
+    					transition_in(switch_instance.$$.fragment, 1);
+    					mount_component(switch_instance, switch_instance_anchor.parentNode, switch_instance_anchor);
+    				} else {
+    					switch_instance = null;
+    				}
+    			}
+
+    			else if (switch_value) {
+    				switch_instance.$set(switch_instance_changes);
+    			}
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			if (switch_instance) transition_in(switch_instance.$$.fragment, local);
+
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			if (switch_instance) transition_out(switch_instance.$$.fragment, local);
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div);
+    			}
+
+    			destroy_each(each_blocks, detaching);
+
+    			if (detaching) {
+    				detach(t);
+    				detach(switch_instance_anchor);
+    			}
+
+    			if (switch_instance) destroy_component(switch_instance, detaching);
+    		}
+    	};
+    }
+
+    function instance$4($$self, $$props, $$invalidate) {
+    	
+
+
+      const cities = [
+    		{ name: 'Melbourne', component: Melbourne   },
+    		{ name: 'Sydney', component: Sydney },
+    		{ name: 'Brisbane',  component: Brisbane },
+    	];
+
+      let selected = cities[0];
+      
+      const handleClick = () => {
+        getEvents();
+      };
+
+      let events = {
+        loaded: false,
+        data: null
+      };
+
+      const getEvents = async () => {
+        switch (selected.name) {
+          case 'Melbourne':
+            await jsonp_1('https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890', null, (err, data) => {
+              if (err) {
+                console.error(err.message);
+              } else {
+                events.data = data.data; $$invalidate('events', events);
+                events.loaded = true; $$invalidate('events', events);
+                console.log('events.data:', events.data);
+              }
+            }); 
+            break;
+          case 'Sydney':
+              console.log('call sydney meetup api request');
+            break;
+          case 'Brisbane':
+              console.log('call brisbane meetup api request');
+            break;
+          default:
+              console.log('this is the default');
+        }
+
+      };
+
+      onMount(getEvents());
+
+    	return { cities, selected, handleClick, events };
+    }
+
+    class Events extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$4, create_fragment$d, safe_not_equal, []);
+    	}
+    }
+
+    /* src/App.svelte generated by Svelte v3.7.1 */
+
+    const file$a = "src/App.svelte";
+
+    function create_fragment$e(ctx) {
+    	var t0, div, t1, current;
 
     	var navbar = new NavBar({ $$inline: true });
 
@@ -4588,9 +5437,12 @@ var app = (function () {
     		c: function create() {
     			navbar.$$.fragment.c();
     			t0 = space();
+    			div = element("div");
     			router.$$.fragment.c();
     			t1 = space();
     			footer.$$.fragment.c();
+    			attr(div, "class", "main svelte-pbvl02");
+    			add_location(div, file$a, 31, 0, 496);
     		},
 
     		l: function claim(nodes) {
@@ -4600,9 +5452,10 @@ var app = (function () {
     		m: function mount(target, anchor) {
     			mount_component(navbar, target, anchor);
     			insert(target, t0, anchor);
-    			mount_component(router, target, anchor);
-    			insert(target, t1, anchor);
-    			mount_component(footer, target, anchor);
+    			insert(target, div, anchor);
+    			mount_component(router, div, null);
+    			append(div, t1);
+    			mount_component(footer, div, null);
     			current = true;
     		},
 
@@ -4635,26 +5488,26 @@ var app = (function () {
 
     			if (detaching) {
     				detach(t0);
+    				detach(div);
     			}
 
-    			destroy_component(router, detaching);
+    			destroy_component(router);
 
-    			if (detaching) {
-    				detach(t1);
-    			}
-
-    			destroy_component(footer, detaching);
+    			destroy_component(footer);
     		}
     	};
     }
 
-    function instance$3($$self) {
+    function instance$5($$self) {
     	
 
     	const routes = {
         '/': Home,
      
-        '/board': Humans, 
+    		'/board': Humans,
+    		
+    		'/events': Events,
+    		
     };
 
     	return { routes };
@@ -4663,7 +5516,7 @@ var app = (function () {
     class App extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$3, create_fragment$a, safe_not_equal, []);
+    		init(this, options, instance$5, create_fragment$e, safe_not_equal, []);
     	}
     }
 

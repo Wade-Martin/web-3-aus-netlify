@@ -1,14 +1,12 @@
 <style>
   .navbar {
-    height: 2rem;
+    height: 60px;
     margin-bottom: 0;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, .05);
     border: none;
     position: fixed;
     top: 0;
-    z-index: 250;
     width: 100%;
-    padding: .74rem 1rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -36,6 +34,7 @@
   <nav>
     <a href="/" use:link class="navbar-brand">Web3 Australia</a>
     <div class="main-nav">
+      <a href="/events" use:link>Events</a>
       <a href="/board" use:link>Humans</a>
     </div>
   </nav>

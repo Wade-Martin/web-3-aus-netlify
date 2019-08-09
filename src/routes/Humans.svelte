@@ -17,6 +17,14 @@
   }
 
   .container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .content-container {
     width: 60%;
     display: flex;
     justify-content: space-between;
@@ -31,9 +39,11 @@
 
 </style>
 
-
 <div class="container">
-  <h1>Committee of Management</h1>
-  <p>The Web3 Australia’s committee of management totals 7 humans and includes academics, entrepreneurs, technologists and software developers.<p>
-  <ProfileGrid />
+  <div class="content-container">
+    <h1>Committee of Management</h1>
+    <p>The Web3 Australia’s committee of management totals 7 humans and includes academics, entrepreneurs, technologists and software developers.<p>
+    <ProfileGrid />
+  </div>
 </div>
+

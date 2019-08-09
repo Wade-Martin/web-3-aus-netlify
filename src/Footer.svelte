@@ -17,8 +17,10 @@
     align-items: flex-end;
   }
 
-
- 
+  .contact {
+    width: 35%;
+    text-align: left;
+  }
 
   .text-right {
     text-align: right;
@@ -27,14 +29,13 @@
 
 <div class="foot-nav">
     <div class="container">
-      <div>
+      <div class="contact">
         <h3>Contact Us</h3>
         <p class="text-right">
-          Send us a message
+          Send us a message<br>
+          <a href="mailto:hello@web3australia.com">hello@web3australia.org</a>
         </p>
-        <a href="mailto:hello@web3australia.com">
-          hello@web3australia.org
-        </a>
+        
       </div>
     </div>
 </div>
