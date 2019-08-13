@@ -36,6 +36,8 @@
     <div class="main-nav">
       <a href="/events" use:link>Events</a>
       <a href="/board" use:link>Humans</a>
+      <a href="/meetups" use:link>Meetups</a>
+      <a href="/Blog" use:link>Blog</a>
     </div>
   </nav>
 </div>

@@ -1,61 +1,9 @@
-<script>
-  import {link} from 'svelte-spa-router';
-  import { onMount } from 'svelte';
-  import axios from 'axios';
-  import jsonp from 'jsonp';
-  import Melbourne from './Melbourne.svelte';
-  import Sydney from './Sydney.svelte';
-  import Brisbane from './Brisbane.svelte';
-
-
-  const cities = [
-		{ name: 'Melbourne', component: Melbourne   },
-		{ name: 'Sydney', component: Sydney },
-		{ name: 'Brisbane',  component: Brisbane },
-	];
-
-  let selected = cities[0];
-  
-  const handleClick = () => {
-    getEvents()
-  }
-
-  let events = {
-    loaded: false,
-    data: null
-  }
-
-  const getEvents = async () => {
-    switch (selected.name) {
-      case 'Melbourne':
-        await jsonp('https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890', null, (err, data) => {
-          if (err) {
-            console.error(err.message);
-          } else {
-            events.data = data.data;
-            events.loaded = true;
-            console.log('events.data:', events.data)
-          }
-        }); 
-        break;
-      case 'Sydney':
-          console.log('call sydney meetup api request')
-        break;
-      case 'Brisbane':
-          console.log('call brisbane meetup api request')
-        break;
-      default:
-          console.log('this is the default')
-    }
-
-  };
-
-  onMount(getEvents())
-
-</script>
-
 <style>
   .tab {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     overflow: hidden;
     border: 1px solid #ccc;
     background-color: #f1f1f1;
@@ -82,19 +30,86 @@
     background-color: #ccc;
   }
 
-/* Style the tab content */
-  .tabcontent {
-    display: none;
-    padding: 6px 12px;
-    border: 1px solid #ccc;
-    border-top: none;
-  }
 </style>
+
+<script>
+  import jsonp from 'jsonp';
+  import Melbourne from './Melbourne.svelte';
+  import Sydney from './Sydney.svelte';
+  import Brisbane from './Brisbane.svelte';
+  import { onMount } from 'svelte';
+  
+  const cities = [
+		{ name: 'Melbourne', component: Melbourne },
+		{ name: 'Sydney', component: Sydney },
+		{ name: 'Brisbane',  component: Brisbane }
+  ];
+
+  let events = {
+    loaded: false,
+    data: null
+  };
+  
+  let selected;
+
+  const handleClick = (event) => {
+    console.log('handling click')
+    getMeetups(event)
+  };
+
+  onMount(async () => {
+    selected = cities[0]
+    await jsonp('https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890', null, (err, data) => {
+      if (err) {
+        console.error(err.message);
+      } else {
+        events.data = data.data;
+        events.loaded = true;
+        console.log('events.data:', events.data)
+      }
+    }); 
+  });
+  
+  const getMeetups = async (event) => {
+    console.log('getting meetups')
+    events.loaded = false;
+    events.data = null;
+    let city = event.target.id;
+    switch (city) {
+      case 'Melbourne':
+        await jsonp('https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890', null, (err, data) => {
+          if (err) {
+            console.error(err.message);
+          } else {
+            selected = cities[0];
+            events.data = data.data;
+            events.loaded = true;
+            console.log('events.data:', events.data)
+          }
+        }); 
+        break;
+      case 'Sydney':
+          selected = cities[1];
+          console.log('call sydney meetup api request')
+        break;
+      case 'Brisbane':
+          selected = cities[2];
+          console.log('call brisbane meetup api request')
+        break;
+      default:
+          console.log('this is the default')
+    }
+  };
+</script>
 
 <div class="tab">
 	{#each cities as city}
-    <button class="tablinks" onclick={handleClick}>{city.name}</button>
+    <button class="tablinks" id="{city.name}" on:click={handleClick}> Meetups in {city.name} </button>
 	{/each}
 </div>
 
-<svelte:component this={selected.component} events={events}/>
+{#if !events.loaded}
+  <p>...fetching events</p>
+{:else}
+  <svelte:component this={selected.component} events={events.data}/>
+{/if}

@@ -1,20 +1,15 @@
 <script>
   import {link} from 'svelte-spa-router'
-  import axios from 'axios';
   import jsonp from 'jsonp';
   import EventCard from './EventCard.svelte'
 
-  export let events = {
-    loaded: false,
-    data: null
-  };
-
+  export let events;
 
 </script>
 
 <style>
   .container {
-    font-family: 'Space Mono', monospace;;
+    font-family: 'Space Mono', monospace;
     width: 100%;
     padding: .74rem 1rem;
     display: flex;
@@ -53,15 +48,10 @@
 
 <div class="container">
   <div class="flex-container-location-select">  
-    <h2>Upcoming Events</h2>
-    {#if !events.loaded}
-      <p>Loading...</p>
-    {:else}
-      <div class="flex-events">
-	      {#each events.data as event }
-		      <EventCard {...event}/>
-	      {/each}
-      </div>
-    {/if}
+    <div class="flex-events">
+	    {#each events as event }
+		    <EventCard event={event} />
+	    {/each}
+    </div>
   </div>
 </div>

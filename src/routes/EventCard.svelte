@@ -15,21 +15,22 @@
 </style>
 
 <script>
-  export let name;
-  export let group;
-  export let link;
-  export let local_date;
-  export let local_time;
-  export let venue;
-  export let how_to_find_us; 
+  import { onMount } from 'svelte';
+  export let event;
+
+  onMount(() => {
+    console.log(event)
+  })
+
 </script>
 
 <div class="event-card">
   <div>
     <h2 class="day">01</h2>
     <p>January</p >
-    <h3><a href={link}>{name}</a></h3>
+    <h3><a href={event.link}>{event.name}</a></h3>
     <p>18:00 - 21:00</p>
-    <p>@ {venue.name}</p>
+    <p>@ {event.venue.name}</p>
+    <p></p>
   </div>
 </div>

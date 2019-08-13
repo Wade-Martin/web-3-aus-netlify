@@ -1,131 +1,69 @@
+<script>
+  import { onMount } from 'svelte';
+  import { slide, fade } from 'svelte/transition';
+  import {link} from 'svelte-spa-router';
+  import jsonp from 'jsonp';
+  
+
+	let events = [];
+
+	onMount(async () => {
+    await jsonp('https://api.meetup.com/Ethereum-Melbourne/events?page=5&sig_id=225203890', null, (err, data) => {
+      if (err) {
+        console.error(err.message);
+      } else {
+        events = data.data;
+        console.log('events:', events)
+      }
+    });
+  });
+</script>
+
 <style>
-  .container {
-    font-family: 'Space Mono', monospace;;
-    width: 100%;
-    padding: .74rem 1rem;
+	.container {
+    font-family: 'Space Mono', monospace;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
   }
+  
+  .events {
+		width: 85%;
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		grid-gap: 8px;
+	}
 
-  .flex-container {
-    width: 60%;
+	.event-box {
+		width: 100%;
+    border: 1px solid black;
+    border-radius: 7.5px;
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    align-items: center;
-    flex-direction: column;
-   }
+    background: rgb(234, 234, 243);
+	}
 
-   .flex-container-location-select {
-    width: 60%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-   }
-
-   .selectLocation {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: space-evenly; 
-  }
-
-  .flex-events {
-    display: flex;
-    flex-wrap: wrap;
+  .large {
+    font-size: 72px;
   }
 </style>
 
-<script>
-  import {link} from 'svelte-spa-router'
-  import axios from 'axios';
-  import jsonp from 'jsonp';
-  import EventCard from './EventCard.svelte'
-
-  let events = {
-    loaded: false,
-    data: null
-  }
-
-	let locations = [
-    { id: 'Select Your City'},
-		{ id: 'Melbourne'},
-		{ id: 'Sydney'},
-		{ id: 'Brisbane'}
-	];
-
-	let selected;
-
-  const getEvents = async () => {
-    switch (selected) {
-      case 'Melbourne':
-        await jsonp('https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890', null, (err, data) => {
-          if (err) {
-            console.error(err.message);
-          } else {
-            events.data = data.data;
-            events.loaded = true;
-            console.log('events.data:', events.data)
-          }
-        }); 
-        break;
-      case 'Sydney':
-          console.log('call sydney meetup api request')
-        break;
-      case 'Brisbane':
-          console.log('call brisbane meetup api request')
-        break;
-      default:
-          console.log('this is the default')
-    }
-  };
-
-   const getSydEvents = async () => {
-    // events = await axios.get('https://api.meetup.com/Web3-Melbourne/events?key=' + process.env.MEETUP_API_KEY + '&sign=true&page=6');
-  }
-  
-   const getBrisEvents = async () => {
-    // events = await axios.get('https://api.meetup.com/Web3-Melbourne/events?key=' + process.env.MEETUP_API_KEY + '&sign=true&page=6');
-  }
-</script>
-
-
-
-    
-{#if !events.loaded}
-  <div class="container">
-    <div class="flex-container-location-select">  
-      <h2>Upcoming Events</h2>
-      <div class="selectLocation">
-        <select bind:value={selected} on:change="{getEvents}">
-		      {#each locations as location}
-			      <option value={location.id}>
-				      {location.id}
-			      </option>
-		      {/each}
-        </select> 
-      </div>
-    </div>
+<div class="container">
+  <h1>Upcoming Events</h1>
+  <div class="events">
+	  {#each events as event, i}
+		  <div transition:slide|local class="event-box">
+		  	<h2>01</h2>
+        <p>January</p >
+        <h3><a href={event.link}>{event.name}</a></h3>
+        <p>18:00 - 21:00</p>
+        <p>@ {event.venue.name}</p>
+		  </div>
+	  {:else}
+	  	<h2 out:fade >Loading...</h2>
+	  {/each}
   </div>
-{:else}
-  <div class="container">
-    <div class="flex-container-location-select">
-      <h2>Upcoming Events</h2>
-      <div class="selectLocation">
-        <select bind:value={selected} on:change="{getEvents}">
-		      {#each locations as location}
-			      <option value={location.id}>
-				      {location.id}
-			      </option>
-		      {/each}
-        </select>  
-      </div>
-    </div>
-    <div class="flex-events">
-	    {#each events.data as event }
-		    <EventCard {...event}/>
-	    {/each}
-    </div>
-  </div>
-{/if}
+</div>

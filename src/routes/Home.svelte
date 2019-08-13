@@ -10,4 +10,3 @@
 
 <Logo />
 <LandingText />
-<Meetups />
