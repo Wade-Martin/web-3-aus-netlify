@@ -314,57 +314,63 @@ var app = (function () {
         }
     }
     const null_transition = { duration: 0 };
-    function create_out_transition(node, fn, params) {
+    function create_in_transition(node, fn, params) {
         let config = fn(node, params);
-        let running = true;
+        let running = false;
         let animation_name;
-        const group = outros;
-        group.r += 1;
+        let task;
+        let uid = 0;
+        function cleanup() {
+            if (animation_name)
+                delete_rule(node, animation_name);
+        }
         function go() {
             const { delay = 0, duration = 300, easing = identity, tick = noop, css } = config || null_transition;
             if (css)
-                animation_name = create_rule(node, 1, 0, duration, delay, easing, css);
+                animation_name = create_rule(node, 0, 1, duration, delay, easing, css, uid++);
+            tick(0, 1);
             const start_time = now() + delay;
             const end_time = start_time + duration;
-            add_render_callback(() => dispatch(node, false, 'start'));
-            loop(now => {
+            if (task)
+                task.abort();
+            running = true;
+            add_render_callback(() => dispatch(node, true, 'start'));
+            task = loop(now => {
                 if (running) {
                     if (now >= end_time) {
-                        tick(0, 1);
-                        dispatch(node, false, 'end');
-                        if (!--group.r) {
-                            // this will result in `end()` being called,
-                            // so we don't need to clean up here
-                            run_all(group.c);
-                        }
-                        return false;
+                        tick(1, 0);
+                        dispatch(node, true, 'end');
+                        cleanup();
+                        return running = false;
                     }
                     if (now >= start_time) {
                         const t = easing((now - start_time) / duration);
-                        tick(1 - t, t);
+                        tick(t, 1 - t);
                     }
                 }
                 return running;
             });
         }
-        if (is_function(config)) {
-            wait().then(() => {
-                // @ts-ignore
-                config = config();
-                go();
-            });
-        }
-        else {
-            go();
-        }
+        let started = false;
         return {
-            end(reset) {
-                if (reset && config.tick) {
-                    config.tick(1, 0);
+            start() {
+                if (started)
+                    return;
+                delete_rule(node);
+                if (is_function(config)) {
+                    config = config();
+                    wait().then(go);
                 }
+                else {
+                    go();
+                }
+            },
+            invalidate() {
+                started = false;
+            },
+            end() {
                 if (running) {
-                    if (animation_name)
-                        delete_rule(node, animation_name);
+                    cleanup();
                     running = false;
                 }
             }
@@ -1138,16 +1144,16 @@ var app = (function () {
     const file = "src/NavBar.svelte";
 
     function create_fragment$1(ctx) {
-    	var div1, nav, a0, link_action, t1, div0, a1, link_action_1, t3, a2, link_action_2, t5, a3, link_action_3, t7, a4, link_action_4;
+    	var nav, h3, a0, link_action, t1, div, a1, link_action_1, t3, a2, link_action_2, t5, a3, link_action_3;
 
     	return {
     		c: function create() {
-    			div1 = element("div");
     			nav = element("nav");
+    			h3 = element("h3");
     			a0 = element("a");
     			a0.textContent = "Web3 Australia";
     			t1 = space();
-    			div0 = element("div");
+    			div = element("div");
     			a1 = element("a");
     			a1.textContent = "Events";
     			t3 = space();
@@ -1155,31 +1161,25 @@ var app = (function () {
     			a2.textContent = "Humans";
     			t5 = space();
     			a3 = element("a");
-    			a3.textContent = "Meetups";
-    			t7 = space();
-    			a4 = element("a");
-    			a4.textContent = "Blog";
+    			a3.textContent = "Blog";
     			attr(a0, "href", "/");
-    			attr(a0, "class", "navbar-brand svelte-1op86hv");
-    			add_location(a0, file, 34, 4, 595);
+    			attr(a0, "class", "svelte-68dx9x");
+    			add_location(a0, file, 18, 28, 305);
+    			attr(h3, "class", "w-25 grow ml6");
+    			add_location(h3, file, 18, 2, 279);
+    			attr(a1, "class", "dim svelte-68dx9x");
     			attr(a1, "href", "/events");
-    			attr(a1, "class", "svelte-1op86hv");
-    			add_location(a1, file, 36, 6, 689);
+    			add_location(a1, file, 20, 4, 393);
+    			attr(a2, "class", "dim svelte-68dx9x");
     			attr(a2, "href", "/board");
-    			attr(a2, "class", "svelte-1op86hv");
-    			add_location(a2, file, 37, 6, 733);
-    			attr(a3, "href", "/meetups");
-    			attr(a3, "class", "svelte-1op86hv");
-    			add_location(a3, file, 38, 6, 776);
-    			attr(a4, "href", "/Blog");
-    			attr(a4, "class", "svelte-1op86hv");
-    			add_location(a4, file, 39, 6, 822);
-    			attr(div0, "class", "main-nav");
-    			add_location(div0, file, 35, 4, 660);
-    			attr(nav, "class", "svelte-1op86hv");
-    			add_location(nav, file, 33, 2, 585);
-    			attr(div1, "class", "navbar svelte-1op86hv");
-    			add_location(div1, file, 32, 0, 562);
+    			add_location(a2, file, 21, 4, 447);
+    			attr(a3, "class", "dim svelte-68dx9x");
+    			attr(a3, "href", "/Blog");
+    			add_location(a3, file, 22, 4, 500);
+    			attr(div, "class", "flex-auto w-75 tr mr6");
+    			add_location(div, file, 19, 2, 353);
+    			attr(nav, "class", "top-0 fixed w-100 bg-white flex items-center svelte-68dx9x");
+    			add_location(nav, file, 17, 0, 218);
     		},
 
     		l: function claim(nodes) {
@@ -1187,23 +1187,20 @@ var app = (function () {
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, div1, anchor);
-    			append(div1, nav);
-    			append(nav, a0);
+    			insert(target, nav, anchor);
+    			append(nav, h3);
+    			append(h3, a0);
     			link_action = link.call(null, a0) || {};
     			append(nav, t1);
-    			append(nav, div0);
-    			append(div0, a1);
+    			append(nav, div);
+    			append(div, a1);
     			link_action_1 = link.call(null, a1) || {};
-    			append(div0, t3);
-    			append(div0, a2);
+    			append(div, t3);
+    			append(div, a2);
     			link_action_2 = link.call(null, a2) || {};
-    			append(div0, t5);
-    			append(div0, a3);
+    			append(div, t5);
+    			append(div, a3);
     			link_action_3 = link.call(null, a3) || {};
-    			append(div0, t7);
-    			append(div0, a4);
-    			link_action_4 = link.call(null, a4) || {};
     		},
 
     		p: noop,
@@ -1212,14 +1209,13 @@ var app = (function () {
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(div1);
+    				detach(nav);
     			}
 
     			if (link_action && typeof link_action.destroy === 'function') link_action.destroy();
     			if (link_action_1 && typeof link_action_1.destroy === 'function') link_action_1.destroy();
     			if (link_action_2 && typeof link_action_2.destroy === 'function') link_action_2.destroy();
     			if (link_action_3 && typeof link_action_3.destroy === 'function') link_action_3.destroy();
-    			if (link_action_4 && typeof link_action_4.destroy === 'function') link_action_4.destroy();
     		}
     	};
     }
@@ -1236,15 +1232,14 @@ var app = (function () {
     const file$1 = "src/Footer.svelte";
 
     function create_fragment$2(ctx) {
-    	var div2, div1, div0, h3, t1, p, t2, br, t3, a;
+    	var footer, div, h4, t1, p, t2, br, t3, a;
 
     	return {
     		c: function create() {
-    			div2 = element("div");
-    			div1 = element("div");
-    			div0 = element("div");
-    			h3 = element("h3");
-    			h3.textContent = "Contact Us";
+    			footer = element("footer");
+    			div = element("div");
+    			h4 = element("h4");
+    			h4.textContent = "Contact Us";
     			t1 = space();
     			p = element("p");
     			t2 = text$1("Send us a message");
@@ -1252,18 +1247,15 @@ var app = (function () {
     			t3 = space();
     			a = element("a");
     			a.textContent = "hello@web3australia.org";
-    			add_location(h3, file$1, 32, 8, 593);
-    			add_location(br, file$1, 34, 27, 671);
+    			add_location(h4, file$1, 10, 6, 259);
+    			add_location(br, file$1, 12, 25, 314);
     			attr(a, "href", "mailto:hello@web3australia.com");
-    			add_location(a, file$1, 35, 10, 686);
-    			attr(p, "class", "text-right svelte-1qyqpim");
-    			add_location(p, file$1, 33, 8, 621);
-    			attr(div0, "class", "contact svelte-1qyqpim");
-    			add_location(div0, file$1, 31, 6, 563);
-    			attr(div1, "class", "container svelte-1qyqpim");
-    			add_location(div1, file$1, 30, 4, 533);
-    			attr(div2, "class", "foot-nav svelte-1qyqpim");
-    			add_location(div2, file$1, 29, 0, 506);
+    			add_location(a, file$1, 13, 8, 327);
+    			add_location(p, file$1, 11, 6, 285);
+    			attr(div, "class", "ml6");
+    			add_location(div, file$1, 9, 4, 235);
+    			attr(footer, "class", "w-100 bottom-0 flex bg-white svelte-1qbfbsc");
+    			add_location(footer, file$1, 8, 0, 185);
     		},
 
     		l: function claim(nodes) {
@@ -1271,12 +1263,11 @@ var app = (function () {
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, div2, anchor);
-    			append(div2, div1);
-    			append(div1, div0);
-    			append(div0, h3);
-    			append(div0, t1);
-    			append(div0, p);
+    			insert(target, footer, anchor);
+    			append(footer, div);
+    			append(div, h4);
+    			append(div, t1);
+    			append(div, p);
     			append(p, t2);
     			append(p, br);
     			append(p, t3);
@@ -1289,7 +1280,7 @@ var app = (function () {
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(div2);
+    				detach(footer);
     			}
     		}
     	};
@@ -1302,43 +1293,1000 @@ var app = (function () {
     	}
     }
 
+    function cubicInOut(t) {
+        return t < 0.5 ? 4.0 * t * t * t : 0.5 * Math.pow(2.0 * t - 2.0, 3.0) + 1.0;
+    }
     function cubicOut(t) {
         const f = t - 1.0;
         return f * f * f + 1.0;
     }
-
-    function fade(node, { delay = 0, duration = 400 }) {
-        const o = +getComputedStyle(node).opacity;
-        return {
-            delay,
-            duration,
-            css: t => `opacity: ${t * o}`
-        };
+    function quintOut(t) {
+        return --t * t * t * t * t + 1;
     }
-    function slide(node, { delay = 0, duration = 400, easing = cubicOut }) {
+
+    function fly(node, { delay = 0, duration = 400, easing = cubicOut, x = 0, y = 0, opacity = 0 }) {
         const style = getComputedStyle(node);
-        const opacity = +style.opacity;
-        const height = parseFloat(style.height);
-        const padding_top = parseFloat(style.paddingTop);
-        const padding_bottom = parseFloat(style.paddingBottom);
-        const margin_top = parseFloat(style.marginTop);
-        const margin_bottom = parseFloat(style.marginBottom);
-        const border_top_width = parseFloat(style.borderTopWidth);
-        const border_bottom_width = parseFloat(style.borderBottomWidth);
+        const target_opacity = +style.opacity;
+        const transform = style.transform === 'none' ? '' : style.transform;
+        const od = target_opacity * (1 - opacity);
         return {
             delay,
             duration,
             easing,
-            css: t => `overflow: hidden;` +
-                `opacity: ${Math.min(t * 20, 1) * opacity};` +
-                `height: ${t * height}px;` +
-                `padding-top: ${t * padding_top}px;` +
-                `padding-bottom: ${t * padding_bottom}px;` +
-                `margin-top: ${t * margin_top}px;` +
-                `margin-bottom: ${t * margin_bottom}px;` +
-                `border-top-width: ${t * border_top_width}px;` +
-                `border-bottom-width: ${t * border_bottom_width}px;`
+            css: (t, u) => `
+			transform: ${transform} translate(${(1 - t) * x}px, ${(1 - t) * y}px);
+			opacity: ${target_opacity - (od * u)}`
         };
+    }
+    function draw(node, { delay = 0, speed, duration, easing = cubicInOut }) {
+        const len = node.getTotalLength();
+        if (duration === undefined) {
+            if (speed === undefined) {
+                duration = 800;
+            }
+            else {
+                duration = len / speed;
+            }
+        }
+        else if (typeof duration === 'function') {
+            duration = duration(len);
+        }
+        return {
+            delay,
+            duration,
+            easing,
+            css: (t, u) => `stroke-dasharray: ${t * len} ${u * len}`
+        };
+    }
+
+    /* src/routes/LandingPage.svelte generated by Svelte v3.7.1 */
+
+    const file$2 = "src/routes/LandingPage.svelte";
+
+    // (31:2) {#if visible}
+    function create_if_block(ctx) {
+    	var svg, defs, clipPath0, path0, clipPath1, path1, g4, g3, g0, path2, path2_intro, path3, path3_intro, path4, path4_intro, path5, path5_intro, g1, path6, path6_intro, path7, path7_intro, path8, path8_intro, path9, path9_intro, path10, path10_intro, path11, path11_intro, g2, path12, path12_intro, path13, path13_intro, path14, path14_intro, path15, path15_intro, path16, path16_intro, path17, path17_intro, path18, path18_intro, path19, path19_intro, path20, path20_intro, path21, path21_intro, path22, path22_intro, path23, path23_intro;
+
+    	return {
+    		c: function create() {
+    			svg = svg_element("svg");
+    			defs = svg_element("defs");
+    			clipPath0 = svg_element("clipPath");
+    			path0 = svg_element("path");
+    			clipPath1 = svg_element("clipPath");
+    			path1 = svg_element("path");
+    			g4 = svg_element("g");
+    			g3 = svg_element("g");
+    			g0 = svg_element("g");
+    			path2 = svg_element("path");
+    			path3 = svg_element("path");
+    			path4 = svg_element("path");
+    			path5 = svg_element("path");
+    			g1 = svg_element("g");
+    			path6 = svg_element("path");
+    			path7 = svg_element("path");
+    			path8 = svg_element("path");
+    			path9 = svg_element("path");
+    			path10 = svg_element("path");
+    			path11 = svg_element("path");
+    			g2 = svg_element("g");
+    			path12 = svg_element("path");
+    			path13 = svg_element("path");
+    			path14 = svg_element("path");
+    			path15 = svg_element("path");
+    			path16 = svg_element("path");
+    			path17 = svg_element("path");
+    			path18 = svg_element("path");
+    			path19 = svg_element("path");
+    			path20 = svg_element("path");
+    			path21 = svg_element("path");
+    			path22 = svg_element("path");
+    			path23 = svg_element("path");
+    			attr(path0, "d", "M0 0h1920v1080H0z");
+    			add_location(path0, file$2, 34, 10, 645);
+    			attr(clipPath0, "id", "a");
+    			add_location(clipPath0, file$2, 33, 8, 617);
+    			attr(path1, "d", "M0 0h1920v1080H0z");
+    			add_location(path1, file$2, 37, 10, 731);
+    			attr(clipPath1, "id", "b");
+    			add_location(clipPath1, file$2, 36, 8, 703);
+    			add_location(defs, file$2, 32, 6, 602);
+    			attr(path2, "fill", "none");
+    			attr(path2, "stroke", "#070506");
+    			attr(path2, "stroke-miterlimit", "10");
+    			attr(path2, "d", "M1195.26293945 218.46099854l57.26599884     278.16699218-57.26599884 278.16699219");
+    			add_location(path2, file$2, 43, 12, 916);
+    			attr(path3, "fill", "none");
+    			attr(path3, "stroke", "#070506");
+    			attr(path3, "stroke-miterlimit", "10");
+    			attr(path3, "d", "M1195.26293945 218.46099854l41.62599945     279.18299222-41.62599945 277.15099215");
+    			add_location(path3, file$2, 44, 12, 1103);
+    			attr(path4, "fill", "none");
+    			attr(path4, "stroke", "#070506");
+    			attr(path4, "stroke-miterlimit", "10");
+    			attr(path4, "d", "M1195.26293945 218.46099854l25.98600006     280.19899225-25.98600006 276.13499212");
+    			add_location(path4, file$2, 45, 12, 1290);
+    			attr(path5, "fill", "none");
+    			attr(path5, "stroke", "#070506");
+    			attr(path5, "stroke-miterlimit", "10");
+    			attr(path5, "d", "M1195.26293945 218.46099854l10.34599972     281.21499228-10.34599972 275.11899209");
+    			add_location(path5, file$2, 46, 12, 1477);
+    			attr(g0, "display", "block");
+    			add_location(g0, file$2, 42, 10, 884);
+    			attr(path6, "fill", "none");
+    			attr(path6, "stroke", "#070506");
+    			attr(path6, "stroke-miterlimit", "10");
+    			attr(path6, "d", "M724.71299744 852.57098389l-79.44999695-226.38799286    79.07499695-324.69599152");
+    			add_location(path6, file$2, 49, 12, 1709);
+    			attr(path7, "fill", "none");
+    			attr(path7, "stroke", "#070506");
+    			attr(path7, "stroke-miterlimit", "10");
+    			attr(path7, "d", "M724.71300125 852.57098389L658.9109993    616.40699005l65.55200195-315.23200226");
+    			add_location(path7, file$2, 50, 12, 1895);
+    			attr(path8, "fill", "none");
+    			attr(path8, "stroke", "#070506");
+    			attr(path8, "stroke-miterlimit", "10");
+    			attr(path8, "d", "M724.71300125 852.57098389l-52.15200043-245.939991    51.96500016-305.51899338");
+    			add_location(path8, file$2, 51, 12, 2080);
+    			attr(path9, "fill", "none");
+    			attr(path9, "stroke", "#070506");
+    			attr(path9, "stroke-miterlimit", "10");
+    			attr(path9, "d", "M724.71300316 852.57098389l-38.50400162-255.71699143    38.25400162-295.61699295");
+    			add_location(path9, file$2, 52, 12, 2264);
+    			attr(path10, "fill", "none");
+    			attr(path10, "stroke", "#070506");
+    			attr(path10, "stroke-miterlimit", "10");
+    			attr(path10, "d", "M724.94700432 852.70199585l-24.8540001-265.491992     24.2290001-285.71699238");
+    			add_location(path10, file$2, 53, 12, 2450);
+    			attr(path11, "fill", "none");
+    			attr(path11, "stroke", "#070506");
+    			attr(path11, "stroke-miterlimit", "10");
+    			attr(path11, "d", "M724.71300077 852.57098389L713.50700045     577.3019917l10.70600032-275.56499219");
+    			add_location(path11, file$2, 54, 12, 2633);
+    			attr(g1, "display", "block");
+    			add_location(g1, file$2, 48, 10, 1677);
+    			attr(path12, "fill", "none");
+    			attr(path12, "stroke", "#070506");
+    			attr(path12, "stroke-miterlimit", "10");
+    			attr(path12, "d", "M888.685997     551.78199387c-40.413002-29.35100174-75.8880081-55.11500168-75.8880081-55.11500168l191.50300597-139.08399964L1195.80400085     218.5v556.33398438l-191.50300598-139.08399964s-62.13199997-45.12499237-115.61499786-83.96799087");
+    			add_location(path12, file$2, 57, 12, 2864);
+    			attr(path13, "fill", "none");
+    			attr(path13, "stroke", "#070506");
+    			attr(path13, "stroke-miterlimit", "10");
+    			attr(path13, "d", "M912.33499908 400.83200073c28.6739998-11.9449997    82.09999848-34.20199585 82.09999848-34.20199585l180.03999328-116.50100708 11.4630127 255.58400294-9.47801208    255.07299474-182.0249939-115.98999023-99.8050003-41.57700348-91.69800568-97.50600103 91.69800567-97.50500056s7.1870041-2.99399566    17.70500183-7.37599945");
+    			add_location(path13, file$2, 58, 12, 3207);
+    			attr(path14, "fill", "none");
+    			attr(path14, "stroke", "#070506");
+    			attr(path14, "stroke-miterlimit", "10");
+    			attr(path14, "d", "M900.52199554 390.02400208c32.94099808-5.62399292     84.04699762-14.34899903 84.04699762-14.34899903l168.57799476-93.91700744 22.92401123 233.00000757-22.75500489     231.27899938-168.7470011-92.19499206-111.26699884-18.99501038-80.23600006-120.08899694 80.23600006-120.08699793s11.55599976-1.97299957    27.22000122-4.64700317");
+    			add_location(path14, file$2, 59, 12, 3632);
+    			attr(path15, "fill", "none");
+    			attr(path15, "stroke", "#070506");
+    			attr(path15, "stroke-miterlimit", "10");
+    			attr(path15, "d", "M891.50299835 382.29500037c35.87499619 1.04800415     83.1979975 2.43099975 83.1979975 2.43099975l157.1160055-71.33399963 34.3869934 210.41699927-34.3869934    210.42000634-157.1160055-71.33601379-122.72900336 3.5880127-68.77300262-142.67200525 68.77300262-142.66899817s17.63300324.51499939 39.53100586    1.15499878");
+    			add_location(path15, file$2, 60, 12, 4066);
+    			attr(path16, "fill", "none");
+    			attr(path16, "stroke", "#070506");
+    			attr(path16, "stroke-miterlimit", "10");
+    			attr(path16, "d", "M884.16400146 378.03599548c37.39899827 7.29299927     80.67099708 15.73199463 80.67099708 15.73199463l145.6529928-48.75300598 45.8500061 187.83600562-45.8500061    187.83800561-145.6529928-48.75401306-134.19100135 26.17100525-57.31100464-165.2549978 57.31100464-165.25200599s25.05899811 4.88700867   53.52000427  10.43701172");
+    			add_location(path16, file$2, 61, 12, 4488);
+    			attr(path17, "fill", "none");
+    			attr(path17, "stroke", "#070506");
+    			attr(path17, "stroke-miterlimit", "10");
+    			attr(path17, "d", "M877.0289917 376.72698975c38.03500366 12.7310028    77.94000244 26.08799743 77.94000244 26.08799743l134.19099426-26.16900635 57.31201172 165.25200599-57.31201172   165.2549978-134.19099426-26.17100525-145.65400696 48.75401306-45.84899902-187.83800561 45.84899902-187.83600562s33.08200836 11.07299805    67.71400452 22.66500855");
+    			add_location(path17, file$2, 62, 12, 4918);
+    			attr(path18, "fill", "none");
+    			attr(path18, "stroke", "#070506");
+    			attr(path18, "stroke-miterlimit", "10");
+    			attr(path18, "d", "M869.3160019 377.4520111c38.33300399 17.40499879    75.7860031 34.45000367 75.7860031 34.45000367l122.72899628-3.58700561 68.77300263 142.66999816-68.77300263    142.67199707-122.72899628-3.58799743-157.11599731 71.33599853-34.38600159-210.41999817 34.38600159-210.41900634s41.14899445 18.68301391  81.3299942  36.92601013");
+    			add_location(path18, file$2, 63, 12, 5350);
+    			attr(path19, "fill", "none");
+    			attr(path19, "stroke", "#070506");
+    			attr(path19, "stroke-miterlimit", "10");
+    			attr(path19, "d", "M860.6210022 379.33799744c38.68499756 21.55200195     74.61499841 41.56900024 74.61499841 41.56900024l111.26699774 18.9960022 80.23500824 120.08799743-80.23500824 120.08799744-111.26699774    18.9960022-168.57799585 93.91799927-22.92500305-233.0019989 22.92500305-233.0019989s48.85399628 27.21800231 93.96299744 52.34899902");
+    			add_location(path19, file$2, 64, 12, 5778);
+    			attr(path20, "fill", "none");
+    			attr(path20, "stroke", "#070506");
+    			attr(path20, "stroke-miterlimit", "10");
+    			attr(path20, "d", "M850.73999786 381.66299438c39.33499909 25.45199585    74.62899726 48.2899933 74.62899726 48.2899933l99.80500085 41.57800292 91.69799805 97.5049967-91.69799805 97.5069967-99.80500085   41.57699586-180.04100745 116.50201416-11.46099853-255.58600672 11.46099853-255.58299963s55.90700531 36.17599487 105.4120102 68.25000671");
+    			add_location(path20, file$2, 65, 12, 6207);
+    			attr(path21, "fill", "none");
+    			attr(path21, "stroke", "#070506");
+    			attr(path21, "stroke-miterlimit", "10");
+    			attr(path21, "d", "M1031.1190033 522.96901321c40.41200256 29.35100174    75.88700866 55.11500168 75.88700866 55.11500168L915.50300598 717.16700745 724 856.25100708V578.08401489 299.91702271l191.50300598   139.08299255s62.13199997 45.125 115.61599732 83.96899795M1130.86299706     817.42898178c-3.67100144-6.06900024-6.21500206-10.27400017-6.21500206-10.27400017h65.63400268l-32.81700134    54.25400162s-17.08799935-28.25000083-26.60199928-43.98000145");
+    			add_location(path21, file$2, 66, 12, 6632);
+    			attr(path22, "fill", "none");
+    			attr(path22, "stroke", "#070506");
+    			attr(path22, "stroke-miterlimit", "10");
+    			attr(path22, "d", "M1128.74299622    809.6359849c-2.49399949-1.51500016-4.09500122-2.48500043-4.09500122-2.48500043m65.63400268 0l-32.81600134   19.88400078s-19.92199953-12.07500034-28.72300012-17.40300035");
+    			add_location(path22, file$2, 67, 12, 7169);
+    			attr(path23, "fill", "none");
+    			attr(path23, "stroke", "#070506");
+    			attr(path23, "stroke-miterlimit", "10");
+    			attr(path23, "d", "M1128.74299622    812.15501213c-2.49399949-3.04599953-4.09500122-5-4.09500122-5m65.63400268 0l-32.81600134    40.06399918s-19.92199953-24.32099963-28.72300012-35.06399918");
+    			add_location(path23, file$2, 68, 12, 7461);
+    			attr(g2, "display", "block");
+    			add_location(g2, file$2, 56, 10, 2832);
+    			attr(g3, "clip-path", "url(#b)");
+    			attr(g3, "display", "block");
+    			add_location(g3, file$2, 41, 8, 833);
+    			attr(g4, "clip-path", "url(#a)");
+    			add_location(g4, file$2, 40, 6, 801);
+    			attr(svg, "class", "absolute o-50 svelte-iap7jv");
+    			attr(svg, "width", "100%");
+    			attr(svg, "height", "100%");
+    			attr(svg, "xmlns", "http://www.w3.org/2000/svg");
+    			attr(svg, "viewBox", "0 0 1920 1080");
+    			attr(svg, "preserveAspectRatio", "xMidYMid meet");
+    			add_location(svg, file$2, 31, 4, 445);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, svg, anchor);
+    			append(svg, defs);
+    			append(defs, clipPath0);
+    			append(clipPath0, path0);
+    			append(defs, clipPath1);
+    			append(clipPath1, path1);
+    			append(svg, g4);
+    			append(g4, g3);
+    			append(g3, g0);
+    			append(g0, path2);
+    			append(g0, path3);
+    			append(g0, path4);
+    			append(g0, path5);
+    			append(g3, g1);
+    			append(g1, path6);
+    			append(g1, path7);
+    			append(g1, path8);
+    			append(g1, path9);
+    			append(g1, path10);
+    			append(g1, path11);
+    			append(g3, g2);
+    			append(g2, path12);
+    			append(g2, path13);
+    			append(g2, path14);
+    			append(g2, path15);
+    			append(g2, path16);
+    			append(g2, path17);
+    			append(g2, path18);
+    			append(g2, path19);
+    			append(g2, path20);
+    			append(g2, path21);
+    			append(g2, path22);
+    			append(g2, path23);
+    		},
+
+    		i: function intro(local) {
+    			if (!path2_intro) {
+    				add_render_callback(() => {
+    					path2_intro = create_in_transition(path2, draw, {duration: 5000});
+    					path2_intro.start();
+    				});
+    			}
+
+    			if (!path3_intro) {
+    				add_render_callback(() => {
+    					path3_intro = create_in_transition(path3, draw, {duration: 5000});
+    					path3_intro.start();
+    				});
+    			}
+
+    			if (!path4_intro) {
+    				add_render_callback(() => {
+    					path4_intro = create_in_transition(path4, draw, {duration: 5000});
+    					path4_intro.start();
+    				});
+    			}
+
+    			if (!path5_intro) {
+    				add_render_callback(() => {
+    					path5_intro = create_in_transition(path5, draw, {duration: 5000});
+    					path5_intro.start();
+    				});
+    			}
+
+    			if (!path6_intro) {
+    				add_render_callback(() => {
+    					path6_intro = create_in_transition(path6, draw, {duration: 5000});
+    					path6_intro.start();
+    				});
+    			}
+
+    			if (!path7_intro) {
+    				add_render_callback(() => {
+    					path7_intro = create_in_transition(path7, draw, {duration: 5000});
+    					path7_intro.start();
+    				});
+    			}
+
+    			if (!path8_intro) {
+    				add_render_callback(() => {
+    					path8_intro = create_in_transition(path8, draw, {duration: 5000});
+    					path8_intro.start();
+    				});
+    			}
+
+    			if (!path9_intro) {
+    				add_render_callback(() => {
+    					path9_intro = create_in_transition(path9, draw, {duration: 5000});
+    					path9_intro.start();
+    				});
+    			}
+
+    			if (!path10_intro) {
+    				add_render_callback(() => {
+    					path10_intro = create_in_transition(path10, draw, {duration: 5000});
+    					path10_intro.start();
+    				});
+    			}
+
+    			if (!path11_intro) {
+    				add_render_callback(() => {
+    					path11_intro = create_in_transition(path11, draw, {duration: 5000});
+    					path11_intro.start();
+    				});
+    			}
+
+    			if (!path12_intro) {
+    				add_render_callback(() => {
+    					path12_intro = create_in_transition(path12, draw, {duration: 5000});
+    					path12_intro.start();
+    				});
+    			}
+
+    			if (!path13_intro) {
+    				add_render_callback(() => {
+    					path13_intro = create_in_transition(path13, draw, {duration: 5000});
+    					path13_intro.start();
+    				});
+    			}
+
+    			if (!path14_intro) {
+    				add_render_callback(() => {
+    					path14_intro = create_in_transition(path14, draw, {duration: 5000});
+    					path14_intro.start();
+    				});
+    			}
+
+    			if (!path15_intro) {
+    				add_render_callback(() => {
+    					path15_intro = create_in_transition(path15, draw, {duration: 5000});
+    					path15_intro.start();
+    				});
+    			}
+
+    			if (!path16_intro) {
+    				add_render_callback(() => {
+    					path16_intro = create_in_transition(path16, draw, {duration: 5000});
+    					path16_intro.start();
+    				});
+    			}
+
+    			if (!path17_intro) {
+    				add_render_callback(() => {
+    					path17_intro = create_in_transition(path17, draw, {duration: 5000});
+    					path17_intro.start();
+    				});
+    			}
+
+    			if (!path18_intro) {
+    				add_render_callback(() => {
+    					path18_intro = create_in_transition(path18, draw, {duration: 5000});
+    					path18_intro.start();
+    				});
+    			}
+
+    			if (!path19_intro) {
+    				add_render_callback(() => {
+    					path19_intro = create_in_transition(path19, draw, {duration: 5000});
+    					path19_intro.start();
+    				});
+    			}
+
+    			if (!path20_intro) {
+    				add_render_callback(() => {
+    					path20_intro = create_in_transition(path20, draw, {duration: 5000});
+    					path20_intro.start();
+    				});
+    			}
+
+    			if (!path21_intro) {
+    				add_render_callback(() => {
+    					path21_intro = create_in_transition(path21, draw, {duration: 5000});
+    					path21_intro.start();
+    				});
+    			}
+
+    			if (!path22_intro) {
+    				add_render_callback(() => {
+    					path22_intro = create_in_transition(path22, draw, {duration: 5000});
+    					path22_intro.start();
+    				});
+    			}
+
+    			if (!path23_intro) {
+    				add_render_callback(() => {
+    					path23_intro = create_in_transition(path23, draw, {duration: 5000});
+    					path23_intro.start();
+    				});
+    			}
+    		},
+
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(svg);
+    			}
+    		}
+    	};
+    }
+
+    function create_fragment$3(ctx) {
+    	var main, t0, div5, div2, div0, t1, div1, h1, t2, br, t3, t4, section, div3, t5, article, h20, t7, p0, t9, p1, t11, p2, t13, h21, t15, p3, t17, div4;
+
+    	var if_block = (ctx.visible) && create_if_block();
+
+    	return {
+    		c: function create() {
+    			main = element("main");
+    			if (if_block) if_block.c();
+    			t0 = space();
+    			div5 = element("div");
+    			div2 = element("div");
+    			div0 = element("div");
+    			t1 = space();
+    			div1 = element("div");
+    			h1 = element("h1");
+    			t2 = text$1("WEB 3 ");
+    			br = element("br");
+    			t3 = text$1(" AUSTRALIA");
+    			t4 = space();
+    			section = element("section");
+    			div3 = element("div");
+    			t5 = space();
+    			article = element("article");
+    			h20 = element("h2");
+    			h20.textContent = "Web3 Australia’s Goals";
+    			t7 = space();
+    			p0 = element("p");
+    			p0.textContent = "Advance the development and safe implementation of Web3 and decentralised technologies.";
+    			t9 = space();
+    			p1 = element("p");
+    			p1.textContent = "Provide community education on technologies that preserve data rights and data security.";
+    			t11 = space();
+    			p2 = element("p");
+    			p2.textContent = "Promote the prevention of consumer data misuse, including mass surveillance and invasion of privacy by global technology companies and governments.";
+    			t13 = space();
+    			h21 = element("h2");
+    			h21.textContent = "Our Events";
+    			t15 = space();
+    			p3 = element("p");
+    			p3.textContent = "Our Meetups cover a variety of topics such as the technical details of various Web3 platforms (Ethereum/IPFS/Whisper), as well as more general topics such as \tdecentralised trust systems and the social/cultural implications of decentralised/distributed systems.";
+    			t17 = space();
+    			div4 = element("div");
+    			add_location(div0, file$2, 77, 4, 7868);
+    			add_location(br, file$2, 79, 28, 7973);
+    			attr(h1, "class", "f-6");
+    			add_location(h1, file$2, 79, 5, 7950);
+    			attr(div1, "class", "flex flex-column justify-center content-center");
+    			add_location(div1, file$2, 78, 4, 7884);
+    			attr(div2, "class", "grid vh-75 ml6 mb5 svelte-iap7jv");
+    			add_location(div2, file$2, 76, 2, 7831);
+    			add_location(div3, file$2, 83, 4, 8048);
+    			attr(h20, "class", "self-center f2");
+    			add_location(h20, file$2, 86, 6, 8126);
+    			attr(p0, "class", "f3");
+    			add_location(p0, file$2, 87, 5, 8186);
+    			attr(p1, "class", "f3");
+    			add_location(p1, file$2, 88, 5, 8297);
+    			attr(p2, "class", "f3");
+    			add_location(p2, file$2, 89, 5, 8409);
+    			attr(h21, "class", "self-center f2");
+    			add_location(h21, file$2, 90, 5, 8580);
+    			attr(p3, "class", "f3");
+    			add_location(p3, file$2, 91, 5, 8628);
+    			attr(article, "class", "flex flex-column justify-center");
+    			add_location(article, file$2, 85, 4, 8069);
+    			add_location(div4, file$2, 95, 4, 8940);
+    			attr(section, "class", "text-grid svelte-iap7jv");
+    			add_location(section, file$2, 82, 2, 8016);
+    			attr(div5, "class", "flex flex-column w-100 h-100");
+    			add_location(div5, file$2, 75, 0, 7786);
+    			attr(main, "class", "w-100");
+    			add_location(main, file$2, 29, 0, 404);
+    		},
+
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, main, anchor);
+    			if (if_block) if_block.m(main, null);
+    			append(main, t0);
+    			append(main, div5);
+    			append(div5, div2);
+    			append(div2, div0);
+    			append(div2, t1);
+    			append(div2, div1);
+    			append(div1, h1);
+    			append(h1, t2);
+    			append(h1, br);
+    			append(h1, t3);
+    			append(div5, t4);
+    			append(div5, section);
+    			append(section, div3);
+    			append(section, t5);
+    			append(section, article);
+    			append(article, h20);
+    			append(article, t7);
+    			append(article, p0);
+    			append(article, t9);
+    			append(article, p1);
+    			append(article, t11);
+    			append(article, p2);
+    			append(article, t13);
+    			append(article, h21);
+    			append(article, t15);
+    			append(article, p3);
+    			append(section, t17);
+    			append(section, div4);
+    		},
+
+    		p: function update(changed, ctx) {
+    			if (ctx.visible) {
+    				if (!if_block) {
+    					if_block = create_if_block();
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(main, t0);
+    				} else {
+    									transition_in(if_block, 1);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+
+    		i: function intro(local) {
+    			transition_in(if_block);
+    		},
+
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(main);
+    			}
+
+    			if (if_block) if_block.d();
+    		}
+    	};
+    }
+
+    function instance$1($$self, $$props, $$invalidate) {
+    	
+      
+      let visible = false;
+      
+      onMount(() => {
+        $$invalidate('visible', visible = true);
+      });
+
+    	return { visible };
+    }
+
+    class LandingPage extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$1, create_fragment$3, safe_not_equal, []);
+    	}
+    }
+
+    /* src/routes/ProfileGrid.svelte generated by Svelte v3.7.1 */
+
+    const file$3 = "src/routes/ProfileGrid.svelte";
+
+    function create_fragment$4(ctx) {
+    	var div21, div2, div0, h20, t1, h40, t3, p0, t4, br0, t5, br1, t6, t7, div1, img0, t8, div5, div3, img1, t9, div4, h21, t11, h41, t13, p1, t15, div8, div6, h22, t17, h42, t19, p2, t21, div7, img2, t22, div11, div9, img3, t23, div10, h23, t25, h43, t27, p3, t29, div14, div12, h24, t31, h44, t33, p4, t35, p5, t37, div13, img4, t38, div17, div15, img5, t39, div16, h25, t41, h45, t43, p6, t45, div20, div18, h26, t47, h46, t49, p7, t51, div19, img6;
+
+    	return {
+    		c: function create() {
+    			div21 = element("div");
+    			div2 = element("div");
+    			div0 = element("div");
+    			h20 = element("h2");
+    			h20.textContent = "James Zaki";
+    			t1 = space();
+    			h40 = element("h4");
+    			h40.textContent = "Blockchain/IoT Engineer and Consultant";
+    			t3 = space();
+    			p0 = element("p");
+    			t4 = text$1("With 15 years experience in engineering and software development, James has worked in a variety of domains from industrial/home automation to local tech companies and start-ups.");
+    			br0 = element("br");
+    			t5 = text$1("\n        The last 7 years have covered development, product management, and tech advisor roles, both locally and abroad.");
+    			br1 = element("br");
+    			t6 = text$1("\n        As organiser of the OzBerry IoT MeetUp and smart-contract developer/auditor, James is exploring applications using IoT and Blockchain technologies that can positively impact society.");
+    			t7 = space();
+    			div1 = element("div");
+    			img0 = element("img");
+    			t8 = space();
+    			div5 = element("div");
+    			div3 = element("div");
+    			img1 = element("img");
+    			t9 = space();
+    			div4 = element("div");
+    			h21 = element("h2");
+    			h21.textContent = "Ellie Rennie";
+    			t11 = space();
+    			h41 = element("h4");
+    			h41.textContent = "Associate Professor, RMIT Blockchain Innovation Hub";
+    			t13 = space();
+    			p1 = element("p");
+    			p1.textContent = "Ellie Rennie’s research spans internet studies, public policy, and political theory. In recent years she has been conducting qualitative   research to better understand how social norms influence internet adoption and use. She has an ongoing interest in civil society,         distributed governance systems, and social innovation.";
+    			t15 = space();
+    			div8 = element("div");
+    			div6 = element("div");
+    			h22 = element("h2");
+    			h22.textContent = "Bok Khoo";
+    			t17 = space();
+    			h42 = element("h4");
+    			h42.textContent = "Decentralised Future Fund";
+    			t19 = space();
+    			p2 = element("p");
+    			p2.textContent = "Bok Khoo, or BokkyPooBah, is an actuary and software developer working in the Ethereum ecosystem. He is one of the early and top contributors to Ethereum.StackExchange.com. He assisted in the reconciliation of refunds to the original token holders in the pioneer decentralised autonomous organisation, The DAO. He has conducted 39 public Ethereum smart contract audits, and built the early and primitive decentralised exchange CryptoDerivatives.Market in Nov 2016. He helped establish the Decentralised Future Fund DAO that funded the representation of 10 Australian Ethereum community members at conferences worldwide in 2018. He has also released some very nice open source Ethereum smart contract libraries like the Gas-Efficient Solidity DateTime Library and BokkyPooBah’s Red-Black Binary Search Tree Library.";
+    			t21 = space();
+    			div7 = element("div");
+    			img2 = element("img");
+    			t22 = space();
+    			div11 = element("div");
+    			div9 = element("div");
+    			img3 = element("img");
+    			t23 = space();
+    			div10 = element("div");
+    			h23 = element("h2");
+    			h23.textContent = "Thomas Nash";
+    			t25 = space();
+    			h43 = element("h4");
+    			h43.textContent = "CTO & Co-Founder, Flex Dapps";
+    			t27 = space();
+    			p3 = element("p");
+    			p3.textContent = "A Software Engineer for 5 years and Co-founder of Flex Dapps, Tom has been working with the Ethereum blockchain since 2016. He has a deep interest in everything decentralised and has run countless beginner and intermediate level workshops over the last 18 months. If you ask around for technical blockchain experts in Australia, Tom’s name is one that will pop up time and time again.";
+    			t29 = space();
+    			div14 = element("div");
+    			div12 = element("div");
+    			h24 = element("h2");
+    			h24.textContent = "Bonnie Yiu";
+    			t31 = space();
+    			h44 = element("h4");
+    			h44.textContent = "Co-Founder, Consulere";
+    			t33 = space();
+    			p4 = element("p");
+    			p4.textContent = "Bonnie Yiu is co-founder of Consulere.io, a blockchain, IoT and AI consulting company. Bonnie regularly publishes and presents on blockchain-related matters, and recently appeared as a speaker at the World Economic Forum (WEF) in Davos, Switzerland in January 2019. Bonnie is also a Founding Governing Member of the Decentralised Future Fund.";
+    			t35 = space();
+    			p5 = element("p");
+    			p5.textContent = "Prior to that Bonnie was an Associate at international law firms in Sydney and Silicon Valley, specialising in Financial Services and Venture Capital laws.";
+    			t37 = space();
+    			div13 = element("div");
+    			img4 = element("img");
+    			t38 = space();
+    			div17 = element("div");
+    			div15 = element("div");
+    			img5 = element("img");
+    			t39 = space();
+    			div16 = element("div");
+    			h25 = element("h2");
+    			h25.textContent = "James Eddington";
+    			t41 = space();
+    			h45 = element("h4");
+    			h45.textContent = "Classified";
+    			t43 = space();
+    			p6 = element("p");
+    			p6.textContent = "James is a web3 technology and privacy enthusiast, with specific expertise in cryptocurrency custodianship and the decentralised finance industry. Having worked in traditional financial services and with Melbourne based blockchain venture studio Typehuman, James now pursues his own interests in Web3.";
+    			t45 = space();
+    			div20 = element("div");
+    			div18 = element("div");
+    			h26 = element("h2");
+    			h26.textContent = "Alexander Ramsey";
+    			t47 = space();
+    			h46 = element("h4");
+    			h46.textContent = "CEO & Co-Founder, Flex Dapps";
+    			t49 = space();
+    			p7 = element("p");
+    			p7.textContent = "Alexander is a serial company founder and community builder who has worked in emerging industries including game development, esports, 3D systems and immersive media, with experience that encompasses commercial operations, programming, design and community engagement. Alex is currently the CEO and Co-founder of Flex Dapps, an Australian software development company specialising in decentralised applications. He is also a community organiser of Web3 Melbourne, a grassroots technology-agnostic developer community.";
+    			t51 = space();
+    			div19 = element("div");
+    			img6 = element("img");
+    			add_location(h20, file$3, 33, 6, 560);
+    			add_location(h40, file$3, 34, 6, 586);
+    			add_location(br0, file$3, 36, 185, 829);
+    			add_location(br1, file$3, 37, 119, 953);
+    			add_location(p0, file$3, 35, 6, 640);
+    			attr(div0, "class", "text svelte-1o2gl64");
+    			add_location(div0, file$3, 32, 4, 535);
+    			attr(img0, "src", "https://web3australia.org/wp-content/uploads/2019/03/jz.jpg");
+    			attr(img0, "alt", "notw cover");
+    			attr(img0, "class", "svelte-1o2gl64");
+    			add_location(img0, file$3, 42, 6, 1203);
+    			attr(div1, "class", "picture");
+    			add_location(div1, file$3, 41, 4, 1175);
+    			attr(div2, "class", "profile svelte-1o2gl64");
+    			add_location(div2, file$3, 31, 2, 509);
+    			attr(img1, "src", "https://web3australia.org/wp-content/uploads/2019/03/RJp9gIJl_400x400.jpg");
+    			attr(img1, "alt", "notw cover");
+    			attr(img1, "class", "svelte-1o2gl64");
+    			add_location(img1, file$3, 48, 6, 1393);
+    			add_location(div3, file$3, 47, 4, 1381);
+    			add_location(h21, file$3, 51, 6, 1537);
+    			add_location(h41, file$3, 52, 6, 1565);
+    			add_location(p1, file$3, 53, 6, 1632);
+    			attr(div4, "class", "text svelte-1o2gl64");
+    			add_location(div4, file$3, 50, 4, 1512);
+    			attr(div5, "class", "profile svelte-1o2gl64");
+    			set_style(div5, "grid-template-columns", "36% auto");
+    			add_location(div5, file$3, 46, 2, 1316);
+    			add_location(h22, file$3, 61, 6, 2100);
+    			add_location(h42, file$3, 62, 6, 2124);
+    			add_location(p2, file$3, 63, 6, 2165);
+    			attr(div6, "class", "text svelte-1o2gl64");
+    			add_location(div6, file$3, 60, 4, 2075);
+    			attr(img2, "src", "https://web3australia.org/wp-content/uploads/2019/03/bokky-1.jpg");
+    			attr(img2, "alt", "notw cover");
+    			attr(img2, "class", "svelte-1o2gl64");
+    			add_location(img2, file$3, 68, 6, 3046);
+    			attr(div7, "class", "picture");
+    			add_location(div7, file$3, 67, 4, 3018);
+    			attr(div8, "class", "profile svelte-1o2gl64");
+    			set_style(div8, "grid-template-columns", "36% auto");
+    			add_location(div8, file$3, 59, 2, 2010);
+    			attr(img3, "src", "https://web3australia.org/wp-content/uploads/2019/03/tom.jpg");
+    			attr(img3, "alt", "notw cover");
+    			attr(img3, "class", "svelte-1o2gl64");
+    			add_location(img3, file$3, 74, 6, 3257);
+    			attr(div9, "class", "picture");
+    			add_location(div9, file$3, 73, 4, 3229);
+    			add_location(h23, file$3, 77, 6, 3388);
+    			add_location(h43, file$3, 78, 6, 3415);
+    			add_location(p3, file$3, 79, 6, 3459);
+    			attr(div10, "class", "text svelte-1o2gl64");
+    			add_location(div10, file$3, 76, 4, 3363);
+    			attr(div11, "class", "profile svelte-1o2gl64");
+    			set_style(div11, "grid-template-columns", "auto 36%");
+    			add_location(div11, file$3, 72, 2, 3164);
+    			add_location(h24, file$3, 87, 6, 3980);
+    			add_location(h44, file$3, 88, 6, 4006);
+    			add_location(p4, file$3, 89, 6, 4043);
+    			add_location(p5, file$3, 92, 6, 4416);
+    			attr(div12, "class", "text svelte-1o2gl64");
+    			add_location(div12, file$3, 86, 4, 3955);
+    			attr(img4, "src", "https://web3australia.org/wp-content/uploads/2019/03/bonnie.jpg");
+    			attr(img4, "alt", "notw cover");
+    			attr(img4, "class", "svelte-1o2gl64");
+    			add_location(img4, file$3, 97, 6, 4638);
+    			attr(div13, "class", "picture");
+    			add_location(div13, file$3, 96, 4, 4610);
+    			attr(div14, "class", "profile svelte-1o2gl64");
+    			set_style(div14, "grid-template-columns", "36% auto");
+    			add_location(div14, file$3, 85, 2, 3890);
+    			attr(img5, "src", "https://web3australia.org/wp-content/uploads/2019/03/james.jpg");
+    			attr(img5, "alt", "notw cover");
+    			attr(img5, "class", "svelte-1o2gl64");
+    			add_location(img5, file$3, 103, 6, 4854);
+    			attr(div15, "class", "picture");
+    			add_location(div15, file$3, 102, 4, 4826);
+    			add_location(h25, file$3, 106, 6, 4993);
+    			add_location(h45, file$3, 107, 6, 5024);
+    			add_location(p6, file$3, 108, 6, 5050);
+    			attr(div16, "class", "text svelte-1o2gl64");
+    			add_location(div16, file$3, 105, 4, 4968);
+    			attr(div17, "class", "profile svelte-1o2gl64");
+    			set_style(div17, "grid-template-columns", "auto 36%");
+    			add_location(div17, file$3, 101, 2, 4761);
+    			add_location(h26, file$3, 116, 6, 5488);
+    			add_location(h46, file$3, 117, 6, 5520);
+    			add_location(p7, file$3, 118, 6, 5564);
+    			attr(div18, "class", "text svelte-1o2gl64");
+    			add_location(div18, file$3, 115, 4, 5463);
+    			attr(img6, "src", "https://web3australia.org/wp-content/uploads/2019/03/Alex-1-BW.jpg");
+    			attr(img6, "alt", "notw cover");
+    			attr(img6, "class", "svelte-1o2gl64");
+    			add_location(img6, file$3, 123, 6, 6148);
+    			attr(div19, "class", "picture");
+    			add_location(div19, file$3, 122, 4, 6120);
+    			attr(div20, "class", "profile svelte-1o2gl64");
+    			set_style(div20, "grid-template-columns", "36% auto");
+    			add_location(div20, file$3, 114, 2, 5398);
+    			attr(div21, "class", "profile-wrapper svelte-1o2gl64");
+    			add_location(div21, file$3, 30, 0, 477);
+    		},
+
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div21, anchor);
+    			append(div21, div2);
+    			append(div2, div0);
+    			append(div0, h20);
+    			append(div0, t1);
+    			append(div0, h40);
+    			append(div0, t3);
+    			append(div0, p0);
+    			append(p0, t4);
+    			append(p0, br0);
+    			append(p0, t5);
+    			append(p0, br1);
+    			append(p0, t6);
+    			append(div2, t7);
+    			append(div2, div1);
+    			append(div1, img0);
+    			append(div21, t8);
+    			append(div21, div5);
+    			append(div5, div3);
+    			append(div3, img1);
+    			append(div5, t9);
+    			append(div5, div4);
+    			append(div4, h21);
+    			append(div4, t11);
+    			append(div4, h41);
+    			append(div4, t13);
+    			append(div4, p1);
+    			append(div21, t15);
+    			append(div21, div8);
+    			append(div8, div6);
+    			append(div6, h22);
+    			append(div6, t17);
+    			append(div6, h42);
+    			append(div6, t19);
+    			append(div6, p2);
+    			append(div8, t21);
+    			append(div8, div7);
+    			append(div7, img2);
+    			append(div21, t22);
+    			append(div21, div11);
+    			append(div11, div9);
+    			append(div9, img3);
+    			append(div11, t23);
+    			append(div11, div10);
+    			append(div10, h23);
+    			append(div10, t25);
+    			append(div10, h43);
+    			append(div10, t27);
+    			append(div10, p3);
+    			append(div21, t29);
+    			append(div21, div14);
+    			append(div14, div12);
+    			append(div12, h24);
+    			append(div12, t31);
+    			append(div12, h44);
+    			append(div12, t33);
+    			append(div12, p4);
+    			append(div12, t35);
+    			append(div12, p5);
+    			append(div14, t37);
+    			append(div14, div13);
+    			append(div13, img4);
+    			append(div21, t38);
+    			append(div21, div17);
+    			append(div17, div15);
+    			append(div15, img5);
+    			append(div17, t39);
+    			append(div17, div16);
+    			append(div16, h25);
+    			append(div16, t41);
+    			append(div16, h45);
+    			append(div16, t43);
+    			append(div16, p6);
+    			append(div21, t45);
+    			append(div21, div20);
+    			append(div20, div18);
+    			append(div18, h26);
+    			append(div18, t47);
+    			append(div18, h46);
+    			append(div18, t49);
+    			append(div18, p7);
+    			append(div20, t51);
+    			append(div20, div19);
+    			append(div19, img6);
+    		},
+
+    		p: noop,
+    		i: noop,
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div21);
+    			}
+    		}
+    	};
+    }
+
+    class ProfileGrid extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, null, create_fragment$4, safe_not_equal, []);
+    	}
+    }
+
+    /* src/routes/Humans.svelte generated by Svelte v3.7.1 */
+
+    const file$4 = "src/routes/Humans.svelte";
+
+    function create_fragment$5(ctx) {
+    	var div1, div0, h1, t_1, p0, p1, current;
+
+    	var profilegrid = new ProfileGrid({ $$inline: true });
+
+    	return {
+    		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			h1 = element("h1");
+    			h1.textContent = "Committee of Management";
+    			t_1 = space();
+    			p0 = element("p");
+    			p0.textContent = "The Web3 Australia’s committee of management totals 7 humans and includes academics, entrepreneurs, technologists and software developers.";
+    			p1 = element("p");
+    			profilegrid.$$.fragment.c();
+    			attr(h1, "class", "svelte-vfojje");
+    			add_location(h1, file$4, 43, 4, 772);
+    			add_location(p0, file$4, 44, 4, 809);
+    			add_location(p1, file$4, 44, 145, 950);
+    			attr(div0, "class", "content-container svelte-vfojje");
+    			add_location(div0, file$4, 42, 2, 736);
+    			attr(div1, "class", "container svelte-vfojje");
+    			add_location(div1, file$4, 41, 0, 710);
+    		},
+
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div1, anchor);
+    			append(div1, div0);
+    			append(div0, h1);
+    			append(div0, t_1);
+    			append(div0, p0);
+    			append(div0, p1);
+    			mount_component(profilegrid, p1, null);
+    			current = true;
+    		},
+
+    		p: noop,
+
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(profilegrid.$$.fragment, local);
+
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			transition_out(profilegrid.$$.fragment, local);
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div1);
+    			}
+
+    			destroy_component(profilegrid);
+    		}
+    	};
+    }
+
+    class Humans extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, null, create_fragment$5, safe_not_equal, []);
+    	}
     }
 
     var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
@@ -2009,1347 +2957,12 @@ var app = (function () {
       return cancel;
     }
 
-    /* src/routes/Meetups.svelte generated by Svelte v3.7.1 */
-
-    const file$2 = "src/routes/Meetups.svelte";
-
-    function get_each_context(ctx, list, i) {
-    	const child_ctx = Object.create(ctx);
-    	child_ctx.event = list[i];
-    	child_ctx.i = i;
-    	return child_ctx;
-    }
-
-    // (65:3) {:else}
-    function create_else_block(ctx) {
-    	var h2, h2_outro, current;
-
-    	return {
-    		c: function create() {
-    			h2 = element("h2");
-    			h2.textContent = "Loading...";
-    			add_location(h2, file$2, 65, 4, 1386);
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert(target, h2, anchor);
-    			current = true;
-    		},
-
-    		i: function intro(local) {
-    			if (current) return;
-    			if (h2_outro) h2_outro.end(1);
-
-    			current = true;
-    		},
-
-    		o: function outro(local) {
-    			h2_outro = create_out_transition(h2, fade, {});
-
-    			current = false;
-    		},
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(h2);
-    				if (h2_outro) h2_outro.end();
-    			}
-    		}
-    	};
-    }
-
-    // (57:3) {#each events as event, i}
-    function create_each_block(ctx) {
-    	var div, h2, t1, p0, t3, h3, a, t4_value = ctx.event.name, t4, a_href_value, t5, p1, t7, p2, t8, t9_value = ctx.event.venue.name, t9, t10, div_transition, current;
-
-    	return {
-    		c: function create() {
-    			div = element("div");
-    			h2 = element("h2");
-    			h2.textContent = "01";
-    			t1 = space();
-    			p0 = element("p");
-    			p0.textContent = "January";
-    			t3 = space();
-    			h3 = element("h3");
-    			a = element("a");
-    			t4 = text$1(t4_value);
-    			t5 = space();
-    			p1 = element("p");
-    			p1.textContent = "18:00 - 21:00";
-    			t7 = space();
-    			p2 = element("p");
-    			t8 = text$1("@ ");
-    			t9 = text$1(t9_value);
-    			t10 = space();
-    			add_location(h2, file$2, 58, 5, 1204);
-    			add_location(p0, file$2, 59, 8, 1224);
-    			attr(a, "href", a_href_value = ctx.event.link);
-    			add_location(a, file$2, 60, 12, 1252);
-    			add_location(h3, file$2, 60, 8, 1248);
-    			add_location(p1, file$2, 61, 8, 1303);
-    			add_location(p2, file$2, 62, 8, 1332);
-    			attr(div, "class", "event-box svelte-wprdev");
-    			add_location(div, file$2, 57, 4, 1152);
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert(target, div, anchor);
-    			append(div, h2);
-    			append(div, t1);
-    			append(div, p0);
-    			append(div, t3);
-    			append(div, h3);
-    			append(h3, a);
-    			append(a, t4);
-    			append(div, t5);
-    			append(div, p1);
-    			append(div, t7);
-    			append(div, p2);
-    			append(p2, t8);
-    			append(p2, t9);
-    			append(div, t10);
-    			current = true;
-    		},
-
-    		p: function update(changed, ctx) {
-    			if ((!current || changed.events) && t4_value !== (t4_value = ctx.event.name)) {
-    				set_data(t4, t4_value);
-    			}
-
-    			if ((!current || changed.events) && a_href_value !== (a_href_value = ctx.event.link)) {
-    				attr(a, "href", a_href_value);
-    			}
-
-    			if ((!current || changed.events) && t9_value !== (t9_value = ctx.event.venue.name)) {
-    				set_data(t9, t9_value);
-    			}
-    		},
-
-    		i: function intro(local) {
-    			if (current) return;
-    			if (local) {
-    				add_render_callback(() => {
-    					if (!div_transition) div_transition = create_bidirectional_transition(div, slide, {}, true);
-    					div_transition.run(1);
-    				});
-    			}
-
-    			current = true;
-    		},
-
-    		o: function outro(local) {
-    			if (local) {
-    				if (!div_transition) div_transition = create_bidirectional_transition(div, slide, {}, false);
-    				div_transition.run(0);
-    			}
-
-    			current = false;
-    		},
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(div);
-    				if (div_transition) div_transition.end();
-    			}
-    		}
-    	};
-    }
-
-    function create_fragment$3(ctx) {
-    	var div1, h1, t_1, div0, current;
-
-    	var each_value = ctx.events;
-
-    	var each_blocks = [];
-
-    	for (var i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
-    	}
-
-    	const out = i => transition_out(each_blocks[i], 1, 1, () => {
-    		each_blocks[i] = null;
-    	});
-
-    	var each_1_else = null;
-
-    	if (!each_value.length) {
-    		each_1_else = create_else_block();
-    		each_1_else.c();
-    	}
-
-    	return {
-    		c: function create() {
-    			div1 = element("div");
-    			h1 = element("h1");
-    			h1.textContent = "Upcoming Events";
-    			t_1 = space();
-    			div0 = element("div");
-
-    			for (var i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].c();
-    			}
-    			add_location(h1, file$2, 54, 2, 1070);
-    			attr(div0, "class", "events svelte-wprdev");
-    			add_location(div0, file$2, 55, 2, 1097);
-    			attr(div1, "class", "container svelte-wprdev");
-    			add_location(div1, file$2, 53, 0, 1044);
-    		},
-
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert(target, div1, anchor);
-    			append(div1, h1);
-    			append(div1, t_1);
-    			append(div1, div0);
-
-    			for (var i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(div0, null);
-    			}
-
-    			if (each_1_else) {
-    				each_1_else.m(div0, null);
-    			}
-
-    			current = true;
-    		},
-
-    		p: function update(changed, ctx) {
-    			if (changed.events) {
-    				each_value = ctx.events;
-
-    				for (var i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context(ctx, each_value, i);
-
-    					if (each_blocks[i]) {
-    						each_blocks[i].p(changed, child_ctx);
-    						transition_in(each_blocks[i], 1);
-    					} else {
-    						each_blocks[i] = create_each_block(child_ctx);
-    						each_blocks[i].c();
-    						transition_in(each_blocks[i], 1);
-    						each_blocks[i].m(div0, null);
-    					}
-    				}
-
-    				group_outros();
-    				for (i = each_value.length; i < each_blocks.length; i += 1) out(i);
-    				check_outros();
-    			}
-
-    			if (each_value.length) {
-    				if (each_1_else) {
-    					each_1_else.d(1);
-    					each_1_else = null;
-    				}
-    			} else if (!each_1_else) {
-    				each_1_else = create_else_block();
-    				each_1_else.c();
-    				each_1_else.m(div0, null);
-    			}
-    		},
-
-    		i: function intro(local) {
-    			if (current) return;
-    			for (var i = 0; i < each_value.length; i += 1) transition_in(each_blocks[i]);
-
-    			current = true;
-    		},
-
-    		o: function outro(local) {
-    			each_blocks = each_blocks.filter(Boolean);
-    			for (let i = 0; i < each_blocks.length; i += 1) transition_out(each_blocks[i]);
-
-    			current = false;
-    		},
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(div1);
-    			}
-
-    			destroy_each(each_blocks, detaching);
-
-    			if (each_1_else) each_1_else.d();
-    		}
-    	};
-    }
-
-    function instance$1($$self, $$props, $$invalidate) {
-    	
-      
-
-    	let events = [];
-
-    	onMount(async () => {
-        await jsonp_1('https://api.meetup.com/Ethereum-Melbourne/events?page=5&sig_id=225203890', null, (err, data) => {
-          if (err) {
-            console.error(err.message);
-          } else {
-            $$invalidate('events', events = data.data);
-            console.log('events:', events);
-          }
-        });
-      });
-
-    	return { events };
-    }
-
-    class Meetups extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-    		init(this, options, instance$1, create_fragment$3, safe_not_equal, []);
-    	}
-    }
-
-    /* src/routes/LandingText.svelte generated by Svelte v3.7.1 */
-
-    const file$3 = "src/routes/LandingText.svelte";
-
-    function create_fragment$4(ctx) {
-    	var div1, div0, h20, t1, p0, t3, p1, t5, p2, t7, h21, t9, p3;
-
-    	return {
-    		c: function create() {
-    			div1 = element("div");
-    			div0 = element("div");
-    			h20 = element("h2");
-    			h20.textContent = "Web3 Australia’s Goals";
-    			t1 = space();
-    			p0 = element("p");
-    			p0.textContent = "Advance the development and safe implementation of Web3 and decentralised technologies.";
-    			t3 = space();
-    			p1 = element("p");
-    			p1.textContent = "Provide community education on technologies that preserve data rights and data security.";
-    			t5 = space();
-    			p2 = element("p");
-    			p2.textContent = "Promote the prevention of consumer data misuse, including mass surveillance and invasion of privacy by global technology companies and governments.";
-    			t7 = space();
-    			h21 = element("h2");
-    			h21.textContent = "Our Events";
-    			t9 = space();
-    			p3 = element("p");
-    			p3.textContent = "Our Meetups cover a variety of topics such as the technical details of various Web3 platforms (Ethereum/IPFS/Whisper), as well as more general topics such as \tdecentralised trust systems and the social/cultural implications of decentralised/distributed systems.";
-    			attr(h20, "class", "svelte-133tvx2");
-    			add_location(h20, file$3, 30, 4, 535);
-    			add_location(p0, file$3, 31, 2, 569);
-    			add_location(p1, file$3, 32, 2, 666);
-    			add_location(p2, file$3, 33, 2, 764);
-    			attr(h21, "class", "svelte-133tvx2");
-    			add_location(h21, file$3, 34, 2, 921);
-    			add_location(p3, file$3, 35, 2, 943);
-    			attr(div0, "class", "container svelte-133tvx2");
-    			add_location(div0, file$3, 29, 2, 507);
-    			attr(div1, "class", "svelte-133tvx2");
-    			add_location(div1, file$3, 28, 0, 499);
-    		},
-
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert(target, div1, anchor);
-    			append(div1, div0);
-    			append(div0, h20);
-    			append(div0, t1);
-    			append(div0, p0);
-    			append(div0, t3);
-    			append(div0, p1);
-    			append(div0, t5);
-    			append(div0, p2);
-    			append(div0, t7);
-    			append(div0, h21);
-    			append(div0, t9);
-    			append(div0, p3);
-    		},
-
-    		p: noop,
-    		i: noop,
-    		o: noop,
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(div1);
-    			}
-    		}
-    	};
-    }
-
-    class LandingText extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-    		init(this, options, null, create_fragment$4, safe_not_equal, []);
-    	}
-    }
-
-    /* src/routes/Logo.svelte generated by Svelte v3.7.1 */
-
-    const file$4 = "src/routes/Logo.svelte";
-
-    function create_fragment$5(ctx) {
-    	var div2, div0, svg, defs, clipPath0, rect, clipPath1, path0, g27, g26, g4, g0, path1, g1, path2, g2, path3, g3, path4, g11, g5, path5, g6, path6, g7, path7, g8, path8, g9, path9, g10, path10, g25, g12, path11, g13, path12, g14, path13, g15, path14, g16, path15, g17, path16, g18, path17, g19, path18, g20, path19, g21, path20, g22, path21, g23, path22, g24, path23, t0, div1, h1, t1, br, t2;
-
-    	return {
-    		c: function create() {
-    			div2 = element("div");
-    			div0 = element("div");
-    			svg = svg_element("svg");
-    			defs = svg_element("defs");
-    			clipPath0 = svg_element("clipPath");
-    			rect = svg_element("rect");
-    			clipPath1 = svg_element("clipPath");
-    			path0 = svg_element("path");
-    			g27 = svg_element("g");
-    			g26 = svg_element("g");
-    			g4 = svg_element("g");
-    			g0 = svg_element("g");
-    			path1 = svg_element("path");
-    			g1 = svg_element("g");
-    			path2 = svg_element("path");
-    			g2 = svg_element("g");
-    			path3 = svg_element("path");
-    			g3 = svg_element("g");
-    			path4 = svg_element("path");
-    			g11 = svg_element("g");
-    			g5 = svg_element("g");
-    			path5 = svg_element("path");
-    			g6 = svg_element("g");
-    			path6 = svg_element("path");
-    			g7 = svg_element("g");
-    			path7 = svg_element("path");
-    			g8 = svg_element("g");
-    			path8 = svg_element("path");
-    			g9 = svg_element("g");
-    			path9 = svg_element("path");
-    			g10 = svg_element("g");
-    			path10 = svg_element("path");
-    			g25 = svg_element("g");
-    			g12 = svg_element("g");
-    			path11 = svg_element("path");
-    			g13 = svg_element("g");
-    			path12 = svg_element("path");
-    			g14 = svg_element("g");
-    			path13 = svg_element("path");
-    			g15 = svg_element("g");
-    			path14 = svg_element("path");
-    			g16 = svg_element("g");
-    			path15 = svg_element("path");
-    			g17 = svg_element("g");
-    			path16 = svg_element("path");
-    			g18 = svg_element("g");
-    			path17 = svg_element("path");
-    			g19 = svg_element("g");
-    			path18 = svg_element("path");
-    			g20 = svg_element("g");
-    			path19 = svg_element("path");
-    			g21 = svg_element("g");
-    			path20 = svg_element("path");
-    			g22 = svg_element("g");
-    			path21 = svg_element("path");
-    			g23 = svg_element("g");
-    			path22 = svg_element("path");
-    			g24 = svg_element("g");
-    			path23 = svg_element("path");
-    			t0 = space();
-    			div1 = element("div");
-    			h1 = element("h1");
-    			t1 = text$1("WEB 3 ");
-    			br = element("br");
-    			t2 = text$1(" AUSTRALIA");
-    			attr(rect, "width", "1920");
-    			attr(rect, "height", "1080");
-    			attr(rect, "x", "0");
-    			attr(rect, "y", "0");
-    			add_location(rect, file$4, 45, 251, 1038);
-    			attr(clipPath0, "id", "animationMask_Obx7Q4Q9dW");
-    			add_location(clipPath0, file$4, 45, 211, 998);
-    			attr(path0, "d", "M0,0 L1920,0 L1920,1080 L0,1080z");
-    			add_location(path0, file$4, 45, 341, 1128);
-    			attr(clipPath1, "id", "cp_IjQ9np3D");
-    			add_location(clipPath1, file$4, 45, 314, 1101);
-    			add_location(defs, file$4, 45, 205, 992);
-    			attr(path1, "stroke-linecap", "butt");
-    			attr(path1, "stroke-linejoin", "miter");
-    			attr(path1, "fill-opacity", "0");
-    			attr(path1, "stroke-miterlimit", "10");
-    			attr(path1, "stroke", "rgb(7,5,6)");
-    			attr(path1, "stroke-opacity", "1");
-    			attr(path1, "stroke-width", "1");
-    			attr(path1, "d", " M-28.632999420166016,-278.1669921875 C-28.632999420166016,-278.1669921875 28.632999420166016,0 28.632999420166016,0 C28.632999420166016,0 -28.632999420166016,278.1669921875 -28.632999420166016,278.1669921875");
-    			add_location(path1, file$4, 45, 800, 1587);
-    			attr(g0, "opacity", "1");
-    			attr(g0, "transform", "matrix(1,0,0,1,31.132999420166016,280.6669921875)");
-    			add_location(g0, file$4, 45, 723, 1510);
-    			attr(path2, "stroke-linecap", "butt");
-    			attr(path2, "stroke-linejoin", "miter");
-    			attr(path2, "fill-opacity", "0");
-    			attr(path2, "stroke-miterlimit", "10");
-    			attr(path2, "stroke", "rgb(7,5,6)");
-    			attr(path2, "stroke-opacity", "1");
-    			attr(path2, "stroke-width", "1");
-    			attr(path2, "d", " M-20.812999725341797,-278.1669921875 C-20.812999725341797,-278.1669921875 20.812999725341797,1.0160000324249268 20.812999725341797,1.0160000324249268 C20.812999725341797,1.0160000324249268 -20.812999725341797,278.1669921875 -20.812999725341797,278.1669921875");
-    			add_location(path2, file$4, 45, 1249, 2036);
-    			attr(g1, "opacity", "1");
-    			attr(g1, "transform", "matrix(1,0,0,1,23.312999725341797,280.6669921875)");
-    			add_location(g1, file$4, 45, 1172, 1959);
-    			attr(path3, "stroke-linecap", "butt");
-    			attr(path3, "stroke-linejoin", "miter");
-    			attr(path3, "fill-opacity", "0");
-    			attr(path3, "stroke-miterlimit", "10");
-    			attr(path3, "stroke", "rgb(7,5,6)");
-    			attr(path3, "stroke-opacity", "1");
-    			attr(path3, "stroke-width", "1");
-    			attr(path3, "d", " M-12.993000030517578,-278.1669921875 C-12.993000030517578,-278.1669921875 12.993000030517578,2.0320000648498535 12.993000030517578,2.0320000648498535 C12.993000030517578,2.0320000648498535 -12.993000030517578,278.1669921875 -12.993000030517578,278.1669921875");
-    			add_location(path3, file$4, 45, 1749, 2536);
-    			attr(g2, "opacity", "1");
-    			attr(g2, "transform", "matrix(1,0,0,1,15.493000030517578,280.6669921875)");
-    			add_location(g2, file$4, 45, 1672, 2459);
-    			attr(path4, "stroke-linecap", "butt");
-    			attr(path4, "stroke-linejoin", "miter");
-    			attr(path4, "fill-opacity", "0");
-    			attr(path4, "stroke-miterlimit", "10");
-    			attr(path4, "stroke", "rgb(7,5,6)");
-    			attr(path4, "stroke-opacity", "1");
-    			attr(path4, "stroke-width", "1");
-    			attr(path4, "d", " M-5.172999858856201,-278.1669921875 C-5.172999858856201,-278.1669921875 5.172999858856201,3.0480000972747803 5.172999858856201,3.0480000972747803 C5.172999858856201,3.0480000972747803 -5.172999858856201,278.1669921875 -5.172999858856201,278.1669921875");
-    			add_location(path4, file$4, 45, 2248, 3035);
-    			attr(g3, "opacity", "1");
-    			attr(g3, "transform", "matrix(1,0,0,1,7.672999858856201,280.6669921875)");
-    			add_location(g3, file$4, 45, 2172, 2959);
-    			attr(g4, "transform", "matrix(1,0,0,1,1192.762939453125,215.96099853515625)");
-    			attr(g4, "opacity", "1");
-    			set_style(g4, "display", "block");
-    			add_location(g4, file$4, 45, 619, 1406);
-    			attr(path5, "stroke-linecap", "butt");
-    			attr(path5, "stroke-linejoin", "miter");
-    			attr(path5, "fill-opacity", "0");
-    			attr(path5, "stroke-miterlimit", "10");
-    			attr(path5, "stroke", "rgb(7,5,6)");
-    			attr(path5, "stroke-opacity", "1");
-    			attr(path5, "stroke-width", "1");
-    			attr(path5, "d", " M39.724998474121094,278.1669921875 C39.724998474121094,278.1669921875 -39.724998474121094,51.77899932861328 -39.724998474121094,51.77899932861328 C-39.724998474121094,51.77899932861328 39.349998474121094,-272.9169921875 39.349998474121094,-272.9169921875");
-    			add_location(path5, file$4, 45, 2849, 3636);
-    			attr(g5, "opacity", "1");
-    			attr(g5, "transform", "matrix(1,0,0,1,42.224998474121094,280.6669921875)");
-    			add_location(g5, file$4, 45, 2772, 3559);
-    			attr(path6, "stroke-linecap", "butt");
-    			attr(path6, "stroke-linejoin", "miter");
-    			attr(path6, "fill-opacity", "0");
-    			attr(path6, "stroke-miterlimit", "10");
-    			attr(path6, "stroke", "rgb(7,5,6)");
-    			attr(path6, "stroke-opacity", "1");
-    			attr(path6, "stroke-width", "1");
-    			attr(path6, "d", " M32.9010009765625,278.1669921875 C32.9010009765625,278.1669921875 -32.9010009765625,42.00299835205078 -32.9010009765625,42.00299835205078 C-32.9010009765625,42.00299835205078 32.6510009765625,-273.22900390625 32.6510009765625,-273.22900390625");
-    			add_location(path6, file$4, 45, 3344, 4131);
-    			attr(g6, "opacity", "1");
-    			attr(g6, "transform", "matrix(1,0,0,1,49.04899978637695,280.6669921875)");
-    			add_location(g6, file$4, 45, 3268, 4055);
-    			attr(path7, "stroke-linecap", "butt");
-    			attr(path7, "stroke-linejoin", "miter");
-    			attr(path7, "fill-opacity", "0");
-    			attr(path7, "stroke-miterlimit", "10");
-    			attr(path7, "stroke", "rgb(7,5,6)");
-    			attr(path7, "stroke-opacity", "1");
-    			attr(path7, "stroke-width", "1");
-    			attr(path7, "d", " M26.076000213623047,278.1669921875 C26.076000213623047,278.1669921875 -26.076000213623047,32.22700119018555 -26.076000213623047,32.22700119018555 C-26.076000213623047,32.22700119018555 25.888999938964844,-273.2919921875 25.888999938964844,-273.2919921875");
-    			add_location(path7, file$4, 45, 3828, 4615);
-    			attr(g7, "opacity", "1");
-    			attr(g7, "transform", "matrix(1,0,0,1,55.874000549316406,280.6669921875)");
-    			add_location(g7, file$4, 45, 3751, 4538);
-    			attr(path8, "stroke-linecap", "butt");
-    			attr(path8, "stroke-linejoin", "miter");
-    			attr(path8, "fill-opacity", "0");
-    			attr(path8, "stroke-miterlimit", "10");
-    			attr(path8, "stroke", "rgb(7,5,6)");
-    			attr(path8, "stroke-opacity", "1");
-    			attr(path8, "stroke-width", "1");
-    			attr(path8, "d", " M19.25200080871582,278.1669921875 C19.25200080871582,278.1669921875 -19.25200080871582,22.450000762939453 -19.25200080871582,22.450000762939453 C-19.25200080871582,22.450000762939453 19.00200080871582,-273.1669921875 19.00200080871582,-273.1669921875");
-    			add_location(path8, file$4, 45, 4324, 5111);
-    			attr(g8, "opacity", "1");
-    			attr(g8, "transform", "matrix(1,0,0,1,62.698001861572266,280.6669921875)");
-    			add_location(g8, file$4, 45, 4247, 5034);
-    			attr(path9, "stroke-linecap", "butt");
-    			attr(path9, "stroke-linejoin", "miter");
-    			attr(path9, "fill-opacity", "0");
-    			attr(path9, "stroke-miterlimit", "10");
-    			attr(path9, "stroke", "rgb(7,5,6)");
-    			attr(path9, "stroke-opacity", "1");
-    			attr(path9, "stroke-width", "1");
-    			attr(path9, "d", " M12.427000045776367,278.1669921875 C12.427000045776367,278.1669921875 -12.427000045776367,12.675000190734863 -12.427000045776367,12.675000190734863 C-12.427000045776367,12.675000190734863 11.802000045776367,-273.0419921875 11.802000045776367,-273.0419921875");
-    			add_location(path9, file$4, 45, 4818, 5605);
-    			attr(g9, "opacity", "1");
-    			attr(g9, "transform", "matrix(1,0,0,1,69.75700378417969,280.7980041503906)");
-    			add_location(g9, file$4, 45, 4739, 5526);
-    			attr(path10, "stroke-linecap", "butt");
-    			attr(path10, "stroke-linejoin", "miter");
-    			attr(path10, "fill-opacity", "0");
-    			attr(path10, "stroke-miterlimit", "10");
-    			attr(path10, "stroke", "rgb(7,5,6)");
-    			attr(path10, "stroke-opacity", "1");
-    			attr(path10, "stroke-width", "1");
-    			attr(path10, "d", " M5.603000164031982,278.1669921875 C5.603000164031982,278.1669921875 -5.603000164031982,2.8980000019073486 -5.603000164031982,2.8980000019073486 C-5.603000164031982,2.8980000019073486 5.103000164031982,-272.6669921875 5.103000164031982,-272.6669921875");
-    			add_location(path10, file$4, 45, 5316, 6103);
-    			attr(g10, "opacity", "1");
-    			attr(g10, "transform", "matrix(1,0,0,1,76.34700012207031,280.6669921875)");
-    			add_location(g10, file$4, 45, 5240, 6027);
-    			attr(g11, "transform", "matrix(1,0,0,1,642.7630004882812,293.73699951171875)");
-    			attr(g11, "opacity", "1");
-    			set_style(g11, "display", "block");
-    			add_location(g11, file$4, 45, 2668, 3455);
-    			attr(path11, "stroke-linecap", "butt");
-    			attr(path11, "stroke-linejoin", "miter");
-    			attr(path11, "fill-opacity", "0");
-    			attr(path11, "stroke-miterlimit", "10");
-    			attr(path11, "stroke", "rgb(7,5,6)");
-    			attr(path11, "stroke-opacity", "1");
-    			attr(path11, "stroke-width", "1");
-    			attr(path11, "d", " M-115.61499786376953,55.1150016784668 C-156.0279998779297,25.763999938964844 -191.5030059814453,0 -191.5030059814453,0 C-191.5030059814453,0 -191.5030059814453,0 -191.5030059814453,0 C-191.5030059814453,0 0,-139.08399963378906 0,-139.08399963378906 C0,-139.08399963378906 191.5030059814453,-278.1669921875 191.5030059814453,-278.1669921875 C191.5030059814453,-278.1669921875 191.5030059814453,0 191.5030059814453,0 C191.5030059814453,0 191.5030059814453,278.1669921875 191.5030059814453,278.1669921875 C191.5030059814453,278.1669921875 0,139.08299255371094 0,139.08299255371094 C0,139.08299255371094 -62.13199996948242,93.95800018310547 -115.61499786376953,55.1150016784668");
-    			add_location(path11, file$4, 45, 5888, 6675);
-    			attr(g12, "opacity", "1");
-    			attr(g12, "transform", "matrix(1,0,0,1,282.8009948730469,280.6669921875)");
-    			add_location(g12, file$4, 45, 5812, 6599);
-    			attr(path12, "stroke-linecap", "butt");
-    			attr(path12, "stroke-linejoin", "miter");
-    			attr(path12, "fill-opacity", "0");
-    			attr(path12, "stroke-miterlimit", "10");
-    			attr(path12, "stroke", "rgb(7,5,6)");
-    			attr(path12, "stroke-opacity", "1");
-    			attr(path12, "stroke-width", "1");
-    			attr(path12, "d", " M-82.0999984741211,-104.625 C-53.42599868774414,-116.56999969482422 0,-138.82699584960938 0,-138.82699584960938 C0,-138.82699584960938 0,-138.82699584960938 0,-138.82699584960938 C0,-138.82699584960938 180.0399932861328,-255.3280029296875 180.0399932861328,-255.3280029296875 C180.0399932861328,-255.3280029296875 191.5030059814453,0.25600001215934753 191.5030059814453,0.25600001215934753 C191.5030059814453,0.25600001215934753 182.02499389648438,255.32899475097656 182.02499389648438,255.32899475097656 C182.02499389648438,255.32899475097656 0,139.33900451660156 0,139.33900451660156 C0,139.33900451660156 -99.80500030517578,97.76200103759766 -99.80500030517578,97.76200103759766 C-99.80500030517578,97.76200103759766 -191.5030059814453,0.25600001215934753 -191.5030059814453,0.25600001215934753 C-191.5030059814453,0.25600001215934753 -99.80500030517578,-97.2490005493164 -99.80500030517578,-97.2490005493164 C-99.80500030517578,-97.2490005493164 -92.61799621582031,-100.24299621582031 -82.0999984741211,-104.625");
-    			add_location(path12, file$4, 45, 6806, 7593);
-    			attr(g13, "opacity", "1");
-    			attr(g13, "transform", "matrix(1,0,0,1,272.93499755859375,289.4570007324219)");
-    			add_location(g13, file$4, 45, 6726, 7513);
-    			attr(path13, "stroke-linecap", "butt");
-    			attr(path13, "stroke-linejoin", "miter");
-    			attr(path13, "fill-opacity", "0");
-    			attr(path13, "stroke-miterlimit", "10");
-    			attr(path13, "stroke", "rgb(7,5,6)");
-    			attr(path13, "stroke-opacity", "1");
-    			attr(path13, "stroke-width", "1");
-    			attr(path13, "d", " M-84.0459976196289,-123.87300109863281 C-51.10499954223633,-129.4969940185547 0.0010000000474974513,-138.2220001220703 0.0010000000474974513,-138.2220001220703 C0.0010000000474974513,-138.2220001220703 0.0010000000474974513,-138.2220001220703 0.0010000000474974513,-138.2220001220703 C0.0010000000474974513,-138.2220001220703 168.57899475097656,-232.13900756835938 168.57899475097656,-232.13900756835938 C168.57899475097656,-232.13900756835938 191.5030059814453,0.8610000014305115 191.5030059814453,0.8610000014305115 C191.5030059814453,0.8610000014305115 168.7480010986328,232.13999938964844 168.7480010986328,232.13999938964844 C168.7480010986328,232.13999938964844 0.0010000000474974513,139.94500732421875 0.0010000000474974513,139.94500732421875 C0.0010000000474974513,139.94500732421875 -111.26599884033203,120.94999694824219 -111.26599884033203,120.94999694824219 C-111.26599884033203,120.94999694824219 -191.5019989013672,0.8610000014305115 -191.5019989013672,0.8610000014305115 C-191.5019989013672,0.8610000014305115 -111.26599884033203,-119.22599792480469 -111.26599884033203,-119.22599792480469 C-111.26599884033203,-119.22599792480469 -99.70999908447266,-121.1989974975586 -84.0459976196289,-123.87300109863281");
-    			add_location(path13, file$4, 45, 8065, 8852);
-    			attr(g14, "opacity", "1");
-    			attr(g14, "transform", "matrix(1,0,0,1,263.0679931640625,297.8970031738281)");
-    			add_location(g14, file$4, 45, 7986, 8773);
-    			attr(path14, "stroke-linecap", "butt");
-    			attr(path14, "stroke-linejoin", "miter");
-    			attr(path14, "fill-opacity", "0");
-    			attr(path14, "stroke-miterlimit", "10");
-    			attr(path14, "stroke", "rgb(7,5,6)");
-    			attr(path14, "stroke-opacity", "1");
-    			attr(path14, "stroke-width", "1");
-    			attr(path14, "d", " M-83.1989974975586,-141.51499938964844 C-47.32400131225586,-140.4669952392578 -0.0010000000474974513,-139.08399963378906 -0.0010000000474974513,-139.08399963378906 C-0.0010000000474974513,-139.08399963378906 -0.0010000000474974513,-139.08399963378906 -0.0010000000474974513,-139.08399963378906 C-0.0010000000474974513,-139.08399963378906 157.11500549316406,-210.41799926757812 157.11500549316406,-210.41799926757812 C157.11500549316406,-210.41799926757812 191.5019989013672,-0.0010000000474974513 191.5019989013672,-0.0010000000474974513 C191.5019989013672,-0.0010000000474974513 157.11500549316406,210.41900634765625 157.11500549316406,210.41900634765625 C157.11500549316406,210.41900634765625 -0.0010000000474974513,139.08299255371094 -0.0010000000474974513,139.08299255371094 C-0.0010000000474974513,139.08299255371094 -122.7300033569336,142.67100524902344 -122.7300033569336,142.67100524902344 C-122.7300033569336,142.67100524902344 -191.5030059814453,-0.0010000000474974513 -191.5030059814453,-0.0010000000474974513 C-191.5030059814453,-0.0010000000474974513 -122.7300033569336,-142.6699981689453 -122.7300033569336,-142.6699981689453 C-122.7300033569336,-142.6699981689453 -105.09700012207031,-142.15499877929688 -83.1989974975586,-141.51499938964844");
-    			add_location(path14, file$4, 45, 9531, 10318);
-    			attr(g15, "opacity", "1");
-    			attr(g15, "transform", "matrix(1,0,0,1,253.20199584960938,307.8059997558594)");
-    			add_location(g15, file$4, 45, 9451, 10238);
-    			attr(path15, "stroke-linecap", "butt");
-    			attr(path15, "stroke-linejoin", "miter");
-    			attr(path15, "fill-opacity", "0");
-    			attr(path15, "stroke-miterlimit", "10");
-    			attr(path15, "stroke", "rgb(7,5,6)");
-    			attr(path15, "stroke-opacity", "1");
-    			attr(path15, "stroke-width", "1");
-    			attr(path15, "d", " M-80.6719970703125,-154.8159942626953 C-43.27299880981445,-147.5229949951172 -0.0010000000474974513,-139.08399963378906 -0.0010000000474974513,-139.08399963378906 C-0.0010000000474974513,-139.08399963378906 -0.0010000000474974513,-139.08399963378906 -0.0010000000474974513,-139.08399963378906 C-0.0010000000474974513,-139.08399963378906 145.65199279785156,-187.83700561523438 145.65199279785156,-187.83700561523438 C145.65199279785156,-187.83700561523438 191.5019989013672,-0.0010000000474974513 191.5019989013672,-0.0010000000474974513 C191.5019989013672,-0.0010000000474974513 145.65199279785156,187.83700561523438 145.65199279785156,187.83700561523438 C145.65199279785156,187.83700561523438 -0.0010000000474974513,139.08299255371094 -0.0010000000474974513,139.08299255371094 C-0.0010000000474974513,139.08299255371094 -134.19200134277344,165.25399780273438 -134.19200134277344,165.25399780273438 C-134.19200134277344,165.25399780273438 -191.5030059814453,-0.0010000000474974513 -191.5030059814453,-0.0010000000474974513 C-191.5030059814453,-0.0010000000474974513 -134.19200134277344,-165.2530059814453 -134.19200134277344,-165.2530059814453 C-134.19200134277344,-165.2530059814453 -109.13300323486328,-160.36599731445312 -80.6719970703125,-154.8159942626953");
-    			add_location(path15, file$4, 45, 11033, 11820);
-    			attr(g16, "opacity", "1");
-    			attr(g16, "transform", "matrix(1,0,0,1,243.33599853515625,316.85198974609375)");
-    			add_location(g16, file$4, 45, 10952, 11739);
-    			attr(path16, "stroke-linecap", "butt");
-    			attr(path16, "stroke-linejoin", "miter");
-    			attr(path16, "fill-opacity", "0");
-    			attr(path16, "stroke-miterlimit", "10");
-    			attr(path16, "stroke", "rgb(7,5,6)");
-    			attr(path16, "stroke-opacity", "1");
-    			attr(path16, "stroke-width", "1");
-    			attr(path16, "d", " M-77.94000244140625,-165.1719970703125 C-39.904998779296875,-152.4409942626953 0,-139.08399963378906 0,-139.08399963378906 C0,-139.08399963378906 0,-139.08399963378906 0,-139.08399963378906 C0,-139.08399963378906 134.1909942626953,-165.2530059814453 134.1909942626953,-165.2530059814453 C134.1909942626953,-165.2530059814453 191.5030059814453,-0.0010000000474974513 191.5030059814453,-0.0010000000474974513 C191.5030059814453,-0.0010000000474974513 134.1909942626953,165.25399780273438 134.1909942626953,165.25399780273438 C134.1909942626953,165.25399780273438 0,139.08299255371094 0,139.08299255371094 C0,139.08299255371094 -145.6540069580078,187.83700561523438 -145.6540069580078,187.83700561523438 C-145.6540069580078,187.83700561523438 -191.5030059814453,-0.0010000000474974513 -191.5030059814453,-0.0010000000474974513 C-191.5030059814453,-0.0010000000474974513 -145.6540069580078,-187.83700561523438 -145.6540069580078,-187.83700561523438 C-145.6540069580078,-187.83700561523438 -112.5719985961914,-176.76400756835938 -77.94000244140625,-165.1719970703125");
-    			add_location(path16, file$4, 45, 12537, 13324);
-    			attr(g17, "opacity", "1");
-    			attr(g17, "transform", "matrix(1,0,0,1,233.468994140625,325.89898681640625)");
-    			add_location(g17, file$4, 45, 12458, 13245);
-    			attr(path17, "stroke-linecap", "butt");
-    			attr(path17, "stroke-linejoin", "miter");
-    			attr(path17, "fill-opacity", "0");
-    			attr(path17, "stroke-miterlimit", "10");
-    			attr(path17, "stroke", "rgb(7,5,6)");
-    			attr(path17, "stroke-opacity", "1");
-    			attr(path17, "stroke-width", "1");
-    			attr(path17, "d", " M-75.78600311279297,-173.4929962158203 C-37.452999114990234,-156.08799743652344 0,-139.08299255371094 0,-139.08299255371094 C0,-139.08299255371094 0,-139.08299255371094 0,-139.08299255371094 C0,-139.08299255371094 122.72899627685547,-142.6699981689453 122.72899627685547,-142.6699981689453 C122.72899627685547,-142.6699981689453 191.5019989013672,0 191.5019989013672,0 C191.5019989013672,0 122.72899627685547,142.6719970703125 122.72899627685547,142.6719970703125 C122.72899627685547,142.6719970703125 0,139.08399963378906 0,139.08399963378906 C0,139.08399963378906 -157.11599731445312,210.4199981689453 -157.11599731445312,210.4199981689453 C-157.11599731445312,210.4199981689453 -191.5019989013672,0 -191.5019989013672,0 C-191.5019989013672,0 -157.11599731445312,-210.41900634765625 -157.11599731445312,-210.41900634765625 C-157.11599731445312,-210.41900634765625 -115.96700286865234,-191.73599243164062 -75.78600311279297,-173.4929962158203");
-    			add_location(path17, file$4, 45, 13843, 14630);
-    			attr(g18, "opacity", "1");
-    			attr(g18, "transform", "matrix(1,0,0,1,223.6020050048828,334.94500732421875)");
-    			add_location(g18, file$4, 45, 13763, 14550);
-    			attr(path18, "stroke-linecap", "butt");
-    			attr(path18, "stroke-linejoin", "miter");
-    			attr(path18, "fill-opacity", "0");
-    			attr(path18, "stroke-miterlimit", "10");
-    			attr(path18, "stroke", "rgb(7,5,6)");
-    			attr(path18, "stroke-opacity", "1");
-    			attr(path18, "stroke-width", "1");
-    			attr(path18, "d", " M-74.61399841308594,-180.6529998779297 C-35.92900085449219,-159.1009979248047 0.0010000000474974513,-139.08399963378906 0.0010000000474974513,-139.08399963378906 C0.0010000000474974513,-139.08399963378906 0.0010000000474974513,-139.08399963378906 0.0010000000474974513,-139.08399963378906 C0.0010000000474974513,-139.08399963378906 111.26799774169922,-120.08799743652344 111.26799774169922,-120.08799743652344 C111.26799774169922,-120.08799743652344 191.5030059814453,0 191.5030059814453,0 C191.5030059814453,0 111.26799774169922,120.08799743652344 111.26799774169922,120.08799743652344 C111.26799774169922,120.08799743652344 0.0010000000474974513,139.08399963378906 0.0010000000474974513,139.08399963378906 C0.0010000000474974513,139.08399963378906 -168.57699584960938,233.0019989013672 -168.57699584960938,233.0019989013672 C-168.57699584960938,233.0019989013672 -191.5019989013672,0 -191.5019989013672,0 C-191.5019989013672,0 -168.57699584960938,-233.0019989013672 -168.57699584960938,-233.0019989013672 C-168.57699584960938,-233.0019989013672 -119.7229995727539,-205.78399658203125 -74.61399841308594,-180.6529998779297");
-    			add_location(path18, file$4, 45, 15031, 15818);
-    			attr(g19, "opacity", "1");
-    			attr(g19, "transform", "matrix(1,0,0,1,213.73500061035156,343.9909973144531)");
-    			add_location(g19, file$4, 45, 14951, 15738);
-    			attr(path19, "stroke-linecap", "butt");
-    			attr(path19, "stroke-linejoin", "miter");
-    			attr(path19, "fill-opacity", "0");
-    			attr(path19, "stroke-miterlimit", "10");
-    			attr(path19, "stroke", "rgb(7,5,6)");
-    			attr(path19, "stroke-opacity", "1");
-    			attr(path19, "stroke-width", "1");
-    			attr(path19, "d", " M-74.62999725341797,-187.37399291992188 C-35.29499816894531,-161.9219970703125 -0.0010000000474974513,-139.08399963378906 -0.0010000000474974513,-139.08399963378906 C-0.0010000000474974513,-139.08399963378906 -0.0010000000474974513,-139.08399963378906 -0.0010000000474974513,-139.08399963378906 C-0.0010000000474974513,-139.08399963378906 99.80400085449219,-97.50599670410156 99.80400085449219,-97.50599670410156 C99.80400085449219,-97.50599670410156 191.5019989013672,-0.0010000000474974513 191.5019989013672,-0.0010000000474974513 C191.5019989013672,-0.0010000000474974513 99.80400085449219,97.50599670410156 99.80400085449219,97.50599670410156 C99.80400085449219,97.50599670410156 -0.0010000000474974513,139.08299255371094 -0.0010000000474974513,139.08299255371094 C-0.0010000000474974513,139.08299255371094 -180.04200744628906,255.5850067138672 -180.04200744628906,255.5850067138672 C-180.04200744628906,255.5850067138672 -191.5030059814453,-0.0010000000474974513 -191.5030059814453,-0.0010000000474974513 C-191.5030059814453,-0.0010000000474974513 -180.04200744628906,-255.58399963378906 -180.04200744628906,-255.58399963378906 C-180.04200744628906,-255.58399963378906 -124.13500213623047,-219.4080047607422 -74.62999725341797,-187.37399291992188");
-    			add_location(path19, file$4, 45, 16398, 17185);
-    			attr(g20, "opacity", "1");
-    			attr(g20, "transform", "matrix(1,0,0,1,203.8699951171875,353.0369873046875)");
-    			add_location(g20, file$4, 45, 16319, 17106);
-    			attr(path20, "stroke-linecap", "butt");
-    			attr(path20, "stroke-linejoin", "miter");
-    			attr(path20, "fill-opacity", "0");
-    			attr(path20, "stroke-miterlimit", "10");
-    			attr(path20, "stroke", "rgb(7,5,6)");
-    			attr(path20, "stroke-opacity", "1");
-    			attr(path20, "stroke-width", "1");
-    			attr(path20, "d", " M115.61599731445312,-55.1150016784668 C156.0279998779297,-25.763999938964844 191.5030059814453,0 191.5030059814453,0 C191.5030059814453,0 191.5030059814453,0 191.5030059814453,0 C191.5030059814453,0 0,139.08299255371094 0,139.08299255371094 C0,139.08299255371094 -191.5030059814453,278.1669921875 -191.5030059814453,278.1669921875 C-191.5030059814453,278.1669921875 -191.5030059814453,0 -191.5030059814453,0 C-191.5030059814453,0 -191.5030059814453,-278.1669921875 -191.5030059814453,-278.1669921875 C-191.5030059814453,-278.1669921875 0,-139.08399963378906 0,-139.08399963378906 C0,-139.08399963378906 62.13199996948242,-93.95899963378906 115.61599731445312,-55.1150016784668");
-    			add_location(path20, file$4, 45, 17893, 18680);
-    			attr(g21, "opacity", "1");
-    			attr(g21, "transform", "matrix(1,0,0,1,194.0030059814453,362.0840148925781)");
-    			add_location(g21, file$4, 45, 17814, 18601);
-    			attr(path21, "stroke-linecap", "butt");
-    			attr(path21, "stroke-linejoin", "miter");
-    			attr(path21, "fill-opacity", "0");
-    			attr(path21, "stroke-miterlimit", "10");
-    			attr(path21, "stroke", "rgb(7,5,6)");
-    			attr(path21, "stroke-opacity", "1");
-    			attr(path21, "stroke-width", "1");
-    			attr(path21, "d", " M-26.601999282836914,-16.85300064086914 C-30.273000717163086,-22.922000885009766 -32.81700134277344,-27.12700080871582 -32.81700134277344,-27.12700080871582 C-32.81700134277344,-27.12700080871582 -32.81700134277344,-27.12700080871582 -32.81700134277344,-27.12700080871582 C-32.81700134277344,-27.12700080871582 32.81700134277344,-27.12700080871582 32.81700134277344,-27.12700080871582 C32.81700134277344,-27.12700080871582 0,27.12700080871582 0,27.12700080871582 C0,27.12700080871582 -17.08799934387207,-1.1230000257492065 -26.601999282836914,-16.85300064086914");
-    			add_location(path21, file$4, 45, 18812, 19599);
-    			attr(g22, "opacity", "1");
-    			attr(g22, "transform", "matrix(1,0,0,1,435.9649963378906,618.281982421875)");
-    			add_location(g22, file$4, 45, 18734, 19521);
-    			attr(path22, "stroke-linecap", "butt");
-    			attr(path22, "stroke-linejoin", "miter");
-    			attr(path22, "fill-opacity", "0");
-    			attr(path22, "stroke-miterlimit", "10");
-    			attr(path22, "stroke", "rgb(7,5,6)");
-    			attr(path22, "stroke-opacity", "1");
-    			attr(path22, "stroke-width", "1");
-    			attr(path22, "d", " M-28.722000122070312,-7.460999965667725 C-31.215999603271484,-8.972000122070312 -32.81700134277344,-9.942000389099121 -32.81700134277344,-9.942000389099121 M32.81700134277344,-9.942000389099121 C32.81700134277344,-9.942000389099121 0.0010000000474974513,9.942000389099121 0.0010000000474974513,9.942000389099121 C0.0010000000474974513,9.942000389099121 -19.92099952697754,-2.128999948501587 -28.722000122070312,-7.460999965667725");
-    			add_location(path22, file$4, 45, 19617, 20404);
-    			attr(g23, "opacity", "1");
-    			attr(g23, "transform", "matrix(1,0,0,1,435.9649963378906,601.0969848632812)");
-    			add_location(g23, file$4, 45, 19538, 20325);
-    			attr(path23, "stroke-linecap", "butt");
-    			attr(path23, "stroke-linejoin", "miter");
-    			attr(path23, "fill-opacity", "0");
-    			attr(path23, "stroke-miterlimit", "10");
-    			attr(path23, "stroke", "rgb(7,5,6)");
-    			attr(path23, "stroke-opacity", "1");
-    			attr(path23, "stroke-width", "1");
-    			attr(path23, "d", " M-28.722000122070312,-15.031999588012695 C-31.215999603271484,-18.077999114990234 -32.81700134277344,-20.031999588012695 -32.81700134277344,-20.031999588012695 M32.81700134277344,-20.031999588012695 C32.81700134277344,-20.031999588012695 0.0010000000474974513,20.031999588012695 0.0010000000474974513,20.031999588012695 C0.0010000000474974513,20.031999588012695 -19.92099952697754,-4.289000034332275 -28.722000122070312,-15.031999588012695");
-    			add_location(path23, file$4, 45, 20288, 21075);
-    			attr(g24, "opacity", "1");
-    			attr(g24, "transform", "matrix(1,0,0,1,435.9649963378906,611.18701171875)");
-    			add_location(g24, file$4, 45, 20211, 20998);
-    			attr(g25, "transform", "matrix(1,0,0,1,721.5,216)");
-    			attr(g25, "opacity", "1");
-    			set_style(g25, "display", "block");
-    			add_location(g25, file$4, 45, 5735, 6522);
-    			attr(g26, "clip-path", "url(#cp_IjQ9np3D)");
-    			attr(g26, "transform", "matrix(1.49167001247406,0,0,1.49167001247406,-472.003173828125,-265.5018310546875)");
-    			attr(g26, "opacity", "1");
-    			set_style(g26, "display", "block");
-    			add_location(g26, file$4, 45, 455, 1242);
-    			attr(g27, "clip-path", "url(#animationMask_Obx7Q4Q9dW)");
-    			add_location(g27, file$4, 45, 409, 1196);
-    			attr(svg, "xmlns", "http://www.w3.org/2000/svg");
-    			attr(svg, "viewBox", "0 0 1920 1080");
-    			attr(svg, "width", "1920");
-    			attr(svg, "height", "1080");
-    			attr(svg, "preserveAspectRatio", "xMidYMid meet");
-    			set_style(svg, "width", "100%");
-    			set_style(svg, "height", "100%");
-    			set_style(svg, "transform", "translate3d(0px, 0px, 0px)");
-    			add_location(svg, file$4, 45, 4, 791);
-    			attr(div0, "class", "bodymovin svelte-1tb9xn");
-    			add_location(div0, file$4, 44, 2, 762);
-    			add_location(br, file$4, 48, 16, 21749);
-    			attr(h1, "class", "svelte-1tb9xn");
-    			add_location(h1, file$4, 48, 4, 21737);
-    			attr(div1, "class", "container svelte-1tb9xn");
-    			add_location(div1, file$4, 47, 2, 21709);
-    			attr(div2, "class", "main svelte-1tb9xn");
-    			add_location(div2, file$4, 43, 0, 741);
-    		},
-
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert(target, div2, anchor);
-    			append(div2, div0);
-    			append(div0, svg);
-    			append(svg, defs);
-    			append(defs, clipPath0);
-    			append(clipPath0, rect);
-    			append(defs, clipPath1);
-    			append(clipPath1, path0);
-    			append(svg, g27);
-    			append(g27, g26);
-    			append(g26, g4);
-    			append(g4, g0);
-    			append(g0, path1);
-    			append(g4, g1);
-    			append(g1, path2);
-    			append(g4, g2);
-    			append(g2, path3);
-    			append(g4, g3);
-    			append(g3, path4);
-    			append(g26, g11);
-    			append(g11, g5);
-    			append(g5, path5);
-    			append(g11, g6);
-    			append(g6, path6);
-    			append(g11, g7);
-    			append(g7, path7);
-    			append(g11, g8);
-    			append(g8, path8);
-    			append(g11, g9);
-    			append(g9, path9);
-    			append(g11, g10);
-    			append(g10, path10);
-    			append(g26, g25);
-    			append(g25, g12);
-    			append(g12, path11);
-    			append(g25, g13);
-    			append(g13, path12);
-    			append(g25, g14);
-    			append(g14, path13);
-    			append(g25, g15);
-    			append(g15, path14);
-    			append(g25, g16);
-    			append(g16, path15);
-    			append(g25, g17);
-    			append(g17, path16);
-    			append(g25, g18);
-    			append(g18, path17);
-    			append(g25, g19);
-    			append(g19, path18);
-    			append(g25, g20);
-    			append(g20, path19);
-    			append(g25, g21);
-    			append(g21, path20);
-    			append(g25, g22);
-    			append(g22, path21);
-    			append(g25, g23);
-    			append(g23, path22);
-    			append(g25, g24);
-    			append(g24, path23);
-    			append(div2, t0);
-    			append(div2, div1);
-    			append(div1, h1);
-    			append(h1, t1);
-    			append(h1, br);
-    			append(h1, t2);
-    		},
-
-    		p: noop,
-    		i: noop,
-    		o: noop,
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(div2);
-    			}
-    		}
-    	};
-    }
-
-    class Logo extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-    		init(this, options, null, create_fragment$5, safe_not_equal, []);
-    	}
-    }
-
-    /* src/routes/Home.svelte generated by Svelte v3.7.1 */
-
-    function create_fragment$6(ctx) {
-    	var t, current;
-
-    	var logo = new Logo({ $$inline: true });
-
-    	var landingtext = new LandingText({ $$inline: true });
-
-    	return {
-    		c: function create() {
-    			logo.$$.fragment.c();
-    			t = space();
-    			landingtext.$$.fragment.c();
-    		},
-
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-
-    		m: function mount(target, anchor) {
-    			mount_component(logo, target, anchor);
-    			insert(target, t, anchor);
-    			mount_component(landingtext, target, anchor);
-    			current = true;
-    		},
-
-    		p: noop,
-
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(logo.$$.fragment, local);
-
-    			transition_in(landingtext.$$.fragment, local);
-
-    			current = true;
-    		},
-
-    		o: function outro(local) {
-    			transition_out(logo.$$.fragment, local);
-    			transition_out(landingtext.$$.fragment, local);
-    			current = false;
-    		},
-
-    		d: function destroy(detaching) {
-    			destroy_component(logo, detaching);
-
-    			if (detaching) {
-    				detach(t);
-    			}
-
-    			destroy_component(landingtext, detaching);
-    		}
-    	};
-    }
-
-    class Home extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-    		init(this, options, null, create_fragment$6, safe_not_equal, []);
-    	}
-    }
-
-    /* src/routes/ProfileGrid.svelte generated by Svelte v3.7.1 */
-
-    const file$5 = "src/routes/ProfileGrid.svelte";
-
-    function create_fragment$7(ctx) {
-    	var div21, div2, div0, h20, t1, h40, t3, p0, t4, br0, t5, br1, t6, t7, div1, img0, t8, div5, div3, img1, t9, div4, h21, t11, h41, t13, p1, t15, div8, div6, h22, t17, h42, t19, p2, t21, div7, img2, t22, div11, div9, img3, t23, div10, h23, t25, h43, t27, p3, t29, div14, div12, h24, t31, h44, t33, p4, t35, p5, t37, div13, img4, t38, div17, div15, img5, t39, div16, h25, t41, h45, t43, p6, t45, div20, div18, h26, t47, h46, t49, p7, t51, div19, img6;
-
-    	return {
-    		c: function create() {
-    			div21 = element("div");
-    			div2 = element("div");
-    			div0 = element("div");
-    			h20 = element("h2");
-    			h20.textContent = "James Zaki";
-    			t1 = space();
-    			h40 = element("h4");
-    			h40.textContent = "Blockchain/IoT Engineer and Consultant";
-    			t3 = space();
-    			p0 = element("p");
-    			t4 = text$1("With 15 years experience in engineering and software development, James has worked in a variety of domains from industrial/home automation to local tech companies and start-ups.");
-    			br0 = element("br");
-    			t5 = text$1("\n        The last 7 years have covered development, product management, and tech advisor roles, both locally and abroad.");
-    			br1 = element("br");
-    			t6 = text$1("\n        As organiser of the OzBerry IoT MeetUp and smart-contract developer/auditor, James is exploring applications using IoT and Blockchain technologies that can positively impact society.");
-    			t7 = space();
-    			div1 = element("div");
-    			img0 = element("img");
-    			t8 = space();
-    			div5 = element("div");
-    			div3 = element("div");
-    			img1 = element("img");
-    			t9 = space();
-    			div4 = element("div");
-    			h21 = element("h2");
-    			h21.textContent = "Ellie Rennie";
-    			t11 = space();
-    			h41 = element("h4");
-    			h41.textContent = "Associate Professor, RMIT Blockchain Innovation Hub";
-    			t13 = space();
-    			p1 = element("p");
-    			p1.textContent = "Ellie Rennie’s research spans internet studies, public policy, and political theory. In recent years she has been conducting qualitative   research to better understand how social norms influence internet adoption and use. She has an ongoing interest in civil society,         distributed governance systems, and social innovation.";
-    			t15 = space();
-    			div8 = element("div");
-    			div6 = element("div");
-    			h22 = element("h2");
-    			h22.textContent = "Bok Khoo";
-    			t17 = space();
-    			h42 = element("h4");
-    			h42.textContent = "Decentralised Future Fund";
-    			t19 = space();
-    			p2 = element("p");
-    			p2.textContent = "Bok Khoo, or BokkyPooBah, is an actuary and software developer working in the Ethereum ecosystem. He is one of the early and top contributors to Ethereum.StackExchange.com. He assisted in the reconciliation of refunds to the original token holders in the pioneer decentralised autonomous organisation, The DAO. He has conducted 39 public Ethereum smart contract audits, and built the early and primitive decentralised exchange CryptoDerivatives.Market in Nov 2016. He helped establish the Decentralised Future Fund DAO that funded the representation of 10 Australian Ethereum community members at conferences worldwide in 2018. He has also released some very nice open source Ethereum smart contract libraries like the Gas-Efficient Solidity DateTime Library and BokkyPooBah’s Red-Black Binary Search Tree Library.";
-    			t21 = space();
-    			div7 = element("div");
-    			img2 = element("img");
-    			t22 = space();
-    			div11 = element("div");
-    			div9 = element("div");
-    			img3 = element("img");
-    			t23 = space();
-    			div10 = element("div");
-    			h23 = element("h2");
-    			h23.textContent = "Thomas Nash";
-    			t25 = space();
-    			h43 = element("h4");
-    			h43.textContent = "CTO & Co-Founder, Flex Dapps";
-    			t27 = space();
-    			p3 = element("p");
-    			p3.textContent = "A Software Engineer for 5 years and Co-founder of Flex Dapps, Tom has been working with the Ethereum blockchain since 2016. He has a deep interest in everything decentralised and has run countless beginner and intermediate level workshops over the last 18 months. If you ask around for technical blockchain experts in Australia, Tom’s name is one that will pop up time and time again.";
-    			t29 = space();
-    			div14 = element("div");
-    			div12 = element("div");
-    			h24 = element("h2");
-    			h24.textContent = "Bonnie Yiu";
-    			t31 = space();
-    			h44 = element("h4");
-    			h44.textContent = "Co-Founder, Consulere";
-    			t33 = space();
-    			p4 = element("p");
-    			p4.textContent = "Bonnie Yiu is co-founder of Consulere.io, a blockchain, IoT and AI consulting company. Bonnie regularly publishes and presents on blockchain-related matters, and recently appeared as a speaker at the World Economic Forum (WEF) in Davos, Switzerland in January 2019. Bonnie is also a Founding Governing Member of the Decentralised Future Fund.";
-    			t35 = space();
-    			p5 = element("p");
-    			p5.textContent = "Prior to that Bonnie was an Associate at international law firms in Sydney and Silicon Valley, specialising in Financial Services and Venture Capital laws.";
-    			t37 = space();
-    			div13 = element("div");
-    			img4 = element("img");
-    			t38 = space();
-    			div17 = element("div");
-    			div15 = element("div");
-    			img5 = element("img");
-    			t39 = space();
-    			div16 = element("div");
-    			h25 = element("h2");
-    			h25.textContent = "James Eddington";
-    			t41 = space();
-    			h45 = element("h4");
-    			h45.textContent = "Classified";
-    			t43 = space();
-    			p6 = element("p");
-    			p6.textContent = "James is a web3 technology and privacy enthusiast, with specific expertise in cryptocurrency custodianship and the decentralised finance industry. Having worked in traditional financial services and with Melbourne based blockchain venture studio Typehuman, James now pursues his own interests in Web3.";
-    			t45 = space();
-    			div20 = element("div");
-    			div18 = element("div");
-    			h26 = element("h2");
-    			h26.textContent = "Alexander Ramsey";
-    			t47 = space();
-    			h46 = element("h4");
-    			h46.textContent = "CEO & Co-Founder, Flex Dapps";
-    			t49 = space();
-    			p7 = element("p");
-    			p7.textContent = "Alexander is a serial company founder and community builder who has worked in emerging industries including game development, esports, 3D systems and immersive media, with experience that encompasses commercial operations, programming, design and community engagement. Alex is currently the CEO and Co-founder of Flex Dapps, an Australian software development company specialising in decentralised applications. He is also a community organiser of Web3 Melbourne, a grassroots technology-agnostic developer community.";
-    			t51 = space();
-    			div19 = element("div");
-    			img6 = element("img");
-    			add_location(h20, file$5, 33, 6, 560);
-    			add_location(h40, file$5, 34, 6, 586);
-    			add_location(br0, file$5, 36, 185, 829);
-    			add_location(br1, file$5, 37, 119, 953);
-    			add_location(p0, file$5, 35, 6, 640);
-    			attr(div0, "class", "text svelte-1o2gl64");
-    			add_location(div0, file$5, 32, 4, 535);
-    			attr(img0, "src", "https://web3australia.org/wp-content/uploads/2019/03/jz.jpg");
-    			attr(img0, "alt", "notw cover");
-    			attr(img0, "class", "svelte-1o2gl64");
-    			add_location(img0, file$5, 42, 6, 1203);
-    			attr(div1, "class", "picture");
-    			add_location(div1, file$5, 41, 4, 1175);
-    			attr(div2, "class", "profile svelte-1o2gl64");
-    			add_location(div2, file$5, 31, 2, 509);
-    			attr(img1, "src", "https://web3australia.org/wp-content/uploads/2019/03/RJp9gIJl_400x400.jpg");
-    			attr(img1, "alt", "notw cover");
-    			attr(img1, "class", "svelte-1o2gl64");
-    			add_location(img1, file$5, 48, 6, 1393);
-    			add_location(div3, file$5, 47, 4, 1381);
-    			add_location(h21, file$5, 51, 6, 1537);
-    			add_location(h41, file$5, 52, 6, 1565);
-    			add_location(p1, file$5, 53, 6, 1632);
-    			attr(div4, "class", "text svelte-1o2gl64");
-    			add_location(div4, file$5, 50, 4, 1512);
-    			attr(div5, "class", "profile svelte-1o2gl64");
-    			set_style(div5, "grid-template-columns", "36% auto");
-    			add_location(div5, file$5, 46, 2, 1316);
-    			add_location(h22, file$5, 61, 6, 2100);
-    			add_location(h42, file$5, 62, 6, 2124);
-    			add_location(p2, file$5, 63, 6, 2165);
-    			attr(div6, "class", "text svelte-1o2gl64");
-    			add_location(div6, file$5, 60, 4, 2075);
-    			attr(img2, "src", "https://web3australia.org/wp-content/uploads/2019/03/bokky-1.jpg");
-    			attr(img2, "alt", "notw cover");
-    			attr(img2, "class", "svelte-1o2gl64");
-    			add_location(img2, file$5, 68, 6, 3046);
-    			attr(div7, "class", "picture");
-    			add_location(div7, file$5, 67, 4, 3018);
-    			attr(div8, "class", "profile svelte-1o2gl64");
-    			set_style(div8, "grid-template-columns", "36% auto");
-    			add_location(div8, file$5, 59, 2, 2010);
-    			attr(img3, "src", "https://web3australia.org/wp-content/uploads/2019/03/tom.jpg");
-    			attr(img3, "alt", "notw cover");
-    			attr(img3, "class", "svelte-1o2gl64");
-    			add_location(img3, file$5, 74, 6, 3257);
-    			attr(div9, "class", "picture");
-    			add_location(div9, file$5, 73, 4, 3229);
-    			add_location(h23, file$5, 77, 6, 3388);
-    			add_location(h43, file$5, 78, 6, 3415);
-    			add_location(p3, file$5, 79, 6, 3459);
-    			attr(div10, "class", "text svelte-1o2gl64");
-    			add_location(div10, file$5, 76, 4, 3363);
-    			attr(div11, "class", "profile svelte-1o2gl64");
-    			set_style(div11, "grid-template-columns", "auto 36%");
-    			add_location(div11, file$5, 72, 2, 3164);
-    			add_location(h24, file$5, 87, 6, 3980);
-    			add_location(h44, file$5, 88, 6, 4006);
-    			add_location(p4, file$5, 89, 6, 4043);
-    			add_location(p5, file$5, 92, 6, 4416);
-    			attr(div12, "class", "text svelte-1o2gl64");
-    			add_location(div12, file$5, 86, 4, 3955);
-    			attr(img4, "src", "https://web3australia.org/wp-content/uploads/2019/03/bonnie.jpg");
-    			attr(img4, "alt", "notw cover");
-    			attr(img4, "class", "svelte-1o2gl64");
-    			add_location(img4, file$5, 97, 6, 4638);
-    			attr(div13, "class", "picture");
-    			add_location(div13, file$5, 96, 4, 4610);
-    			attr(div14, "class", "profile svelte-1o2gl64");
-    			set_style(div14, "grid-template-columns", "36% auto");
-    			add_location(div14, file$5, 85, 2, 3890);
-    			attr(img5, "src", "https://web3australia.org/wp-content/uploads/2019/03/james.jpg");
-    			attr(img5, "alt", "notw cover");
-    			attr(img5, "class", "svelte-1o2gl64");
-    			add_location(img5, file$5, 103, 6, 4854);
-    			attr(div15, "class", "picture");
-    			add_location(div15, file$5, 102, 4, 4826);
-    			add_location(h25, file$5, 106, 6, 4993);
-    			add_location(h45, file$5, 107, 6, 5024);
-    			add_location(p6, file$5, 108, 6, 5050);
-    			attr(div16, "class", "text svelte-1o2gl64");
-    			add_location(div16, file$5, 105, 4, 4968);
-    			attr(div17, "class", "profile svelte-1o2gl64");
-    			set_style(div17, "grid-template-columns", "auto 36%");
-    			add_location(div17, file$5, 101, 2, 4761);
-    			add_location(h26, file$5, 116, 6, 5488);
-    			add_location(h46, file$5, 117, 6, 5520);
-    			add_location(p7, file$5, 118, 6, 5564);
-    			attr(div18, "class", "text svelte-1o2gl64");
-    			add_location(div18, file$5, 115, 4, 5463);
-    			attr(img6, "src", "https://web3australia.org/wp-content/uploads/2019/03/Alex-1-BW.jpg");
-    			attr(img6, "alt", "notw cover");
-    			attr(img6, "class", "svelte-1o2gl64");
-    			add_location(img6, file$5, 123, 6, 6148);
-    			attr(div19, "class", "picture");
-    			add_location(div19, file$5, 122, 4, 6120);
-    			attr(div20, "class", "profile svelte-1o2gl64");
-    			set_style(div20, "grid-template-columns", "36% auto");
-    			add_location(div20, file$5, 114, 2, 5398);
-    			attr(div21, "class", "profile-wrapper svelte-1o2gl64");
-    			add_location(div21, file$5, 30, 0, 477);
-    		},
-
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert(target, div21, anchor);
-    			append(div21, div2);
-    			append(div2, div0);
-    			append(div0, h20);
-    			append(div0, t1);
-    			append(div0, h40);
-    			append(div0, t3);
-    			append(div0, p0);
-    			append(p0, t4);
-    			append(p0, br0);
-    			append(p0, t5);
-    			append(p0, br1);
-    			append(p0, t6);
-    			append(div2, t7);
-    			append(div2, div1);
-    			append(div1, img0);
-    			append(div21, t8);
-    			append(div21, div5);
-    			append(div5, div3);
-    			append(div3, img1);
-    			append(div5, t9);
-    			append(div5, div4);
-    			append(div4, h21);
-    			append(div4, t11);
-    			append(div4, h41);
-    			append(div4, t13);
-    			append(div4, p1);
-    			append(div21, t15);
-    			append(div21, div8);
-    			append(div8, div6);
-    			append(div6, h22);
-    			append(div6, t17);
-    			append(div6, h42);
-    			append(div6, t19);
-    			append(div6, p2);
-    			append(div8, t21);
-    			append(div8, div7);
-    			append(div7, img2);
-    			append(div21, t22);
-    			append(div21, div11);
-    			append(div11, div9);
-    			append(div9, img3);
-    			append(div11, t23);
-    			append(div11, div10);
-    			append(div10, h23);
-    			append(div10, t25);
-    			append(div10, h43);
-    			append(div10, t27);
-    			append(div10, p3);
-    			append(div21, t29);
-    			append(div21, div14);
-    			append(div14, div12);
-    			append(div12, h24);
-    			append(div12, t31);
-    			append(div12, h44);
-    			append(div12, t33);
-    			append(div12, p4);
-    			append(div12, t35);
-    			append(div12, p5);
-    			append(div14, t37);
-    			append(div14, div13);
-    			append(div13, img4);
-    			append(div21, t38);
-    			append(div21, div17);
-    			append(div17, div15);
-    			append(div15, img5);
-    			append(div17, t39);
-    			append(div17, div16);
-    			append(div16, h25);
-    			append(div16, t41);
-    			append(div16, h45);
-    			append(div16, t43);
-    			append(div16, p6);
-    			append(div21, t45);
-    			append(div21, div20);
-    			append(div20, div18);
-    			append(div18, h26);
-    			append(div18, t47);
-    			append(div18, h46);
-    			append(div18, t49);
-    			append(div18, p7);
-    			append(div20, t51);
-    			append(div20, div19);
-    			append(div19, img6);
-    		},
-
-    		p: noop,
-    		i: noop,
-    		o: noop,
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(div21);
-    			}
-    		}
-    	};
-    }
-
-    class ProfileGrid extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-    		init(this, options, null, create_fragment$7, safe_not_equal, []);
-    	}
-    }
-
-    /* src/routes/Humans.svelte generated by Svelte v3.7.1 */
-
-    const file$6 = "src/routes/Humans.svelte";
-
-    function create_fragment$8(ctx) {
-    	var div1, div0, h1, t_1, p0, p1, current;
-
-    	var profilegrid = new ProfileGrid({ $$inline: true });
-
-    	return {
-    		c: function create() {
-    			div1 = element("div");
-    			div0 = element("div");
-    			h1 = element("h1");
-    			h1.textContent = "Committee of Management";
-    			t_1 = space();
-    			p0 = element("p");
-    			p0.textContent = "The Web3 Australia’s committee of management totals 7 humans and includes academics, entrepreneurs, technologists and software developers.";
-    			p1 = element("p");
-    			profilegrid.$$.fragment.c();
-    			attr(h1, "class", "svelte-vfojje");
-    			add_location(h1, file$6, 43, 4, 772);
-    			add_location(p0, file$6, 44, 4, 809);
-    			add_location(p1, file$6, 44, 145, 950);
-    			attr(div0, "class", "content-container svelte-vfojje");
-    			add_location(div0, file$6, 42, 2, 736);
-    			attr(div1, "class", "container svelte-vfojje");
-    			add_location(div1, file$6, 41, 0, 710);
-    		},
-
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert(target, div1, anchor);
-    			append(div1, div0);
-    			append(div0, h1);
-    			append(div0, t_1);
-    			append(div0, p0);
-    			append(div0, p1);
-    			mount_component(profilegrid, p1, null);
-    			current = true;
-    		},
-
-    		p: noop,
-
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(profilegrid.$$.fragment, local);
-
-    			current = true;
-    		},
-
-    		o: function outro(local) {
-    			transition_out(profilegrid.$$.fragment, local);
-    			current = false;
-    		},
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(div1);
-    			}
-
-    			destroy_component(profilegrid);
-    		}
-    	};
-    }
-
-    class Humans extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-    		init(this, options, null, create_fragment$8, safe_not_equal, []);
-    	}
-    }
-
     /* src/routes/EventCard.svelte generated by Svelte v3.7.1 */
     const { console: console_1 } = globals;
 
-    const file$7 = "src/routes/EventCard.svelte";
+    const file$5 = "src/routes/EventCard.svelte";
 
-    function create_fragment$9(ctx) {
+    function create_fragment$6(ctx) {
     	var div1, div0, h2, t1, p0, t3, h3, a, t4_value = ctx.event.name, t4, a_href_value, t5, p1, t7, p2, t8, t9_value = ctx.event.venue.name, t9, t10, p3;
 
     	return {
@@ -3375,17 +2988,17 @@ var app = (function () {
     			t10 = space();
     			p3 = element("p");
     			attr(h2, "class", "day svelte-rh95e6");
-    			add_location(h2, file$7, 28, 4, 403);
-    			add_location(p0, file$7, 29, 4, 431);
+    			add_location(h2, file$5, 28, 4, 403);
+    			add_location(p0, file$5, 29, 4, 431);
     			attr(a, "href", a_href_value = ctx.event.link);
-    			add_location(a, file$7, 30, 8, 455);
-    			add_location(h3, file$7, 30, 4, 451);
-    			add_location(p1, file$7, 31, 4, 502);
-    			add_location(p2, file$7, 32, 4, 527);
-    			add_location(p3, file$7, 33, 4, 559);
-    			add_location(div0, file$7, 27, 2, 393);
+    			add_location(a, file$5, 30, 8, 455);
+    			add_location(h3, file$5, 30, 4, 451);
+    			add_location(p1, file$5, 31, 4, 502);
+    			add_location(p2, file$5, 32, 4, 527);
+    			add_location(p3, file$5, 33, 4, 559);
+    			add_location(div0, file$5, 27, 2, 393);
     			attr(div1, "class", "event-card svelte-rh95e6");
-    			add_location(div1, file$7, 26, 0, 366);
+    			add_location(div1, file$5, 26, 0, 366);
     		},
 
     		l: function claim(nodes) {
@@ -3459,7 +3072,7 @@ var app = (function () {
     class EventCard extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$2, create_fragment$9, safe_not_equal, ["event"]);
+    		init(this, options, instance$2, create_fragment$6, safe_not_equal, ["event"]);
 
     		const { ctx } = this.$$;
     		const props = options.props || {};
@@ -3479,16 +3092,16 @@ var app = (function () {
 
     /* src/routes/Melbourne.svelte generated by Svelte v3.7.1 */
 
-    const file$8 = "src/routes/Melbourne.svelte";
+    const file$6 = "src/routes/Melbourne.svelte";
 
-    function get_each_context$1(ctx, list, i) {
+    function get_each_context(ctx, list, i) {
     	const child_ctx = Object.create(ctx);
     	child_ctx.event = list[i];
     	return child_ctx;
     }
 
     // (52:5) {#each events as event }
-    function create_each_block$1(ctx) {
+    function create_each_block(ctx) {
     	var current;
 
     	var eventcard = new EventCard({
@@ -3530,7 +3143,7 @@ var app = (function () {
     	};
     }
 
-    function create_fragment$a(ctx) {
+    function create_fragment$7(ctx) {
     	var div2, div1, div0, current;
 
     	var each_value = ctx.events;
@@ -3538,7 +3151,7 @@ var app = (function () {
     	var each_blocks = [];
 
     	for (var i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
+    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
     	}
 
     	const out = i => transition_out(each_blocks[i], 1, 1, () => {
@@ -3555,11 +3168,11 @@ var app = (function () {
     				each_blocks[i].c();
     			}
     			attr(div0, "class", "flex-events svelte-1roa5c2");
-    			add_location(div0, file$8, 50, 4, 917);
+    			add_location(div0, file$6, 50, 4, 917);
     			attr(div1, "class", "flex-container-location-select svelte-1roa5c2");
-    			add_location(div1, file$8, 49, 2, 866);
+    			add_location(div1, file$6, 49, 2, 866);
     			attr(div2, "class", "container svelte-1roa5c2");
-    			add_location(div2, file$8, 48, 0, 840);
+    			add_location(div2, file$6, 48, 0, 840);
     		},
 
     		l: function claim(nodes) {
@@ -3583,13 +3196,13 @@ var app = (function () {
     				each_value = ctx.events;
 
     				for (var i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context$1(ctx, each_value, i);
+    					const child_ctx = get_each_context(ctx, each_value, i);
 
     					if (each_blocks[i]) {
     						each_blocks[i].p(changed, child_ctx);
     						transition_in(each_blocks[i], 1);
     					} else {
-    						each_blocks[i] = create_each_block$1(child_ctx);
+    						each_blocks[i] = create_each_block(child_ctx);
     						each_blocks[i].c();
     						transition_in(each_blocks[i], 1);
     						each_blocks[i].m(div0, null);
@@ -3646,7 +3259,7 @@ var app = (function () {
     class Melbourne extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$3, create_fragment$a, safe_not_equal, ["events"]);
+    		init(this, options, instance$3, create_fragment$7, safe_not_equal, ["events"]);
 
     		const { ctx } = this.$$;
     		const props = options.props || {};
@@ -3666,7 +3279,7 @@ var app = (function () {
 
     /* src/routes/Sydney.svelte generated by Svelte v3.7.1 */
 
-    function create_fragment$b(ctx) {
+    function create_fragment$8(ctx) {
     	return {
     		c: noop,
 
@@ -3685,13 +3298,13 @@ var app = (function () {
     class Sydney extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, null, create_fragment$b, safe_not_equal, []);
+    		init(this, options, null, create_fragment$8, safe_not_equal, []);
     	}
     }
 
     /* src/routes/Brisbane.svelte generated by Svelte v3.7.1 */
 
-    function create_fragment$c(ctx) {
+    function create_fragment$9(ctx) {
     	return {
     		c: noop,
 
@@ -3710,22 +3323,22 @@ var app = (function () {
     class Brisbane extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, null, create_fragment$c, safe_not_equal, []);
+    		init(this, options, null, create_fragment$9, safe_not_equal, []);
     	}
     }
 
     /* src/routes/Events.svelte generated by Svelte v3.7.1 */
 
-    const file$9 = "src/routes/Events.svelte";
+    const file$7 = "src/routes/Events.svelte";
 
-    function get_each_context$2(ctx, list, i) {
+    function get_each_context$1(ctx, list, i) {
     	const child_ctx = Object.create(ctx);
     	child_ctx.city = list[i];
     	return child_ctx;
     }
 
     // (106:1) {#each cities as city}
-    function create_each_block$2(ctx) {
+    function create_each_block$1(ctx) {
     	var button, t0, t1_value = ctx.city.name, t1, t2, button_id_value, dispose;
 
     	return {
@@ -3736,7 +3349,7 @@ var app = (function () {
     			t2 = space();
     			attr(button, "class", "tablinks svelte-1f8orxp");
     			attr(button, "id", button_id_value = ctx.city.name);
-    			add_location(button, file$9, 106, 4, 2532);
+    			add_location(button, file$7, 106, 4, 2532);
     			dispose = listen(button, "click", ctx.handleClick);
     		},
 
@@ -3760,7 +3373,7 @@ var app = (function () {
     }
 
     // (113:0) {:else}
-    function create_else_block$1(ctx) {
+    function create_else_block(ctx) {
     	var switch_instance_anchor, current;
 
     	var switch_value = ctx.selected.component;
@@ -3844,14 +3457,14 @@ var app = (function () {
     }
 
     // (111:0) {#if !events.loaded}
-    function create_if_block(ctx) {
+    function create_if_block$1(ctx) {
     	var p;
 
     	return {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...fetching events";
-    			add_location(p, file$9, 111, 2, 2671);
+    			add_location(p, file$7, 111, 2, 2671);
     		},
 
     		m: function mount(target, anchor) {
@@ -3870,7 +3483,7 @@ var app = (function () {
     	};
     }
 
-    function create_fragment$d(ctx) {
+    function create_fragment$a(ctx) {
     	var div, t, current_block_type_index, if_block, if_block_anchor, current;
 
     	var each_value = ctx.cities;
@@ -3878,12 +3491,12 @@ var app = (function () {
     	var each_blocks = [];
 
     	for (var i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block$2(get_each_context$2(ctx, each_value, i));
+    		each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
     	}
 
     	var if_block_creators = [
-    		create_if_block,
-    		create_else_block$1
+    		create_if_block$1,
+    		create_else_block
     	];
 
     	var if_blocks = [];
@@ -3908,7 +3521,7 @@ var app = (function () {
     			if_block.c();
     			if_block_anchor = empty();
     			attr(div, "class", "tab svelte-1f8orxp");
-    			add_location(div, file$9, 104, 0, 2486);
+    			add_location(div, file$7, 104, 0, 2486);
     		},
 
     		l: function claim(nodes) {
@@ -3933,12 +3546,12 @@ var app = (function () {
     				each_value = ctx.cities;
 
     				for (var i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context$2(ctx, each_value, i);
+    					const child_ctx = get_each_context$1(ctx, each_value, i);
 
     					if (each_blocks[i]) {
     						each_blocks[i].p(changed, child_ctx);
     					} else {
-    						each_blocks[i] = create_each_block$2(child_ctx);
+    						each_blocks[i] = create_each_block$1(child_ctx);
     						each_blocks[i].c();
     						each_blocks[i].m(div, null);
     					}
@@ -4073,7 +3686,7 @@ var app = (function () {
     class Events extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$4, create_fragment$d, safe_not_equal, []);
+    		init(this, options, instance$4, create_fragment$a, safe_not_equal, []);
     	}
     }
 
@@ -10060,17 +9673,24 @@ var app = (function () {
     /* src/routes/Blog.svelte generated by Svelte v3.7.1 */
     const { Error: Error_1$1 } = globals;
 
-    const file$a = "src/routes/Blog.svelte";
+    const file$8 = "src/routes/Blog.svelte";
 
-    function get_each_context$3(ctx, list, i) {
+    function get_each_context$2(ctx, list, i) {
     	const child_ctx = Object.create(ctx);
     	child_ctx.post = list[i];
     	child_ctx.i = i;
     	return child_ctx;
     }
 
-    // (101:0) {:catch error}
-    function create_catch_block(ctx) {
+    function get_each_context_1(ctx, list, i) {
+    	const child_ctx = Object.create(ctx);
+    	child_ctx.post = list[i];
+    	child_ctx.i = i;
+    	return child_ctx;
+    }
+
+    // (137:0) {:catch error}
+    function create_catch_block_1(ctx) {
     	var p, t_value = ctx.error.message, t;
 
     	return {
@@ -10078,7 +9698,7 @@ var app = (function () {
     			p = element("p");
     			t = text$1(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$a, 101, 1, 2214);
+    			add_location(p, file$8, 137, 1, 2903);
     		},
 
     		m: function mount(target, anchor) {
@@ -10098,16 +9718,16 @@ var app = (function () {
     	};
     }
 
-    // (80:0) {:then blogData}
-    function create_then_block(ctx) {
-    	var div0, h1, t1, h2, a, t2_value = ctx.blogData.feed.title, t2, a_href_value, t3, p, t4_value = ctx.blogData.feed.description, t4, t5, div1, current;
+    // (109:0) {:then blogData}
+    function create_then_block_1(ctx) {
+    	var div0, t0, div1, h2, a, t1_value = ctx.blogData.feed.title, t1, a_href_value, current;
 
-    	var each_value = ctx.blogData.items;
+    	var each_value_1 = ctx.blogData.items;
 
     	var each_blocks = [];
 
-    	for (var i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block$3(get_each_context$3(ctx, each_value, i));
+    	for (var i = 0; i < each_value_1.length; i += 1) {
+    		each_blocks[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
     	}
 
     	const out = i => transition_out(each_blocks[i], 1, 1, () => {
@@ -10117,79 +9737,67 @@ var app = (function () {
     	return {
     		c: function create() {
     			div0 = element("div");
-    			h1 = element("h1");
-    			h1.textContent = "Our Blogs";
-    			t1 = space();
-    			h2 = element("h2");
-    			a = element("a");
-    			t2 = text$1(t2_value);
-    			t3 = space();
-    			p = element("p");
-    			t4 = text$1(t4_value);
-    			t5 = space();
-    			div1 = element("div");
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
-    			add_location(h1, file$a, 81, 6, 1566);
+
+    			t0 = space();
+    			div1 = element("div");
+    			h2 = element("h2");
+    			a = element("a");
+    			t1 = text$1(t1_value);
+    			attr(div0, "class", "blogs svelte-1q8gg7c");
+    			add_location(div0, file$8, 109, 2, 2096);
     			attr(a, "href", a_href_value = ctx.blogData.feed.link);
-    			add_location(a, file$a, 82, 11, 1596);
-    			add_location(h2, file$a, 82, 6, 1591);
-    			add_location(p, file$a, 83, 6, 1664);
-    			attr(div0, "class", "blog-heading svelte-1a2e2h3");
-    			add_location(div0, file$a, 80, 4, 1533);
-    			attr(div1, "class", "blogs svelte-1a2e2h3");
-    			add_location(div1, file$a, 85, 4, 1714);
+    			add_location(a, file$8, 132, 9, 2744);
+    			add_location(h2, file$8, 132, 4, 2739);
+    			attr(div1, "class", "blog-group svelte-1q8gg7c");
+    			add_location(div1, file$8, 131, 2, 2710);
     		},
 
     		m: function mount(target, anchor) {
     			insert(target, div0, anchor);
-    			append(div0, h1);
-    			append(div0, t1);
-    			append(div0, h2);
-    			append(h2, a);
-    			append(a, t2);
-    			append(div0, t3);
-    			append(div0, p);
-    			append(p, t4);
-    			insert(target, t5, anchor);
-    			insert(target, div1, anchor);
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(div1, null);
+    				each_blocks[i].m(div0, null);
     			}
 
+    			insert(target, t0, anchor);
+    			insert(target, div1, anchor);
+    			append(div1, h2);
+    			append(h2, a);
+    			append(a, t1);
     			current = true;
     		},
 
     		p: function update(changed, ctx) {
-    			if (changed.moment || changed.promise) {
-    				each_value = ctx.blogData.items;
+    			if (changed.web3Promise || changed.moment) {
+    				each_value_1 = ctx.blogData.items;
 
-    				for (var i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context$3(ctx, each_value, i);
+    				for (var i = 0; i < each_value_1.length; i += 1) {
+    					const child_ctx = get_each_context_1(ctx, each_value_1, i);
 
     					if (each_blocks[i]) {
     						each_blocks[i].p(changed, child_ctx);
     						transition_in(each_blocks[i], 1);
     					} else {
-    						each_blocks[i] = create_each_block$3(child_ctx);
+    						each_blocks[i] = create_each_block_1(child_ctx);
     						each_blocks[i].c();
     						transition_in(each_blocks[i], 1);
-    						each_blocks[i].m(div1, null);
+    						each_blocks[i].m(div0, null);
     					}
     				}
 
     				group_outros();
-    				for (i = each_value.length; i < each_blocks.length; i += 1) out(i);
+    				for (i = each_value_1.length; i < each_blocks.length; i += 1) out(i);
     				check_outros();
     			}
     		},
 
     		i: function intro(local) {
     			if (current) return;
-    			for (var i = 0; i < each_value.length; i += 1) transition_in(each_blocks[i]);
+    			for (var i = 0; i < each_value_1.length; i += 1) transition_in(each_blocks[i]);
 
     			current = true;
     		},
@@ -10204,71 +9812,76 @@ var app = (function () {
     		d: function destroy(detaching) {
     			if (detaching) {
     				detach(div0);
-    				detach(t5);
-    				detach(div1);
     			}
 
     			destroy_each(each_blocks, detaching);
+
+    			if (detaching) {
+    				detach(t0);
+    				detach(div1);
+    			}
     		}
     	};
     }
 
-    // (87:5) {#each blogData.items as post, i}
-    function create_each_block$3(ctx) {
-    	var div2, div0, img, img_src_value, t0, div1, h3, a, t1_value = ctx.post.title, t1, a_href_value, t2, p0, t3, t4_value = ctx.post.author, t4, t5, p1, t6_value = moment(ctx.post.pubDate).format("MMMM Do YYYY"), t6, t7, div2_transition, current;
+    // (111:3) {#each blogData.items as post, i}
+    function create_each_block_1(ctx) {
+    	var div3, div0, p0, t0_value = ctx.post.author, t0, t1, p1, t2_value = moment(ctx.post.pubDate).format("MMMM Do YYYY"), t2, t3, div1, img, img_src_value, t4, div2, h3, a, t5_value = ctx.post.title, t5, a_href_value, t6, div3_transition, current;
 
     	return {
     		c: function create() {
-    			div2 = element("div");
+    			div3 = element("div");
     			div0 = element("div");
-    			img = element("img");
-    			t0 = space();
+    			p0 = element("p");
+    			t0 = text$1(t0_value);
+    			t1 = space();
+    			p1 = element("p");
+    			t2 = text$1(t2_value);
+    			t3 = space();
     			div1 = element("div");
+    			img = element("img");
+    			t4 = space();
+    			div2 = element("div");
     			h3 = element("h3");
     			a = element("a");
-    			t1 = text$1(t1_value);
-    			t2 = space();
-    			p0 = element("p");
-    			t3 = text$1("Written by ");
-    			t4 = text$1(t4_value);
-    			t5 = space();
-    			p1 = element("p");
-    			t6 = text$1(t6_value);
-    			t7 = space();
+    			t5 = text$1(t5_value);
+    			t6 = space();
+    			add_location(p0, file$8, 119, 10, 2363);
+    			add_location(p1, file$8, 120, 10, 2394);
+    			attr(div0, "class", "blog-heading svelte-1q8gg7c");
+    			add_location(div0, file$8, 118, 8, 2325);
     			attr(img, "src", img_src_value = ctx.post.thumbnail);
     			attr(img, "alt", "post thumbnail image");
-    			attr(img, "class", "svelte-1a2e2h3");
-    			add_location(img, file$a, 89, 12, 1867);
-    			attr(div0, "class", "blog-img svelte-1a2e2h3");
-    			add_location(div0, file$a, 88, 10, 1832);
+    			attr(img, "class", "svelte-1q8gg7c");
+    			add_location(img, file$8, 123, 10, 2501);
+    			attr(div1, "class", "blog-img svelte-1q8gg7c");
+    			add_location(div1, file$8, 122, 8, 2468);
     			attr(a, "href", a_href_value = ctx.post.link);
-    			add_location(a, file$a, 92, 16, 1990);
-    			add_location(h3, file$a, 92, 12, 1986);
-    			add_location(p0, file$a, 93, 12, 2044);
-    			add_location(p1, file$a, 94, 12, 2088);
-    			attr(div1, "class", "blog-text svelte-1a2e2h3");
-    			add_location(div1, file$a, 91, 10, 1950);
-    			attr(div2, "class", "blog svelte-1a2e2h3");
-    			add_location(div2, file$a, 87, 6, 1779);
+    			add_location(a, file$8, 126, 14, 2618);
+    			add_location(h3, file$8, 126, 10, 2614);
+    			attr(div2, "class", "blog-text svelte-1q8gg7c");
+    			add_location(div2, file$8, 125, 8, 2580);
+    			attr(div3, "class", "blog svelte-1q8gg7c");
+    			add_location(div3, file$8, 111, 6, 2160);
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, div2, anchor);
-    			append(div2, div0);
-    			append(div0, img);
-    			append(div2, t0);
-    			append(div2, div1);
-    			append(div1, h3);
+    			insert(target, div3, anchor);
+    			append(div3, div0);
+    			append(div0, p0);
+    			append(p0, t0);
+    			append(div0, t1);
+    			append(div0, p1);
+    			append(p1, t2);
+    			append(div3, t3);
+    			append(div3, div1);
+    			append(div1, img);
+    			append(div3, t4);
+    			append(div3, div2);
+    			append(div2, h3);
     			append(h3, a);
-    			append(a, t1);
-    			append(div1, t2);
-    			append(div1, p0);
-    			append(p0, t3);
-    			append(p0, t4);
-    			append(div1, t5);
-    			append(div1, p1);
-    			append(p1, t6);
-    			append(div2, t7);
+    			append(a, t5);
+    			append(div3, t6);
     			current = true;
     		},
 
@@ -10276,43 +9889,51 @@ var app = (function () {
 
     		i: function intro(local) {
     			if (current) return;
-    			if (local) {
-    				add_render_callback(() => {
-    					if (!div2_transition) div2_transition = create_bidirectional_transition(div2, slide, {}, true);
-    					div2_transition.run(1);
-    				});
-    			}
+    			add_render_callback(() => {
+    				if (!div3_transition) div3_transition = create_bidirectional_transition(div3, fly, {
+            delay: 250, 
+            duration: 1000,
+            x: -500,
+            opacity: 0.5,
+            easing: quintOut
+          }, true);
+    				div3_transition.run(1);
+    			});
 
     			current = true;
     		},
 
     		o: function outro(local) {
-    			if (local) {
-    				if (!div2_transition) div2_transition = create_bidirectional_transition(div2, slide, {}, false);
-    				div2_transition.run(0);
-    			}
+    			if (!div3_transition) div3_transition = create_bidirectional_transition(div3, fly, {
+            delay: 250, 
+            duration: 1000,
+            x: -500,
+            opacity: 0.5,
+            easing: quintOut
+          }, false);
+    			div3_transition.run(0);
 
     			current = false;
     		},
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(div2);
-    				if (div2_transition) div2_transition.end();
+    				detach(div3);
+    				if (div3_transition) div3_transition.end();
     			}
     		}
     	};
     }
 
-    // (78:16)   <p>...waiting</p> {:then blogData}
-    function create_pending_block(ctx) {
+    // (107:20)   <p>...waiting</p> {:then blogData}
+    function create_pending_block_1(ctx) {
     	var p;
 
     	return {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$a, 78, 1, 1494);
+    			add_location(p, file$8, 107, 1, 2059);
     		},
 
     		m: function mount(target, anchor) {
@@ -10331,10 +9952,267 @@ var app = (function () {
     	};
     }
 
-    function create_fragment$e(ctx) {
-    	var div, promise_1, current;
+    // (172:0) {:catch error}
+    function create_catch_block(ctx) {
+    	var p, t_value = ctx.error.message, t;
+
+    	return {
+    		c: function create() {
+    			p = element("p");
+    			t = text$1(t_value);
+    			set_style(p, "color", "red");
+    			add_location(p, file$8, 172, 1, 3845);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, p, anchor);
+    			append(p, t);
+    		},
+
+    		p: noop,
+    		i: noop,
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(p);
+    			}
+    		}
+    	};
+    }
+
+    // (144:0) {:then blogData}
+    function create_then_block(ctx) {
+    	var div0, div0_transition, t0, div1, h2, a, t1_value = ctx.blogData.feed.title, t1, a_href_value, current;
+
+    	var each_value = ctx.blogData.items;
+
+    	var each_blocks = [];
+
+    	for (var i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block$2(get_each_context$2(ctx, each_value, i));
+    	}
+
+    	return {
+    		c: function create() {
+    			div0 = element("div");
+
+    			for (var i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t0 = space();
+    			div1 = element("div");
+    			h2 = element("h2");
+    			a = element("a");
+    			t1 = text$1(t1_value);
+    			attr(div0, "class", "blogs svelte-1q8gg7c");
+    			add_location(div0, file$8, 144, 2, 3039);
+    			attr(a, "href", a_href_value = ctx.blogData.feed.link);
+    			add_location(a, file$8, 167, 9, 3686);
+    			add_location(h2, file$8, 167, 4, 3681);
+    			attr(div1, "class", "blog-heading svelte-1q8gg7c");
+    			add_location(div1, file$8, 166, 2, 3650);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div0, anchor);
+
+    			for (var i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div0, null);
+    			}
+
+    			insert(target, t0, anchor);
+    			insert(target, div1, anchor);
+    			append(div1, h2);
+    			append(h2, a);
+    			append(a, t1);
+    			current = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			if (changed.flexPromise || changed.moment) {
+    				each_value = ctx.blogData.items;
+
+    				for (var i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$2(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(changed, child_ctx);
+    					} else {
+    						each_blocks[i] = create_each_block$2(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(div0, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+    				each_blocks.length = each_value.length;
+    			}
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			add_render_callback(() => {
+    				if (!div0_transition) div0_transition = create_bidirectional_transition(div0, fly, {
+            delay: 250, 
+            duration: 1000,
+            x: -500,
+            opacity: 0.5,
+            easing: quintOut
+          }, true);
+    				div0_transition.run(1);
+    			});
+
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			if (!div0_transition) div0_transition = create_bidirectional_transition(div0, fly, {
+            delay: 250, 
+            duration: 1000,
+            x: -500,
+            opacity: 0.5,
+            easing: quintOut
+          }, false);
+    			div0_transition.run(0);
+
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div0);
+    			}
+
+    			destroy_each(each_blocks, detaching);
+
+    			if (detaching) {
+    				if (div0_transition) div0_transition.end();
+    				detach(t0);
+    				detach(div1);
+    			}
+    		}
+    	};
+    }
+
+    // (152:3) {#each blogData.items as post, i}
+    function create_each_block$2(ctx) {
+    	var div3, div0, p0, t0_value = ctx.post.author, t0, t1, p1, t2_value = moment(ctx.post.pubDate).format("MMMM Do YYYY"), t2, t3, div1, img, img_src_value, t4, div2, h3, a, t5_value = ctx.post.title, t5, a_href_value, t6;
+
+    	return {
+    		c: function create() {
+    			div3 = element("div");
+    			div0 = element("div");
+    			p0 = element("p");
+    			t0 = text$1(t0_value);
+    			t1 = space();
+    			p1 = element("p");
+    			t2 = text$1(t2_value);
+    			t3 = space();
+    			div1 = element("div");
+    			img = element("img");
+    			t4 = space();
+    			div2 = element("div");
+    			h3 = element("h3");
+    			a = element("a");
+    			t5 = text$1(t5_value);
+    			t6 = space();
+    			add_location(p0, file$8, 154, 10, 3303);
+    			add_location(p1, file$8, 155, 10, 3334);
+    			attr(div0, "class", "blog-heading svelte-1q8gg7c");
+    			add_location(div0, file$8, 153, 8, 3265);
+    			attr(img, "src", img_src_value = ctx.post.thumbnail);
+    			attr(img, "alt", "post thumbnail image");
+    			attr(img, "class", "svelte-1q8gg7c");
+    			add_location(img, file$8, 158, 10, 3441);
+    			attr(div1, "class", "blog-img svelte-1q8gg7c");
+    			add_location(div1, file$8, 157, 8, 3408);
+    			attr(a, "href", a_href_value = ctx.post.link);
+    			add_location(a, file$8, 161, 14, 3558);
+    			add_location(h3, file$8, 161, 10, 3554);
+    			attr(div2, "class", "blog-text svelte-1q8gg7c");
+    			add_location(div2, file$8, 160, 8, 3520);
+    			attr(div3, "class", "blog svelte-1q8gg7c");
+    			add_location(div3, file$8, 152, 4, 3238);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div3, anchor);
+    			append(div3, div0);
+    			append(div0, p0);
+    			append(p0, t0);
+    			append(div0, t1);
+    			append(div0, p1);
+    			append(p1, t2);
+    			append(div3, t3);
+    			append(div3, div1);
+    			append(div1, img);
+    			append(div3, t4);
+    			append(div3, div2);
+    			append(div2, h3);
+    			append(h3, a);
+    			append(a, t5);
+    			append(div3, t6);
+    		},
+
+    		p: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div3);
+    			}
+    		}
+    	};
+    }
+
+    // (142:20)   <p>...waiting</p> {:then blogData}
+    function create_pending_block(ctx) {
+    	var p;
+
+    	return {
+    		c: function create() {
+    			p = element("p");
+    			p.textContent = "...waiting";
+    			add_location(p, file$8, 142, 1, 3002);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, p, anchor);
+    		},
+
+    		p: noop,
+    		i: noop,
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(p);
+    			}
+    		}
+    	};
+    }
+
+    function create_fragment$b(ctx) {
+    	var h1, t1, div0, promise, t2, div1, promise_1, current;
 
     	let info = {
+    		ctx,
+    		current: null,
+    		token: null,
+    		pending: create_pending_block_1,
+    		then: create_then_block_1,
+    		catch: create_catch_block_1,
+    		value: 'blogData',
+    		error: 'error',
+    		blocks: [,,,]
+    	};
+
+    	handle_promise(promise = ctx.web3Promise, info);
+
+    	let info_1 = {
     		ctx,
     		current: null,
     		token: null,
@@ -10346,15 +10224,27 @@ var app = (function () {
     		blocks: [,,,]
     	};
 
-    	handle_promise(promise_1 = ctx.promise, info);
+    	handle_promise(promise_1 = ctx.flexPromise, info_1);
 
     	return {
     		c: function create() {
-    			div = element("div");
+    			h1 = element("h1");
+    			h1.textContent = "Our Blogs";
+    			t1 = space();
+    			div0 = element("div");
 
     			info.block.c();
-    			attr(div, "class", "main svelte-1a2e2h3");
-    			add_location(div, file$a, 76, 0, 1457);
+
+    			t2 = space();
+    			div1 = element("div");
+
+    			info_1.block.c();
+    			attr(h1, "class", "svelte-1q8gg7c");
+    			add_location(h1, file$8, 103, 0, 1998);
+    			attr(div0, "class", "main svelte-1q8gg7c");
+    			add_location(div0, file$8, 104, 0, 2017);
+    			attr(div1, "class", "main svelte-1q8gg7c");
+    			add_location(div1, file$8, 140, 0, 2961);
     		},
 
     		l: function claim(nodes) {
@@ -10362,11 +10252,20 @@ var app = (function () {
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, div, anchor);
+    			insert(target, h1, anchor);
+    			insert(target, t1, anchor);
+    			insert(target, div0, anchor);
 
-    			info.block.m(div, info.anchor = null);
-    			info.mount = () => div;
+    			info.block.m(div0, info.anchor = null);
+    			info.mount = () => div0;
     			info.anchor = null;
+
+    			insert(target, t2, anchor);
+    			insert(target, div1, anchor);
+
+    			info_1.block.m(div1, info_1.anchor = null);
+    			info_1.mount = () => div1;
+    			info_1.anchor = null;
 
     			current = true;
     		},
@@ -10375,14 +10274,21 @@ var app = (function () {
     			ctx = new_ctx;
     			info.ctx = ctx;
 
-    			if (promise_1 !== (promise_1 = ctx.promise) && handle_promise(promise_1, info)) ; else {
+    			if (promise !== (promise = ctx.web3Promise) && handle_promise(promise, info)) ; else {
     				info.block.p(changed, assign(assign({}, ctx), info.resolved));
+    			}
+
+    			info_1.ctx = ctx;
+
+    			if (promise_1 !== (promise_1 = ctx.flexPromise) && handle_promise(promise_1, info_1)) ; else {
+    				info_1.block.p(changed, assign(assign({}, ctx), info_1.resolved));
     			}
     		},
 
     		i: function intro(local) {
     			if (current) return;
     			transition_in(info.block);
+    			transition_in(info_1.block);
     			current = true;
     		},
 
@@ -10392,17 +10298,33 @@ var app = (function () {
     				transition_out(block);
     			}
 
+    			for (let i = 0; i < 3; i += 1) {
+    				const block = info_1.blocks[i];
+    				transition_out(block);
+    			}
+
     			current = false;
     		},
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(div);
+    				detach(h1);
+    				detach(t1);
+    				detach(div0);
     			}
 
     			info.block.d();
     			info.token = null;
     			info = null;
+
+    			if (detaching) {
+    				detach(t2);
+    				detach(div1);
+    			}
+
+    			info_1.block.d();
+    			info_1.token = null;
+    			info_1 = null;
     		}
     	};
     }
@@ -10410,7 +10332,20 @@ var app = (function () {
     function instance$5($$self) {
     	
 
-      const getBlog = async () => {
+      const getWeb3Blog = async () => {
+        let response = await axios$1.get('https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/web3-australia');
+        let blogData = await response.data;
+        console.log(blogData);
+        if (blogData.status == "ok") {
+          return blogData;
+    		} else {
+    			throw new Error(text);
+    		}
+      };
+
+      let web3Promise = getWeb3Blog();
+
+      const getFlexBlog = async () => {
         let response = await axios$1.get('https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/flex-dapps');
         let blogData = await response.data;
         console.log(blogData);
@@ -10421,24 +10356,24 @@ var app = (function () {
     		}
       };
 
-      let promise = getBlog();
+      let flexPromise = getFlexBlog();
 
-    	return { promise };
+    	return { web3Promise, flexPromise };
     }
 
     class Blog extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$5, create_fragment$e, safe_not_equal, []);
+    		init(this, options, instance$5, create_fragment$b, safe_not_equal, []);
     	}
     }
 
     /* src/App.svelte generated by Svelte v3.7.1 */
 
-    const file$b = "src/App.svelte";
+    const file$9 = "src/App.svelte";
 
-    function create_fragment$f(ctx) {
-    	var link, t0, t1, div, t2, current;
+    function create_fragment$c(ctx) {
+    	var link0, link1, t0, t1, div, t2, t3, current;
 
     	var navbar = new NavBar({ $$inline: true });
 
@@ -10451,19 +10386,24 @@ var app = (function () {
 
     	return {
     		c: function create() {
-    			link = element("link");
+    			link0 = element("link");
+    			link1 = element("link");
     			t0 = space();
     			navbar.$$.fragment.c();
     			t1 = space();
     			div = element("div");
-    			router.$$.fragment.c();
     			t2 = space();
+    			router.$$.fragment.c();
+    			t3 = space();
     			footer.$$.fragment.c();
-    			attr(link, "rel", "stylesheet");
-    			attr(link, "href", "https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css");
-    			add_location(link, file$b, 1, 1, 15);
-    			attr(div, "class", "main svelte-pbvl02");
-    			add_location(div, file$b, 41, 0, 747);
+    			attr(link0, "rel", "stylesheet");
+    			attr(link0, "href", "https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css");
+    			add_location(link0, file$9, 1, 1, 15);
+    			attr(link1, "rel", "stylesheet");
+    			attr(link1, "href", "http://unpkg.com/tachyons-hovers@2.5.2/css/tachyons-hovers.min.css");
+    			add_location(link1, file$9, 2, 1, 103);
+    			attr(div, "class", "w-100 bg-white");
+    			add_location(div, file$9, 32, 1, 734);
     		},
 
     		l: function claim(nodes) {
@@ -10471,14 +10411,16 @@ var app = (function () {
     		},
 
     		m: function mount(target, anchor) {
-    			append(document.head, link);
+    			append(document.head, link0);
+    			append(document.head, link1);
     			insert(target, t0, anchor);
     			mount_component(navbar, target, anchor);
     			insert(target, t1, anchor);
     			insert(target, div, anchor);
-    			mount_component(router, div, null);
-    			append(div, t2);
-    			mount_component(footer, div, null);
+    			insert(target, t2, anchor);
+    			mount_component(router, target, anchor);
+    			insert(target, t3, anchor);
+    			mount_component(footer, target, anchor);
     			current = true;
     		},
 
@@ -10507,7 +10449,8 @@ var app = (function () {
     		},
 
     		d: function destroy(detaching) {
-    			detach(link);
+    			detach(link0);
+    			detach(link1);
 
     			if (detaching) {
     				detach(t0);
@@ -10518,11 +10461,16 @@ var app = (function () {
     			if (detaching) {
     				detach(t1);
     				detach(div);
+    				detach(t2);
     			}
 
-    			destroy_component(router);
+    			destroy_component(router, detaching);
 
-    			destroy_component(footer);
+    			if (detaching) {
+    				detach(t3);
+    			}
+
+    			destroy_component(footer, detaching);
     		}
     	};
     }
@@ -10531,16 +10479,13 @@ var app = (function () {
     	
 
     	const routes = {
-        '/': Home,
+        '/': LandingPage,
      
     		'/board': Humans,
     		
     		'/events': Events,
 
-    		'/meetups': Meetups,
-
     		'/Blog': Blog,
-    		
     };
 
     	return { routes };
@@ -10549,7 +10494,7 @@ var app = (function () {
     class App extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$6, create_fragment$f, safe_not_equal, []);
+    		init(this, options, instance$6, create_fragment$c, safe_not_equal, []);
     	}
     }
 
