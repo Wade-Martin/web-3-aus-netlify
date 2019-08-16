@@ -1,6 +1,5 @@
 <svelte:head>
 	<link rel="stylesheet" href="https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css"/>
-	<link rel="stylesheet" href="http://unpkg.com/tachyons-hovers@2.5.2/css/tachyons-hovers.min.css"/>
 </svelte:head>
 
 <script>

@@ -10418,7 +10418,7 @@ var app = (function () {
     const file$a = "src/App.svelte";
 
     function create_fragment$d(ctx) {
-    	var link0, link1, t0, t1, div, t2, t3, current;
+    	var link, t0, t1, div, t2, t3, current;
 
     	var navbar = new NavBar({ $$inline: true });
 
@@ -10431,8 +10431,7 @@ var app = (function () {
 
     	return {
     		c: function create() {
-    			link0 = element("link");
-    			link1 = element("link");
+    			link = element("link");
     			t0 = space();
     			navbar.$$.fragment.c();
     			t1 = space();
@@ -10441,14 +10440,11 @@ var app = (function () {
     			router.$$.fragment.c();
     			t3 = space();
     			footer.$$.fragment.c();
-    			attr(link0, "rel", "stylesheet");
-    			attr(link0, "href", "https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css");
-    			add_location(link0, file$a, 1, 1, 15);
-    			attr(link1, "rel", "stylesheet");
-    			attr(link1, "href", "http://unpkg.com/tachyons-hovers@2.5.2/css/tachyons-hovers.min.css");
-    			add_location(link1, file$a, 2, 1, 103);
+    			attr(link, "rel", "stylesheet");
+    			attr(link, "href", "https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css");
+    			add_location(link, file$a, 1, 1, 15);
     			attr(div, "class", "w-100 bg-white");
-    			add_location(div, file$a, 35, 1, 801);
+    			add_location(div, file$a, 34, 1, 701);
     		},
 
     		l: function claim(nodes) {
@@ -10456,8 +10452,7 @@ var app = (function () {
     		},
 
     		m: function mount(target, anchor) {
-    			append(document.head, link0);
-    			append(document.head, link1);
+    			append(document.head, link);
     			insert(target, t0, anchor);
     			mount_component(navbar, target, anchor);
     			insert(target, t1, anchor);
@@ -10494,8 +10489,7 @@ var app = (function () {
     		},
 
     		d: function destroy(detaching) {
-    			detach(link0);
-    			detach(link1);
+    			detach(link);
 
     			if (detaching) {
     				detach(t0);
