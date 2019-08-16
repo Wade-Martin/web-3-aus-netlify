@@ -10351,7 +10351,7 @@ var app = (function () {
     			attr(textarea, "cols", "30");
     			attr(textarea, "rows", "10");
     			add_location(textarea, file$9, 16, 4, 771);
-    			attr(button, "action", "submit");
+    			attr(button, "type", "submit");
     			add_location(button, file$9, 17, 4, 845);
     			attr(form, "method", "POST");
     			attr(form, "netlify-honeypot", "hpfield");

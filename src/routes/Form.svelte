@@ -15,6 +15,6 @@
     </select>
     <label for="enquiry">Your enquiry:</label>
     <textarea name="enquiry" id="enquiry" cols="30" rows="10"></textarea>
-    <button action="submit">Submit</button> 
+    <button type="submit">Submit</button> 
   </form>  
 </div>
