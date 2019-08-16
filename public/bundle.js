@@ -10274,15 +10274,15 @@ var app = (function () {
     const file$9 = "src/routes/Form.svelte";
 
     function create_fragment$c(ctx) {
-    	var div1, form, div0, label0, t0, input0, t1, label1, t3, input1, t4, label2, t6, select, option0, option1, option2, option3, option4, t12, label3, t14, textarea, t15, button;
+    	var div, form, p, label0, t0, input0, t1, label1, t3, input1, t4, label2, t6, select, option0, option1, option2, option3, option4, t12, label3, t14, textarea, t15, button;
 
     	return {
     		c: function create() {
-    			div1 = element("div");
+    			div = element("div");
     			form = element("form");
-    			div0 = element("div");
+    			p = element("p");
     			label0 = element("label");
-    			t0 = text$1("Leave this field empty: ");
+    			t0 = text$1("Don’t fill this out if you're human: ");
     			input0 = element("input");
     			t1 = space();
     			label1 = element("label");
@@ -10312,53 +10312,53 @@ var app = (function () {
     			t15 = space();
     			button = element("button");
     			button.textContent = "Submit";
-    			attr(input0, "class", "dn");
-    			attr(input0, "name", "_gotcha");
-    			add_location(input0, file$9, 3, 37, 220);
-    			add_location(label0, file$9, 3, 6, 189);
-    			attr(div0, "class", "hpot");
-    			add_location(div0, file$9, 2, 4, 164);
+    			attr(input0, "name", "bot-field");
+    			add_location(input0, file$9, 3, 50, 228);
+    			add_location(label0, file$9, 3, 6, 184);
+    			attr(p, "class", "dn");
+    			add_location(p, file$9, 2, 4, 163);
     			attr(label1, "for", "email");
-    			add_location(label1, file$9, 5, 4, 277);
+    			add_location(label1, file$9, 5, 4, 276);
     			attr(input1, "type", "text");
     			attr(input1, "name", "email");
     			attr(input1, "id", "email");
-    			add_location(input1, file$9, 6, 4, 320);
+    			add_location(input1, file$9, 6, 4, 319);
     			attr(label2, "for", "topic");
-    			add_location(label2, file$9, 7, 4, 368);
+    			add_location(label2, file$9, 7, 4, 367);
     			option0.__value = "Apply for rmoney";
     			option0.value = option0.__value;
-    			add_location(option0, file$9, 9, 6, 454);
+    			add_location(option0, file$9, 9, 6, 453);
     			option1.__value = "another option";
     			option1.value = option1.__value;
-    			add_location(option1, file$9, 10, 6, 510);
+    			add_location(option1, file$9, 10, 6, 509);
     			option2.__value = "Become Involved";
     			option2.value = option2.__value;
-    			add_location(option2, file$9, 11, 6, 565);
+    			add_location(option2, file$9, 11, 6, 564);
     			option3.__value = "generic option";
     			option3.value = option3.__value;
-    			add_location(option3, file$9, 12, 6, 625);
+    			add_location(option3, file$9, 12, 6, 624);
     			option4.__value = "General Enquiry";
     			option4.value = option4.__value;
-    			add_location(option4, file$9, 13, 6, 680);
+    			add_location(option4, file$9, 13, 6, 679);
     			attr(select, "name", "topic");
     			attr(select, "id", "topic");
-    			add_location(select, file$9, 8, 4, 415);
+    			add_location(select, file$9, 8, 4, 414);
     			attr(label3, "for", "enquiry");
-    			add_location(label3, file$9, 15, 4, 755);
+    			add_location(label3, file$9, 15, 4, 754);
     			attr(textarea, "name", "enquiry");
     			attr(textarea, "id", "enquiry");
     			attr(textarea, "cols", "30");
     			attr(textarea, "rows", "10");
-    			add_location(textarea, file$9, 16, 4, 802);
+    			add_location(textarea, file$9, 16, 4, 801);
     			attr(button, "type", "submit");
-    			add_location(button, file$9, 17, 4, 876);
+    			add_location(button, file$9, 17, 4, 875);
     			attr(form, "name", "contact");
     			attr(form, "method", "POST");
-    			attr(form, "action", "https://formspree.io/wsmartin23@gmail.com");
+    			attr(form, "netlify-honeypot", "bot-field");
+    			attr(form, "data-netlify", "true");
     			add_location(form, file$9, 1, 2, 73);
-    			attr(div1, "class", "h-100 w-100 flex flex-column justify-center items-center");
-    			add_location(div1, file$9, 0, 0, 0);
+    			attr(div, "class", "h-100 w-100 flex flex-column justify-center items-center");
+    			add_location(div, file$9, 0, 0, 0);
     		},
 
     		l: function claim(nodes) {
@@ -10366,10 +10366,10 @@ var app = (function () {
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, div1, anchor);
-    			append(div1, form);
-    			append(form, div0);
-    			append(div0, label0);
+    			insert(target, div, anchor);
+    			append(div, form);
+    			append(form, p);
+    			append(p, label0);
     			append(label0, t0);
     			append(label0, input0);
     			append(form, t1);
@@ -10399,7 +10399,7 @@ var app = (function () {
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(div1);
+    				detach(div);
     			}
     		}
     	};

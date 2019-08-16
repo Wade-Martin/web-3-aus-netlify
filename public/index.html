@@ -14,5 +14,23 @@
 </head>
 
 <body>
+	<form class="dn" name="contact" method="POST" netlify-honeypot="bot-field" data-netlify="true"> 
+    <p class="dn">
+      <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
+    </p>
+    <label for="email">Your email:</label>
+    <input class="dn"  type="text" name="email" id="email">
+    <label for="topic">Select a topic:</label>
+    <select class="dn" name="topic" id="topic">
+      <option class="dn" value="Apply for rmoney">R Money</option>
+      <option class="dn" value="another option">Option A</option>
+      <option class="dn" value="Become Involved">Get Involved</option>
+      <option class="dn" value="generic option">Option B</option>
+      <option class="dn" value="General Enquiry">General Enquiry</option>
+    </select>
+    <label for="enquiry">Your enquiry:</label>
+    <textarea class="dn" name="enquiry" id="enquiry" cols="30" rows="10"></textarea>
+    <button class="dn" type="submit">Submit</button> 
+  </form>
 </body>
 </html>

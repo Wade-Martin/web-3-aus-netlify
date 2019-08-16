@@ -1,8 +1,8 @@
 <div class="h-100 w-100 flex flex-column justify-center items-center">
-  <form name="contact" method="POST" action="https://formspree.io/wsmartin23@gmail.com">
-    <div class="hpot">
-      <label>Leave this field empty: <input class="dn" name="_gotcha"></label>
-    </div>
+  <form name="contact" method="POST" netlify-honeypot="bot-field" data-netlify="true"> 
+    <p class="dn">
+      <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
+    </p>
     <label for="email">Your email:</label>
     <input type="text" name="email" id="email">
     <label for="topic">Select a topic:</label>
