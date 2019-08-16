@@ -1,0 +1,20 @@
+<div class="h-100 w-100 flex flex-column justify-center items-center">
+  <form method="POST" netlify-honeypot="hpfield" data-netlify="true">
+    <div class="hpot">
+      <label>Leave this field empty: <input class="dn" name="hpfield"></label>
+    </div>
+    <label for="email">Your email:</label>
+    <input type="text" name="email" id="email">
+    <label for="topic">Select a topic:</label>
+    <select name="topic" id="topic">
+      <option value="Apply for rmoney">R Money</option>
+      <option value="another option">Option A</option>
+      <option value="Become Involved">Get Involved</option>
+      <option value="generic option">Option B</option>
+      <option value="General Enquiry">General Enquiry</option>
+    </select>
+    <label for="enquiry">Your enquiry:</label>
+    <textarea name="enquiry" id="enquiry" cols="30" rows="10"></textarea>
+    <button action="submit">Submit</button> 
+  </form>  
+</div>

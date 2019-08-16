@@ -7,48 +7,9 @@
 
 </script>
 
-<style>
-  .container {
-    font-family: 'Space Mono', monospace;
-    width: 100%;
-    padding: .74rem 1rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .flex-container {
-    width: 60%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-   }
-
-   .flex-container-location-select {
-    width: 60%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-   }
-
-   .selectLocation {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: space-evenly; 
-  }
-
-  .flex-events {
-    display: flex;
-    flex-wrap: wrap;
-  }
-</style>
-
-<div class="container">
-  <div class="flex-container-location-select">  
-    <div class="flex-events">
+<div class="flex flex-column justify-center items-center w-100 vh-100">
+  <div class="flex-container-location-select h5">  
+    <div class="flex flex-wrap h-100">
 	    {#each events as event }
 		    <EventCard event={event} />
 	    {/each}

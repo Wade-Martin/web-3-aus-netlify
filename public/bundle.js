@@ -112,10 +112,6 @@ var app = (function () {
     function empty() {
         return text$1('');
     }
-    function listen(node, event, handler, options) {
-        node.addEventListener(event, handler, options);
-        return () => node.removeEventListener(event, handler, options);
-    }
     function attr(node, attribute, value) {
         if (value == null)
             node.removeAttribute(attribute);
@@ -1144,7 +1140,7 @@ var app = (function () {
     const file = "src/NavBar.svelte";
 
     function create_fragment$1(ctx) {
-    	var nav, h3, a0, link_action, t1, div, a1, link_action_1, t3, a2, link_action_2, t5, a3, link_action_3;
+    	var nav, h3, a0, link_action, t1, div, a1, link_action_1, t3, a2, link_action_2, t5, a3, link_action_3, t7, a4, link_action_4;
 
     	return {
     		c: function create() {
@@ -1162,22 +1158,28 @@ var app = (function () {
     			t5 = space();
     			a3 = element("a");
     			a3.textContent = "Blog";
+    			t7 = space();
+    			a4 = element("a");
+    			a4.textContent = "Contact Us";
     			attr(a0, "href", "/");
     			attr(a0, "class", "svelte-68dx9x");
-    			add_location(a0, file, 18, 28, 305);
-    			attr(h3, "class", "w-25 grow ml6");
+    			add_location(a0, file, 18, 27, 304);
+    			attr(h3, "class", "w-25 dim ml6");
     			add_location(h3, file, 18, 2, 279);
     			attr(a1, "class", "dim svelte-68dx9x");
-    			attr(a1, "href", "/events");
-    			add_location(a1, file, 20, 4, 393);
+    			attr(a1, "href", "/Events");
+    			add_location(a1, file, 20, 4, 392);
     			attr(a2, "class", "dim svelte-68dx9x");
-    			attr(a2, "href", "/board");
-    			add_location(a2, file, 21, 4, 447);
+    			attr(a2, "href", "/Board");
+    			add_location(a2, file, 21, 4, 446);
     			attr(a3, "class", "dim svelte-68dx9x");
     			attr(a3, "href", "/Blog");
-    			add_location(a3, file, 22, 4, 500);
+    			add_location(a3, file, 22, 4, 499);
+    			attr(a4, "class", "dim svelte-68dx9x");
+    			attr(a4, "href", "/ContactForm");
+    			add_location(a4, file, 23, 4, 549);
     			attr(div, "class", "flex-auto w-75 tr mr6");
-    			add_location(div, file, 19, 2, 353);
+    			add_location(div, file, 19, 2, 352);
     			attr(nav, "class", "top-0 fixed w-100 bg-white flex items-center svelte-68dx9x");
     			add_location(nav, file, 17, 0, 218);
     		},
@@ -1201,6 +1203,9 @@ var app = (function () {
     			append(div, t5);
     			append(div, a3);
     			link_action_3 = link.call(null, a3) || {};
+    			append(div, t7);
+    			append(div, a4);
+    			link_action_4 = link.call(null, a4) || {};
     		},
 
     		p: noop,
@@ -1216,6 +1221,7 @@ var app = (function () {
     			if (link_action_1 && typeof link_action_1.destroy === 'function') link_action_1.destroy();
     			if (link_action_2 && typeof link_action_2.destroy === 'function') link_action_2.destroy();
     			if (link_action_3 && typeof link_action_3.destroy === 'function') link_action_3.destroy();
+    			if (link_action_4 && typeof link_action_4.destroy === 'function') link_action_4.destroy();
     		}
     	};
     }
@@ -2963,42 +2969,65 @@ var app = (function () {
     const file$5 = "src/routes/EventCard.svelte";
 
     function create_fragment$6(ctx) {
-    	var div1, div0, h2, t1, p0, t3, h3, a, t4_value = ctx.event.name, t4, a_href_value, t5, p1, t7, p2, t8, t9_value = ctx.event.venue.name, t9, t10, p3;
+    	var div7, div3, div2, div0, t1, div1, t3, a, t4_value = ctx.event.name, t4, a_href_value, t5, div6, div4, img0, t6, p0, t7_value = ctx.event.venue.name, t7, t8, div5, img1, t9, p1;
 
     	return {
     		c: function create() {
-    			div1 = element("div");
+    			div7 = element("div");
+    			div3 = element("div");
+    			div2 = element("div");
     			div0 = element("div");
-    			h2 = element("h2");
-    			h2.textContent = "01";
+    			div0.textContent = "17";
     			t1 = space();
-    			p0 = element("p");
-    			p0.textContent = "January";
+    			div1 = element("div");
+    			div1.textContent = "October";
     			t3 = space();
-    			h3 = element("h3");
     			a = element("a");
     			t4 = text$1(t4_value);
     			t5 = space();
+    			div6 = element("div");
+    			div4 = element("div");
+    			img0 = element("img");
+    			t6 = space();
+    			p0 = element("p");
+    			t7 = text$1(t7_value);
+    			t8 = space();
+    			div5 = element("div");
+    			img1 = element("img");
+    			t9 = space();
     			p1 = element("p");
-    			p1.textContent = "18:00 - 21:00";
-    			t7 = space();
-    			p2 = element("p");
-    			t8 = text$1("@ ");
-    			t9 = text$1(t9_value);
-    			t10 = space();
-    			p3 = element("p");
-    			attr(h2, "class", "day svelte-rh95e6");
-    			add_location(h2, file$5, 28, 4, 403);
-    			add_location(p0, file$5, 29, 4, 431);
+    			p1.textContent = "6pm";
+    			attr(div0, "class", "f1");
+    			add_location(div0, file$5, 25, 6, 502);
+    			attr(div1, "class", "f4 pa1");
+    			add_location(div1, file$5, 28, 6, 549);
+    			attr(div2, "class", "flex h-50 w-75 items-end");
+    			add_location(div2, file$5, 24, 4, 457);
+    			attr(a, "class", "pa3 w-90 h-50 f4 no-underline black-80");
     			attr(a, "href", a_href_value = ctx.event.link);
-    			add_location(a, file$5, 30, 8, 455);
-    			add_location(h3, file$5, 30, 4, 451);
-    			add_location(p1, file$5, 31, 4, 502);
-    			add_location(p2, file$5, 32, 4, 527);
-    			add_location(p3, file$5, 33, 4, 559);
-    			add_location(div0, file$5, 27, 2, 393);
-    			attr(div1, "class", "event-card svelte-rh95e6");
-    			add_location(div1, file$5, 26, 0, 366);
+    			add_location(a, file$5, 32, 4, 614);
+    			attr(div3, "class", "h-50 flex flex-column items-center content-end");
+    			add_location(div3, file$5, 23, 2, 392);
+    			attr(img0, "class", "w-10 tc");
+    			attr(img0, "src", "./location-pin.svg");
+    			attr(img0, "alt", "location pin");
+    			add_location(img0, file$5, 36, 6, 855);
+    			attr(p0, "class", "w-80 f4");
+    			add_location(p0, file$5, 37, 6, 928);
+    			attr(div4, "class", "h1 flex w-100 justify-between pa2 h-50 items-center");
+    			add_location(div4, file$5, 35, 4, 783);
+    			attr(img1, "class", "w-10 tc");
+    			attr(img1, "src", "./wall-clock.svg");
+    			attr(img1, "alt", "clock");
+    			add_location(img1, file$5, 40, 6, 1057);
+    			attr(p1, "class", "w-80 f4");
+    			add_location(p1, file$5, 41, 6, 1120);
+    			attr(div5, "class", "h1 flex w-100 justify-between pa2 h-50 items-center");
+    			add_location(div5, file$5, 39, 4, 985);
+    			attr(div6, "class", "bt h-50 flex flex-column justify-center content-center");
+    			add_location(div6, file$5, 34, 2, 710);
+    			attr(div7, "class", " flex flex-column h-100 mr3 mt3 shadow-3 bg-white mw5");
+    			add_location(div7, file$5, 22, 0, 322);
     		},
 
     		l: function claim(nodes) {
@@ -3006,23 +3035,27 @@ var app = (function () {
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, div1, anchor);
-    			append(div1, div0);
-    			append(div0, h2);
-    			append(div0, t1);
-    			append(div0, p0);
-    			append(div0, t3);
-    			append(div0, h3);
-    			append(h3, a);
+    			insert(target, div7, anchor);
+    			append(div7, div3);
+    			append(div3, div2);
+    			append(div2, div0);
+    			append(div2, t1);
+    			append(div2, div1);
+    			append(div3, t3);
+    			append(div3, a);
     			append(a, t4);
-    			append(div0, t5);
-    			append(div0, p1);
-    			append(div0, t7);
-    			append(div0, p2);
-    			append(p2, t8);
-    			append(p2, t9);
-    			append(div0, t10);
-    			append(div0, p3);
+    			append(div7, t5);
+    			append(div7, div6);
+    			append(div6, div4);
+    			append(div4, img0);
+    			append(div4, t6);
+    			append(div4, p0);
+    			append(p0, t7);
+    			append(div6, t8);
+    			append(div6, div5);
+    			append(div5, img1);
+    			append(div5, t9);
+    			append(div5, p1);
     		},
 
     		p: function update(changed, ctx) {
@@ -3034,8 +3067,8 @@ var app = (function () {
     				attr(a, "href", a_href_value);
     			}
 
-    			if ((changed.event) && t9_value !== (t9_value = ctx.event.venue.name)) {
-    				set_data(t9, t9_value);
+    			if ((changed.event) && t7_value !== (t7_value = ctx.event.venue.name)) {
+    				set_data(t7, t7_value);
     			}
     		},
 
@@ -3044,7 +3077,7 @@ var app = (function () {
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(div1);
+    				detach(div7);
     			}
     		}
     	};
@@ -3100,7 +3133,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (52:5) {#each events as event }
+    // (13:5) {#each events as event }
     function create_each_block(ctx) {
     	var current;
 
@@ -3167,12 +3200,12 @@ var app = (function () {
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
-    			attr(div0, "class", "flex-events svelte-1roa5c2");
-    			add_location(div0, file$6, 50, 4, 917);
-    			attr(div1, "class", "flex-container-location-select svelte-1roa5c2");
-    			add_location(div1, file$6, 49, 2, 866);
-    			attr(div2, "class", "container svelte-1roa5c2");
-    			add_location(div2, file$6, 48, 0, 840);
+    			attr(div0, "class", "flex flex-wrap h-100");
+    			add_location(div0, file$6, 11, 4, 286);
+    			attr(div1, "class", "flex-container-location-select h5");
+    			add_location(div1, file$6, 10, 2, 232);
+    			attr(div2, "class", "flex flex-column justify-center items-center w-100 vh-100");
+    			add_location(div2, file$6, 9, 0, 158);
     		},
 
     		l: function claim(nodes) {
@@ -3331,47 +3364,6 @@ var app = (function () {
 
     const file$7 = "src/routes/Events.svelte";
 
-    function get_each_context$1(ctx, list, i) {
-    	const child_ctx = Object.create(ctx);
-    	child_ctx.city = list[i];
-    	return child_ctx;
-    }
-
-    // (106:1) {#each cities as city}
-    function create_each_block$1(ctx) {
-    	var button, t0, t1_value = ctx.city.name, t1, t2, button_id_value, dispose;
-
-    	return {
-    		c: function create() {
-    			button = element("button");
-    			t0 = text$1("Meetups in ");
-    			t1 = text$1(t1_value);
-    			t2 = space();
-    			attr(button, "class", "tablinks svelte-1f8orxp");
-    			attr(button, "id", button_id_value = ctx.city.name);
-    			add_location(button, file$7, 106, 4, 2532);
-    			dispose = listen(button, "click", ctx.handleClick);
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert(target, button, anchor);
-    			append(button, t0);
-    			append(button, t1);
-    			append(button, t2);
-    		},
-
-    		p: noop,
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(button);
-    			}
-
-    			dispose();
-    		}
-    	};
-    }
-
     // (113:0) {:else}
     function create_else_block(ctx) {
     	var switch_instance_anchor, current;
@@ -3464,7 +3456,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...fetching events";
-    			add_location(p, file$7, 111, 2, 2671);
+    			add_location(p, file$7, 111, 2, 2680);
     		},
 
     		m: function mount(target, anchor) {
@@ -3484,15 +3476,7 @@ var app = (function () {
     }
 
     function create_fragment$a(ctx) {
-    	var div, t, current_block_type_index, if_block, if_block_anchor, current;
-
-    	var each_value = ctx.cities;
-
-    	var each_blocks = [];
-
-    	for (var i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
-    	}
+    	var current_block_type_index, if_block, if_block_anchor, current;
 
     	var if_block_creators = [
     		create_if_block$1,
@@ -3511,17 +3495,8 @@ var app = (function () {
 
     	return {
     		c: function create() {
-    			div = element("div");
-
-    			for (var i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].c();
-    			}
-
-    			t = space();
     			if_block.c();
     			if_block_anchor = empty();
-    			attr(div, "class", "tab svelte-1f8orxp");
-    			add_location(div, file$7, 104, 0, 2486);
     		},
 
     		l: function claim(nodes) {
@@ -3529,40 +3504,12 @@ var app = (function () {
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, div, anchor);
-
-    			for (var i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(div, null);
-    			}
-
-    			insert(target, t, anchor);
     			if_blocks[current_block_type_index].m(target, anchor);
     			insert(target, if_block_anchor, anchor);
     			current = true;
     		},
 
     		p: function update(changed, ctx) {
-    			if (changed.cities) {
-    				each_value = ctx.cities;
-
-    				for (var i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context$1(ctx, each_value, i);
-
-    					if (each_blocks[i]) {
-    						each_blocks[i].p(changed, child_ctx);
-    					} else {
-    						each_blocks[i] = create_each_block$1(child_ctx);
-    						each_blocks[i].c();
-    						each_blocks[i].m(div, null);
-    					}
-    				}
-
-    				for (; i < each_blocks.length; i += 1) {
-    					each_blocks[i].d(1);
-    				}
-    				each_blocks.length = each_value.length;
-    			}
-
     			var previous_block_index = current_block_type_index;
     			current_block_type_index = select_block_type(ctx);
     			if (current_block_type_index === previous_block_index) {
@@ -3596,16 +3543,6 @@ var app = (function () {
     		},
 
     		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(div);
-    			}
-
-    			destroy_each(each_blocks, detaching);
-
-    			if (detaching) {
-    				detach(t);
-    			}
-
     			if_blocks[current_block_type_index].d(detaching);
 
     			if (detaching) {
@@ -3631,14 +3568,9 @@ var app = (function () {
       
       let selected;
 
-      const handleClick = (event) => {
-        console.log('handling click');
-        getMeetups(event);
-      };
-
       onMount(async () => {
         $$invalidate('selected', selected = cities[0]);
-        await jsonp_1('https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890', null, (err, data) => {
+        await jsonp_1('https://api.meetup.com/Ethereum-Melbourne/events?page=7&sig_id=225203890', null, (err, data) => {
           if (err) {
             console.error(err.message);
           } else {
@@ -3648,39 +3580,8 @@ var app = (function () {
           }
         }); 
       });
-      
-      const getMeetups = async (event) => {
-        console.log('getting meetups');
-        events.loaded = false; $$invalidate('events', events);
-        events.data = null; $$invalidate('events', events);
-        let city = event.target.id;
-        switch (city) {
-          case 'Melbourne':
-            await jsonp_1('https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890', null, (err, data) => {
-              if (err) {
-                console.error(err.message);
-              } else {
-                $$invalidate('selected', selected = cities[0]);
-                events.data = data.data; $$invalidate('events', events);
-                events.loaded = true; $$invalidate('events', events);
-                console.log('events.data:', events.data);
-              }
-            }); 
-            break;
-          case 'Sydney':
-              $$invalidate('selected', selected = cities[1]);
-              console.log('call sydney meetup api request');
-            break;
-          case 'Brisbane':
-              $$invalidate('selected', selected = cities[2]);
-              console.log('call brisbane meetup api request');
-            break;
-          default:
-              console.log('this is the default');
-        }
-      };
 
-    	return { cities, events, selected, handleClick };
+    	return { events, selected };
     }
 
     class Events extends SvelteComponentDev {
@@ -9675,7 +9576,7 @@ var app = (function () {
 
     const file$8 = "src/routes/Blog.svelte";
 
-    function get_each_context$2(ctx, list, i) {
+    function get_each_context$1(ctx, list, i) {
     	const child_ctx = Object.create(ctx);
     	child_ctx.post = list[i];
     	child_ctx.i = i;
@@ -9990,7 +9891,7 @@ var app = (function () {
     	var each_blocks = [];
 
     	for (var i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block$2(get_each_context$2(ctx, each_value, i));
+    		each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
     	}
 
     	return {
@@ -10035,12 +9936,12 @@ var app = (function () {
     				each_value = ctx.blogData.items;
 
     				for (var i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context$2(ctx, each_value, i);
+    					const child_ctx = get_each_context$1(ctx, each_value, i);
 
     					if (each_blocks[i]) {
     						each_blocks[i].p(changed, child_ctx);
     					} else {
-    						each_blocks[i] = create_each_block$2(child_ctx);
+    						each_blocks[i] = create_each_block$1(child_ctx);
     						each_blocks[i].c();
     						each_blocks[i].m(div0, null);
     					}
@@ -10099,7 +10000,7 @@ var app = (function () {
     }
 
     // (152:3) {#each blogData.items as post, i}
-    function create_each_block$2(ctx) {
+    function create_each_block$1(ctx) {
     	var div3, div0, p0, t0_value = ctx.post.author, t0, t1, p1, t2_value = moment(ctx.post.pubDate).format("MMMM Do YYYY"), t2, t3, div1, img, img_src_value, t4, div2, h3, a, t5_value = ctx.post.title, t5, a_href_value, t6;
 
     	return {
@@ -10368,11 +10269,154 @@ var app = (function () {
     	}
     }
 
-    /* src/App.svelte generated by Svelte v3.7.1 */
+    /* src/routes/Form.svelte generated by Svelte v3.7.1 */
 
-    const file$9 = "src/App.svelte";
+    const file$9 = "src/routes/Form.svelte";
 
     function create_fragment$c(ctx) {
+    	var div1, form, div0, label0, t0, input0, t1, label1, t3, input1, t4, label2, t6, select, option0, option1, option2, option3, option4, t12, label3, t14, textarea, t15, button;
+
+    	return {
+    		c: function create() {
+    			div1 = element("div");
+    			form = element("form");
+    			div0 = element("div");
+    			label0 = element("label");
+    			t0 = text$1("Leave this field empty: ");
+    			input0 = element("input");
+    			t1 = space();
+    			label1 = element("label");
+    			label1.textContent = "Your email:";
+    			t3 = space();
+    			input1 = element("input");
+    			t4 = space();
+    			label2 = element("label");
+    			label2.textContent = "Select a topic:";
+    			t6 = space();
+    			select = element("select");
+    			option0 = element("option");
+    			option0.textContent = "R Money";
+    			option1 = element("option");
+    			option1.textContent = "Option A";
+    			option2 = element("option");
+    			option2.textContent = "Get Involved";
+    			option3 = element("option");
+    			option3.textContent = "Option B";
+    			option4 = element("option");
+    			option4.textContent = "General Enquiry";
+    			t12 = space();
+    			label3 = element("label");
+    			label3.textContent = "Your enquiry:";
+    			t14 = space();
+    			textarea = element("textarea");
+    			t15 = space();
+    			button = element("button");
+    			button.textContent = "Submit";
+    			attr(input0, "class", "dn");
+    			attr(input0, "name", "hpfield");
+    			add_location(input0, file$9, 3, 37, 201);
+    			add_location(label0, file$9, 3, 6, 170);
+    			attr(div0, "class", "hpot");
+    			add_location(div0, file$9, 2, 4, 145);
+    			attr(label1, "for", "email");
+    			add_location(label1, file$9, 5, 4, 258);
+    			attr(input1, "type", "text");
+    			attr(input1, "name", "email");
+    			attr(input1, "id", "email");
+    			add_location(input1, file$9, 6, 4, 301);
+    			attr(label2, "for", "topic");
+    			add_location(label2, file$9, 7, 4, 349);
+    			option0.__value = "Apply for rmoney";
+    			option0.value = option0.__value;
+    			add_location(option0, file$9, 9, 6, 435);
+    			option1.__value = "another option";
+    			option1.value = option1.__value;
+    			add_location(option1, file$9, 10, 6, 491);
+    			option2.__value = "Become Involved";
+    			option2.value = option2.__value;
+    			add_location(option2, file$9, 11, 6, 546);
+    			option3.__value = "generic option";
+    			option3.value = option3.__value;
+    			add_location(option3, file$9, 12, 6, 606);
+    			option4.__value = "General Enquiry";
+    			option4.value = option4.__value;
+    			add_location(option4, file$9, 13, 6, 661);
+    			attr(select, "name", "topic");
+    			attr(select, "id", "topic");
+    			add_location(select, file$9, 8, 4, 396);
+    			attr(label3, "for", "enquiry");
+    			add_location(label3, file$9, 15, 4, 736);
+    			attr(textarea, "name", "enquiry");
+    			attr(textarea, "id", "enquiry");
+    			attr(textarea, "cols", "30");
+    			attr(textarea, "rows", "10");
+    			add_location(textarea, file$9, 16, 4, 783);
+    			attr(button, "action", "submit");
+    			add_location(button, file$9, 17, 4, 857);
+    			attr(form, "method", "POST");
+    			attr(form, "netlify-honeypot", "hpfield");
+    			attr(form, "data-netlify", "true");
+    			add_location(form, file$9, 1, 2, 73);
+    			attr(div1, "class", "h-100 w-100 flex flex-column justify-center items-center");
+    			add_location(div1, file$9, 0, 0, 0);
+    		},
+
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div1, anchor);
+    			append(div1, form);
+    			append(form, div0);
+    			append(div0, label0);
+    			append(label0, t0);
+    			append(label0, input0);
+    			append(form, t1);
+    			append(form, label1);
+    			append(form, t3);
+    			append(form, input1);
+    			append(form, t4);
+    			append(form, label2);
+    			append(form, t6);
+    			append(form, select);
+    			append(select, option0);
+    			append(select, option1);
+    			append(select, option2);
+    			append(select, option3);
+    			append(select, option4);
+    			append(form, t12);
+    			append(form, label3);
+    			append(form, t14);
+    			append(form, textarea);
+    			append(form, t15);
+    			append(form, button);
+    		},
+
+    		p: noop,
+    		i: noop,
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div1);
+    			}
+    		}
+    	};
+    }
+
+    class Form extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, null, create_fragment$c, safe_not_equal, []);
+    	}
+    }
+
+    /* src/App.svelte generated by Svelte v3.7.1 */
+
+    const file$a = "src/App.svelte";
+
+    function create_fragment$d(ctx) {
     	var link0, link1, t0, t1, div, t2, t3, current;
 
     	var navbar = new NavBar({ $$inline: true });
@@ -10398,12 +10442,12 @@ var app = (function () {
     			footer.$$.fragment.c();
     			attr(link0, "rel", "stylesheet");
     			attr(link0, "href", "https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css");
-    			add_location(link0, file$9, 1, 1, 15);
+    			add_location(link0, file$a, 1, 1, 15);
     			attr(link1, "rel", "stylesheet");
     			attr(link1, "href", "http://unpkg.com/tachyons-hovers@2.5.2/css/tachyons-hovers.min.css");
-    			add_location(link1, file$9, 2, 1, 103);
+    			add_location(link1, file$a, 2, 1, 103);
     			attr(div, "class", "w-100 bg-white");
-    			add_location(div, file$9, 32, 1, 734);
+    			add_location(div, file$a, 35, 1, 801);
     		},
 
     		l: function claim(nodes) {
@@ -10481,11 +10525,13 @@ var app = (function () {
     	const routes = {
         '/': LandingPage,
      
-    		'/board': Humans,
+    		'/Board': Humans,
     		
-    		'/events': Events,
+    		'/Events': Events,
 
     		'/Blog': Blog,
+
+    		'/ContactForm': Form,
     };
 
     	return { routes };
@@ -10494,7 +10540,7 @@ var app = (function () {
     class App extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$6, create_fragment$c, safe_not_equal, []);
+    		init(this, options, instance$6, create_fragment$d, safe_not_equal, []);
     	}
     }
 

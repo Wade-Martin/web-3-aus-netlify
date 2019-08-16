@@ -59,7 +59,7 @@
 
   onMount(async () => {
     selected = cities[0]
-    await jsonp('https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890', null, (err, data) => {
+    await jsonp('https://api.meetup.com/Ethereum-Melbourne/events?page=7&sig_id=225203890', null, (err, data) => {
       if (err) {
         console.error(err.message);
       } else {
@@ -102,11 +102,11 @@
   };
 </script>
 
-<div class="tab">
+<!-- <div class="tab">
 	{#each cities as city}
     <button class="tablinks" id="{city.name}" on:click={handleClick}> Meetups in {city.name} </button>
 	{/each}
-</div>
+</div> -->
 
 {#if !events.loaded}
   <p>...fetching events</p>

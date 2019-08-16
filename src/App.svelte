@@ -12,15 +12,18 @@
 	import Events from './routes/Events.svelte';
 	import Meetups from './routes/Meetups.svelte';
 	import Blog from './routes/Blog.svelte';
+	import Form from './routes/Form.svelte';
 
 	const routes = {
     '/': LandingPage,
  
-		'/board': Humans,
+		'/Board': Humans,
 		
-		'/events': Events,
+		'/Events': Events,
 
 		'/Blog': Blog,
+
+		'/ContactForm': Form,
 }
 </script>
 
