@@ -1,7 +1,7 @@
 <div class="h-100 w-100 flex flex-column justify-center items-center">
-  <form name="contact" action="#/ContactForm" method="POST" netlify-honeypot="hpfield" netlify>
+  <form name="contact" method="POST" action="https://formspree.io/wsmartin23@gmail.com">
     <div class="hpot">
-      <label>Leave this field empty: <input class="dn" name="hpfield"></label>
+      <label>Leave this field empty: <input class="dn" name="_gotcha"></label>
     </div>
     <label for="email">Your email:</label>
     <input type="text" name="email" id="email">
