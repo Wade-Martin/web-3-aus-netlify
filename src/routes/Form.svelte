@@ -1,5 +1,5 @@
 <div class="h-100 w-100 flex flex-column justify-center items-center">
-  <form method="POST" netlify-honeypot="hpfield" netlify>
+  <form name="contact" method="POST" netlify-honeypot="hpfield" netlify>
     <div class="hpot">
       <label>Leave this field empty: <input class="dn" name="hpfield"></label>
     </div>
