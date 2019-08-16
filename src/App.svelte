@@ -11,7 +11,7 @@
 	import Events from './routes/Events.svelte';
 	import Meetups from './routes/Meetups.svelte';
 	import Blog from './routes/Blog.svelte';
-	import Form from './routes/Form.svelte';
+	import Form from './routes/Form.html';
 
 	const routes = {
     '/': LandingPage,
