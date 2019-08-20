@@ -4,7 +4,7 @@ import { fade } from 'svelte/transition';
 
 const dispatch = createEventDispatcher();
 
-export let post;s
+export let post;
 
 </script>
 
