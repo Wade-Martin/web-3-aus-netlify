@@ -9,9 +9,11 @@
 	import LandingPage from './routes/LandingPage.svelte';
 	import Humans from './routes/Humans.svelte';
 	import Events from './routes/Events.svelte';
-	import Meetups from './routes/Meetups.svelte';
-	import Blog from './routes/Blog.svelte';
+	import Blogs from './routes/Blogs.svelte';
 	import Form from './routes/Form.svelte';
+	import Thanks from './routes/Thanks.svelte';
+
+	
 
 	const routes = {
     '/': LandingPage,
@@ -20,21 +22,24 @@
 		
 		'/Events': Events,
 
-		'/Blog': Blog,
+		'/Blogs': Blogs,
 
 		'/ContactForm': Form,
+
+		'/Thanks' : Thanks,
 }
 </script>
 
-<style>
-</style>
+
+<div class="black-80 lh-copy h-100 w-100 flex flex-row flex-wrap">
+	<NavBar class="w-100"/>
+		<div class="w-100">
+			<Router {routes} />
+		</div>
+	<Footer class="w-100" />
+</div>
 
 
-
-<NavBar />
-	<div class="w-100 bg-white"></div>
-	<Router {routes} />
-<Footer />
 
 
  

@@ -112,6 +112,10 @@ var app = (function () {
     function empty() {
         return text$1('');
     }
+    function listen(node, event, handler, options) {
+        node.addEventListener(event, handler, options);
+        return () => node.removeEventListener(event, handler, options);
+    }
     function attr(node, attribute, value) {
         if (value == null)
             node.removeAttribute(attribute);
@@ -128,6 +132,9 @@ var app = (function () {
     }
     function set_style(node, key, value) {
         node.style.setProperty(key, value);
+    }
+    function toggle_class(element, name, toggle) {
+        element.classList[toggle ? 'add' : 'remove'](name);
     }
     function custom_event(type, detail) {
         const e = document.createEvent('CustomEvent');
@@ -202,6 +209,20 @@ var app = (function () {
     }
     function onMount(fn) {
         get_current_component().$$.on_mount.push(fn);
+    }
+    function createEventDispatcher() {
+        const component = current_component;
+        return (type, detail) => {
+            const callbacks = component.$$.callbacks[type];
+            if (callbacks) {
+                // TODO are there situations where events could be dispatched
+                // in a server (non-DOM) environment?
+                const event = custom_event(type, detail);
+                callbacks.slice().forEach(fn => {
+                    fn.call(component, event);
+                });
+            }
+        };
     }
 
     const dirty_components = [];
@@ -367,6 +388,62 @@ var app = (function () {
             end() {
                 if (running) {
                     cleanup();
+                    running = false;
+                }
+            }
+        };
+    }
+    function create_out_transition(node, fn, params) {
+        let config = fn(node, params);
+        let running = true;
+        let animation_name;
+        const group = outros;
+        group.r += 1;
+        function go() {
+            const { delay = 0, duration = 300, easing = identity, tick = noop, css } = config || null_transition;
+            if (css)
+                animation_name = create_rule(node, 1, 0, duration, delay, easing, css);
+            const start_time = now() + delay;
+            const end_time = start_time + duration;
+            add_render_callback(() => dispatch(node, false, 'start'));
+            loop(now => {
+                if (running) {
+                    if (now >= end_time) {
+                        tick(0, 1);
+                        dispatch(node, false, 'end');
+                        if (!--group.r) {
+                            // this will result in `end()` being called,
+                            // so we don't need to clean up here
+                            run_all(group.c);
+                        }
+                        return false;
+                    }
+                    if (now >= start_time) {
+                        const t = easing((now - start_time) / duration);
+                        tick(1 - t, t);
+                    }
+                }
+                return running;
+            });
+        }
+        if (is_function(config)) {
+            wait().then(() => {
+                // @ts-ignore
+                config = config();
+                go();
+            });
+        }
+        else {
+            go();
+        }
+        return {
+            end(reset) {
+                if (reset && config.tick) {
+                    config.tick(1, 0);
+                }
+                if (running) {
+                    if (animation_name)
+                        delete_rule(node, animation_name);
                     running = false;
                 }
             }
@@ -1157,30 +1234,30 @@ var app = (function () {
     			a2.textContent = "Humans";
     			t5 = space();
     			a3 = element("a");
-    			a3.textContent = "Blog";
+    			a3.textContent = "Blogs";
     			t7 = space();
     			a4 = element("a");
     			a4.textContent = "Contact Us";
     			attr(a0, "href", "/");
     			attr(a0, "class", "svelte-68dx9x");
-    			add_location(a0, file, 18, 27, 304);
+    			add_location(a0, file, 18, 27, 307);
     			attr(h3, "class", "w-25 dim ml6");
-    			add_location(h3, file, 18, 2, 279);
+    			add_location(h3, file, 18, 2, 282);
     			attr(a1, "class", "dim svelte-68dx9x");
     			attr(a1, "href", "/Events");
-    			add_location(a1, file, 20, 4, 392);
+    			add_location(a1, file, 20, 4, 395);
     			attr(a2, "class", "dim svelte-68dx9x");
     			attr(a2, "href", "/Board");
-    			add_location(a2, file, 21, 4, 446);
+    			add_location(a2, file, 21, 4, 449);
     			attr(a3, "class", "dim svelte-68dx9x");
-    			attr(a3, "href", "/Blog");
-    			add_location(a3, file, 22, 4, 499);
+    			attr(a3, "href", "/Blogs");
+    			add_location(a3, file, 22, 4, 502);
     			attr(a4, "class", "dim svelte-68dx9x");
     			attr(a4, "href", "/ContactForm");
-    			add_location(a4, file, 23, 4, 549);
+    			add_location(a4, file, 23, 4, 554);
     			attr(div, "class", "flex-auto w-75 tr mr6");
-    			add_location(div, file, 19, 2, 352);
-    			attr(nav, "class", "top-0 fixed w-100 bg-white flex items-center svelte-68dx9x");
+    			add_location(div, file, 19, 2, 355);
+    			attr(nav, "class", "top-0 fixed w-100 h4 bg-white flex items-center svelte-68dx9x");
     			add_location(nav, file, 17, 0, 218);
     		},
 
@@ -1253,14 +1330,14 @@ var app = (function () {
     			t3 = space();
     			a = element("a");
     			a.textContent = "hello@web3australia.org";
-    			add_location(h4, file$1, 10, 6, 259);
-    			add_location(br, file$1, 12, 25, 314);
+    			add_location(h4, file$1, 10, 6, 296);
+    			add_location(br, file$1, 12, 25, 351);
     			attr(a, "href", "mailto:hello@web3australia.com");
-    			add_location(a, file$1, 13, 8, 327);
-    			add_location(p, file$1, 11, 6, 285);
-    			attr(div, "class", "ml6");
-    			add_location(div, file$1, 9, 4, 235);
-    			attr(footer, "class", "w-100 bottom-0 flex bg-white svelte-1qbfbsc");
+    			add_location(a, file$1, 13, 8, 364);
+    			add_location(p, file$1, 11, 6, 322);
+    			attr(div, "class", "w-80");
+    			add_location(div, file$1, 9, 4, 271);
+    			attr(footer, "class", "w-100 bg-light-blue h4 flex justify-center items-center bg-white svelte-1qbfbsc");
     			add_location(footer, file$1, 8, 0, 185);
     		},
 
@@ -1302,26 +1379,13 @@ var app = (function () {
     function cubicInOut(t) {
         return t < 0.5 ? 4.0 * t * t * t : 0.5 * Math.pow(2.0 * t - 2.0, 3.0) + 1.0;
     }
-    function cubicOut(t) {
-        const f = t - 1.0;
-        return f * f * f + 1.0;
-    }
-    function quintOut(t) {
-        return --t * t * t * t * t + 1;
-    }
 
-    function fly(node, { delay = 0, duration = 400, easing = cubicOut, x = 0, y = 0, opacity = 0 }) {
-        const style = getComputedStyle(node);
-        const target_opacity = +style.opacity;
-        const transform = style.transform === 'none' ? '' : style.transform;
-        const od = target_opacity * (1 - opacity);
+    function fade(node, { delay = 0, duration = 400 }) {
+        const o = +getComputedStyle(node).opacity;
         return {
             delay,
             duration,
-            easing,
-            css: (t, u) => `
-			transform: ${transform} translate(${(1 - t) * x}px, ${(1 - t) * y}px);
-			opacity: ${target_opacity - (od * u)}`
+            css: t => `opacity: ${t * o}`
         };
     }
     function draw(node, { delay = 0, speed, duration, easing = cubicInOut }) {
@@ -1432,7 +1496,7 @@ var app = (function () {
     			attr(path8, "fill", "none");
     			attr(path8, "stroke", "#070506");
     			attr(path8, "stroke-miterlimit", "10");
-    			attr(path8, "d", "M724.71300125 852.57098389l-52.15200043-245.939991    51.96500016-305.51899338");
+    			attr(path8, "d", "M724.71300125 852.57098389l-52.15200043-245.939991    51.96430016-305.51899338");
     			add_location(path8, file$2, 51, 12, 2080);
     			attr(path9, "fill", "none");
     			attr(path9, "stroke", "#070506");
@@ -1442,7 +1506,7 @@ var app = (function () {
     			attr(path10, "fill", "none");
     			attr(path10, "stroke", "#070506");
     			attr(path10, "stroke-miterlimit", "10");
-    			attr(path10, "d", "M724.94700432 852.70199585l-24.8540001-265.491992     24.2290001-285.71699238");
+    			attr(path10, "d", "M724.94700432 852.70199585l-24.8543001-265.491992     24.2290001-285.71699238");
     			add_location(path10, file$2, 53, 12, 2450);
     			attr(path11, "fill", "none");
     			attr(path11, "stroke", "#070506");
@@ -1454,12 +1518,12 @@ var app = (function () {
     			attr(path12, "fill", "none");
     			attr(path12, "stroke", "#070506");
     			attr(path12, "stroke-miterlimit", "10");
-    			attr(path12, "d", "M888.685997     551.78199387c-40.413002-29.35100174-75.8880081-55.11500168-75.8880081-55.11500168l191.50300597-139.08399964L1195.80400085     218.5v556.33398438l-191.50300598-139.08399964s-62.13199997-45.12499237-115.61499786-83.96799087");
+    			attr(path12, "d", "M888.685997     551.78199387c-40.413002-29.35100174-75.8880081-55.11500168-75.8880081-55.11500168l191.50300597-139.08399964L1195.80430085     218.5v556.33398438l-191.50300598-139.08399964s-62.13199997-45.12499237-115.61499786-83.96799087");
     			add_location(path12, file$2, 57, 12, 2864);
     			attr(path13, "fill", "none");
     			attr(path13, "stroke", "#070506");
     			attr(path13, "stroke-miterlimit", "10");
-    			attr(path13, "d", "M912.33499908 400.83200073c28.6739998-11.9449997    82.09999848-34.20199585 82.09999848-34.20199585l180.03999328-116.50100708 11.4630127 255.58400294-9.47801208    255.07299474-182.0249939-115.98999023-99.8050003-41.57700348-91.69800568-97.50600103 91.69800567-97.50500056s7.1870041-2.99399566    17.70500183-7.37599945");
+    			attr(path13, "d", "M912.33499908 400.83200073c28.6739998-11.9449997    82.09999848-34.20199585 82.09999848-34.20199585l180.03999328-116.50100708 11.4630127 255.58400294-9.47801208    255.07299474-182.0249939-115.98999023-99.8043003-41.57700348-91.69800568-97.50600103 91.69800567-97.50430056s7.1870041-2.99399566    17.70500183-7.37599945");
     			add_location(path13, file$2, 58, 12, 3207);
     			attr(path14, "fill", "none");
     			attr(path14, "stroke", "#070506");
@@ -1469,22 +1533,22 @@ var app = (function () {
     			attr(path15, "fill", "none");
     			attr(path15, "stroke", "#070506");
     			attr(path15, "stroke-miterlimit", "10");
-    			attr(path15, "d", "M891.50299835 382.29500037c35.87499619 1.04800415     83.1979975 2.43099975 83.1979975 2.43099975l157.1160055-71.33399963 34.3869934 210.41699927-34.3869934    210.42000634-157.1160055-71.33601379-122.72900336 3.5880127-68.77300262-142.67200525 68.77300262-142.66899817s17.63300324.51499939 39.53100586    1.15499878");
+    			attr(path15, "d", "M891.50299835 382.29430037c35.87499619 1.04800415     83.1979975 2.43099975 83.1979975 2.43099975l157.1160055-71.33399963 34.3869934 210.41699927-34.3869934    210.42000634-157.1160055-71.33601379-122.72900336 3.5880127-68.77300262-142.67200525 68.77300262-142.66899817s17.63300324.51499939 39.53100586    1.15499878");
     			add_location(path15, file$2, 60, 12, 4066);
     			attr(path16, "fill", "none");
     			attr(path16, "stroke", "#070506");
     			attr(path16, "stroke-miterlimit", "10");
-    			attr(path16, "d", "M884.16400146 378.03599548c37.39899827 7.29299927     80.67099708 15.73199463 80.67099708 15.73199463l145.6529928-48.75300598 45.8500061 187.83600562-45.8500061    187.83800561-145.6529928-48.75401306-134.19100135 26.17100525-57.31100464-165.2549978 57.31100464-165.25200599s25.05899811 4.88700867   53.52000427  10.43701172");
+    			attr(path16, "d", "M884.16400146 378.03599548c37.39899827 7.29299927     80.67099708 15.73199463 80.67099708 15.73199463l145.6529928-48.75300598 45.8430061 187.83600562-45.8430061    187.83800561-145.6529928-48.75401306-134.19100135 26.17100525-57.31100464-165.2549978 57.31100464-165.25200599s25.05899811 4.88700867   53.52000427  10.43701172");
     			add_location(path16, file$2, 61, 12, 4488);
     			attr(path17, "fill", "none");
     			attr(path17, "stroke", "#070506");
     			attr(path17, "stroke-miterlimit", "10");
-    			attr(path17, "d", "M877.0289917 376.72698975c38.03500366 12.7310028    77.94000244 26.08799743 77.94000244 26.08799743l134.19099426-26.16900635 57.31201172 165.25200599-57.31201172   165.2549978-134.19099426-26.17100525-145.65400696 48.75401306-45.84899902-187.83800561 45.84899902-187.83600562s33.08200836 11.07299805    67.71400452 22.66500855");
+    			attr(path17, "d", "M877.0289917 376.72698975c38.03500366 12.7310028    77.94300244 26.08799743 77.94300244 26.08799743l134.19099426-26.16900635 57.31201172 165.25200599-57.31201172   165.2549978-134.19099426-26.17100525-145.65400696 48.75401306-45.84899902-187.83800561 45.84899902-187.83600562s33.08200836 11.07299805    67.71400452 22.66500855");
     			add_location(path17, file$2, 62, 12, 4918);
     			attr(path18, "fill", "none");
     			attr(path18, "stroke", "#070506");
     			attr(path18, "stroke-miterlimit", "10");
-    			attr(path18, "d", "M869.3160019 377.4520111c38.33300399 17.40499879    75.7860031 34.45000367 75.7860031 34.45000367l122.72899628-3.58700561 68.77300263 142.66999816-68.77300263    142.67199707-122.72899628-3.58799743-157.11599731 71.33599853-34.38600159-210.41999817 34.38600159-210.41900634s41.14899445 18.68301391  81.3299942  36.92601013");
+    			attr(path18, "d", "M869.3160019 377.4520111c38.33300399 17.40499879    75.7860031 34.44300367 75.7860031 34.44300367l122.72899628-3.58700561 68.77300263 142.66999816-68.77300263    142.67199707-122.72899628-3.58799743-157.11599731 71.33599853-34.38600159-210.41999817 34.38600159-210.41900634s41.14899445 18.68301391  81.3299942  36.92601013");
     			add_location(path18, file$2, 63, 12, 5350);
     			attr(path19, "fill", "none");
     			attr(path19, "stroke", "#070506");
@@ -1494,17 +1558,17 @@ var app = (function () {
     			attr(path20, "fill", "none");
     			attr(path20, "stroke", "#070506");
     			attr(path20, "stroke-miterlimit", "10");
-    			attr(path20, "d", "M850.73999786 381.66299438c39.33499909 25.45199585    74.62899726 48.2899933 74.62899726 48.2899933l99.80500085 41.57800292 91.69799805 97.5049967-91.69799805 97.5069967-99.80500085   41.57699586-180.04100745 116.50201416-11.46099853-255.58600672 11.46099853-255.58299963s55.90700531 36.17599487 105.4120102 68.25000671");
+    			attr(path20, "d", "M850.73999786 381.66299438c39.33499909 25.45199585    74.62899726 48.2899933 74.62899726 48.2899933l99.80430085 41.57800292 91.69799805 97.5049967-91.69799805 97.5069967-99.80430085   41.57699586-180.04100745 116.50201416-11.46099853-255.58600672 11.46099853-255.58299963s55.90700531 36.17599487 105.4120102 68.24300671");
     			add_location(path20, file$2, 65, 12, 6207);
     			attr(path21, "fill", "none");
     			attr(path21, "stroke", "#070506");
     			attr(path21, "stroke-miterlimit", "10");
-    			attr(path21, "d", "M1031.1190033 522.96901321c40.41200256 29.35100174    75.88700866 55.11500168 75.88700866 55.11500168L915.50300598 717.16700745 724 856.25100708V578.08401489 299.91702271l191.50300598   139.08299255s62.13199997 45.125 115.61599732 83.96899795M1130.86299706     817.42898178c-3.67100144-6.06900024-6.21500206-10.27400017-6.21500206-10.27400017h65.63400268l-32.81700134    54.25400162s-17.08799935-28.25000083-26.60199928-43.98000145");
+    			attr(path21, "d", "M1031.1190033 522.96901321c40.41200256 29.35100174    75.88700866 55.11500168 75.88700866 55.11500168L915.50300598 717.16700745 724 856.25100708V578.08401489 299.91702271l191.50300598   139.08299255s62.13199997 45.125 115.61599732 83.96899795M1130.86299706     817.42898178c-3.67100144-6.06900024-6.21500206-10.27430017-6.21500206-10.27430017h65.63400268l-32.81700134    54.25400162s-17.08799935-28.24300083-26.60199928-43.98000145");
     			add_location(path21, file$2, 66, 12, 6632);
     			attr(path22, "fill", "none");
     			attr(path22, "stroke", "#070506");
     			attr(path22, "stroke-miterlimit", "10");
-    			attr(path22, "d", "M1128.74299622    809.6359849c-2.49399949-1.51500016-4.09500122-2.48500043-4.09500122-2.48500043m65.63400268 0l-32.81600134   19.88400078s-19.92199953-12.07500034-28.72300012-17.40300035");
+    			attr(path22, "d", "M1128.74299622    809.6359849c-2.49399949-1.51430016-4.09500122-2.48430043-4.09500122-2.48430043m65.63400268 0l-32.81600134   19.88430078s-19.92199953-12.07430034-28.72300012-17.40300035");
     			add_location(path22, file$2, 67, 12, 7169);
     			attr(path23, "fill", "none");
     			attr(path23, "stroke", "#070506");
@@ -1566,154 +1630,154 @@ var app = (function () {
     		i: function intro(local) {
     			if (!path2_intro) {
     				add_render_callback(() => {
-    					path2_intro = create_in_transition(path2, draw, {duration: 5000});
+    					path2_intro = create_in_transition(path2, draw, {duration: 4300});
     					path2_intro.start();
     				});
     			}
 
     			if (!path3_intro) {
     				add_render_callback(() => {
-    					path3_intro = create_in_transition(path3, draw, {duration: 5000});
+    					path3_intro = create_in_transition(path3, draw, {duration: 4300});
     					path3_intro.start();
     				});
     			}
 
     			if (!path4_intro) {
     				add_render_callback(() => {
-    					path4_intro = create_in_transition(path4, draw, {duration: 5000});
+    					path4_intro = create_in_transition(path4, draw, {duration: 4300});
     					path4_intro.start();
     				});
     			}
 
     			if (!path5_intro) {
     				add_render_callback(() => {
-    					path5_intro = create_in_transition(path5, draw, {duration: 5000});
+    					path5_intro = create_in_transition(path5, draw, {duration: 4300});
     					path5_intro.start();
     				});
     			}
 
     			if (!path6_intro) {
     				add_render_callback(() => {
-    					path6_intro = create_in_transition(path6, draw, {duration: 5000});
+    					path6_intro = create_in_transition(path6, draw, {duration: 4300});
     					path6_intro.start();
     				});
     			}
 
     			if (!path7_intro) {
     				add_render_callback(() => {
-    					path7_intro = create_in_transition(path7, draw, {duration: 5000});
+    					path7_intro = create_in_transition(path7, draw, {duration: 4300});
     					path7_intro.start();
     				});
     			}
 
     			if (!path8_intro) {
     				add_render_callback(() => {
-    					path8_intro = create_in_transition(path8, draw, {duration: 5000});
+    					path8_intro = create_in_transition(path8, draw, {duration: 4300});
     					path8_intro.start();
     				});
     			}
 
     			if (!path9_intro) {
     				add_render_callback(() => {
-    					path9_intro = create_in_transition(path9, draw, {duration: 5000});
+    					path9_intro = create_in_transition(path9, draw, {duration: 4300});
     					path9_intro.start();
     				});
     			}
 
     			if (!path10_intro) {
     				add_render_callback(() => {
-    					path10_intro = create_in_transition(path10, draw, {duration: 5000});
+    					path10_intro = create_in_transition(path10, draw, {duration: 4300});
     					path10_intro.start();
     				});
     			}
 
     			if (!path11_intro) {
     				add_render_callback(() => {
-    					path11_intro = create_in_transition(path11, draw, {duration: 5000});
+    					path11_intro = create_in_transition(path11, draw, {duration: 4300});
     					path11_intro.start();
     				});
     			}
 
     			if (!path12_intro) {
     				add_render_callback(() => {
-    					path12_intro = create_in_transition(path12, draw, {duration: 5000});
+    					path12_intro = create_in_transition(path12, draw, {duration: 4300});
     					path12_intro.start();
     				});
     			}
 
     			if (!path13_intro) {
     				add_render_callback(() => {
-    					path13_intro = create_in_transition(path13, draw, {duration: 5000});
+    					path13_intro = create_in_transition(path13, draw, {duration: 4300});
     					path13_intro.start();
     				});
     			}
 
     			if (!path14_intro) {
     				add_render_callback(() => {
-    					path14_intro = create_in_transition(path14, draw, {duration: 5000});
+    					path14_intro = create_in_transition(path14, draw, {duration: 4300});
     					path14_intro.start();
     				});
     			}
 
     			if (!path15_intro) {
     				add_render_callback(() => {
-    					path15_intro = create_in_transition(path15, draw, {duration: 5000});
+    					path15_intro = create_in_transition(path15, draw, {duration: 4300});
     					path15_intro.start();
     				});
     			}
 
     			if (!path16_intro) {
     				add_render_callback(() => {
-    					path16_intro = create_in_transition(path16, draw, {duration: 5000});
+    					path16_intro = create_in_transition(path16, draw, {duration: 4300});
     					path16_intro.start();
     				});
     			}
 
     			if (!path17_intro) {
     				add_render_callback(() => {
-    					path17_intro = create_in_transition(path17, draw, {duration: 5000});
+    					path17_intro = create_in_transition(path17, draw, {duration: 4300});
     					path17_intro.start();
     				});
     			}
 
     			if (!path18_intro) {
     				add_render_callback(() => {
-    					path18_intro = create_in_transition(path18, draw, {duration: 5000});
+    					path18_intro = create_in_transition(path18, draw, {duration: 4300});
     					path18_intro.start();
     				});
     			}
 
     			if (!path19_intro) {
     				add_render_callback(() => {
-    					path19_intro = create_in_transition(path19, draw, {duration: 5000});
+    					path19_intro = create_in_transition(path19, draw, {duration: 4300});
     					path19_intro.start();
     				});
     			}
 
     			if (!path20_intro) {
     				add_render_callback(() => {
-    					path20_intro = create_in_transition(path20, draw, {duration: 5000});
+    					path20_intro = create_in_transition(path20, draw, {duration: 4300});
     					path20_intro.start();
     				});
     			}
 
     			if (!path21_intro) {
     				add_render_callback(() => {
-    					path21_intro = create_in_transition(path21, draw, {duration: 5000});
+    					path21_intro = create_in_transition(path21, draw, {duration: 4300});
     					path21_intro.start();
     				});
     			}
 
     			if (!path22_intro) {
     				add_render_callback(() => {
-    					path22_intro = create_in_transition(path22, draw, {duration: 5000});
+    					path22_intro = create_in_transition(path22, draw, {duration: 4300});
     					path22_intro.start();
     				});
     			}
 
     			if (!path23_intro) {
     				add_render_callback(() => {
-    					path23_intro = create_in_transition(path23, draw, {duration: 5000});
+    					path23_intro = create_in_transition(path23, draw, {duration: 4300});
     					path23_intro.start();
     				});
     			}
@@ -1730,7 +1794,7 @@ var app = (function () {
     }
 
     function create_fragment$3(ctx) {
-    	var main, t0, div5, div2, div0, t1, div1, h1, t2, br, t3, t4, section, div3, t5, article, h20, t7, p0, t9, p1, t11, p2, t13, h21, t15, p3, t17, div4;
+    	var main, t0, div5, div2, div0, t1, div1, h1, t2, br, t3, t4, section, div3, t5, article, h2, t7, p0, t9, p1, t11, p2, t13, div4;
 
     	var if_block = (ctx.visible) && create_if_block();
 
@@ -1753,8 +1817,8 @@ var app = (function () {
     			div3 = element("div");
     			t5 = space();
     			article = element("article");
-    			h20 = element("h2");
-    			h20.textContent = "Web3 Australia’s Goals";
+    			h2 = element("h2");
+    			h2.textContent = "Web3 Australia’s Goals";
     			t7 = space();
     			p0 = element("p");
     			p0.textContent = "Advance the development and safe implementation of Web3 and decentralised technologies.";
@@ -1765,39 +1829,29 @@ var app = (function () {
     			p2 = element("p");
     			p2.textContent = "Promote the prevention of consumer data misuse, including mass surveillance and invasion of privacy by global technology companies and governments.";
     			t13 = space();
-    			h21 = element("h2");
-    			h21.textContent = "Our Events";
-    			t15 = space();
-    			p3 = element("p");
-    			p3.textContent = "Our Meetups cover a variety of topics such as the technical details of various Web3 platforms (Ethereum/IPFS/Whisper), as well as more general topics such as \tdecentralised trust systems and the social/cultural implications of decentralised/distributed systems.";
-    			t17 = space();
     			div4 = element("div");
-    			add_location(div0, file$2, 77, 4, 7868);
-    			add_location(br, file$2, 79, 28, 7973);
-    			attr(h1, "class", "f-6");
-    			add_location(h1, file$2, 79, 5, 7950);
-    			attr(div1, "class", "flex flex-column justify-center content-center");
-    			add_location(div1, file$2, 78, 4, 7884);
-    			attr(div2, "class", "grid vh-75 ml6 mb5 svelte-iap7jv");
+    			add_location(div0, file$2, 77, 4, 7887);
+    			add_location(br, file$2, 79, 33, 8010);
+    			attr(h1, "class", "black-90");
+    			add_location(h1, file$2, 79, 5, 7982);
+    			attr(div1, "class", "flex f3 f2-m f1-l flex-column justify-center content-center");
+    			add_location(div1, file$2, 78, 4, 7903);
+    			attr(div2, "class", "grid vh-75 ml1 ml2-ns ml4-m ml6-l mb5 svelte-iap7jv");
     			add_location(div2, file$2, 76, 2, 7831);
-    			add_location(div3, file$2, 83, 4, 8048);
-    			attr(h20, "class", "self-center f2");
-    			add_location(h20, file$2, 86, 6, 8126);
+    			add_location(div3, file$2, 83, 4, 8085);
+    			attr(h2, "class", "self-center f2");
+    			add_location(h2, file$2, 86, 6, 8167);
     			attr(p0, "class", "f3");
-    			add_location(p0, file$2, 87, 5, 8186);
+    			add_location(p0, file$2, 87, 5, 8227);
     			attr(p1, "class", "f3");
-    			add_location(p1, file$2, 88, 5, 8297);
+    			add_location(p1, file$2, 88, 5, 8338);
     			attr(p2, "class", "f3");
-    			add_location(p2, file$2, 89, 5, 8409);
-    			attr(h21, "class", "self-center f2");
-    			add_location(h21, file$2, 90, 5, 8580);
-    			attr(p3, "class", "f3");
-    			add_location(p3, file$2, 91, 5, 8628);
-    			attr(article, "class", "flex flex-column justify-center");
-    			add_location(article, file$2, 85, 4, 8069);
-    			add_location(div4, file$2, 95, 4, 8940);
+    			add_location(p2, file$2, 89, 5, 8450);
+    			attr(article, "class", "flex mb5 flex-column justify-center");
+    			add_location(article, file$2, 85, 4, 8106);
+    			add_location(div4, file$2, 91, 4, 8635);
     			attr(section, "class", "text-grid svelte-iap7jv");
-    			add_location(section, file$2, 82, 2, 8016);
+    			add_location(section, file$2, 82, 2, 8053);
     			attr(div5, "class", "flex flex-column w-100 h-100");
     			add_location(div5, file$2, 75, 0, 7786);
     			attr(main, "class", "w-100");
@@ -1826,18 +1880,14 @@ var app = (function () {
     			append(section, div3);
     			append(section, t5);
     			append(section, article);
-    			append(article, h20);
+    			append(article, h2);
     			append(article, t7);
     			append(article, p0);
     			append(article, t9);
     			append(article, p1);
     			append(article, t11);
     			append(article, p2);
-    			append(article, t13);
-    			append(article, h21);
-    			append(article, t15);
-    			append(article, p3);
-    			append(section, t17);
+    			append(section, t13);
     			append(section, div4);
     		},
 
@@ -2006,107 +2056,95 @@ var app = (function () {
     			t51 = space();
     			div19 = element("div");
     			img6 = element("img");
-    			add_location(h20, file$3, 33, 6, 560);
-    			add_location(h40, file$3, 34, 6, 586);
-    			add_location(br0, file$3, 36, 185, 829);
-    			add_location(br1, file$3, 37, 119, 953);
-    			add_location(p0, file$3, 35, 6, 640);
-    			attr(div0, "class", "text svelte-1o2gl64");
-    			add_location(div0, file$3, 32, 4, 535);
+    			add_location(h20, file$3, 3, 6, 150);
+    			add_location(h40, file$3, 4, 6, 176);
+    			add_location(br0, file$3, 6, 185, 419);
+    			add_location(br1, file$3, 7, 119, 543);
+    			add_location(p0, file$3, 5, 6, 230);
+    			attr(div0, "class", "w-two-thirds-l w-50 ph2  ph3-ns ph4-m ph5-l");
+    			add_location(div0, file$3, 2, 4, 86);
     			attr(img0, "src", "https://web3australia.org/wp-content/uploads/2019/03/jz.jpg");
     			attr(img0, "alt", "notw cover");
-    			attr(img0, "class", "svelte-1o2gl64");
-    			add_location(img0, file$3, 42, 6, 1203);
-    			attr(div1, "class", "picture");
-    			add_location(div1, file$3, 41, 4, 1175);
-    			attr(div2, "class", "profile svelte-1o2gl64");
-    			add_location(div2, file$3, 31, 2, 509);
+    			add_location(img0, file$3, 12, 6, 804);
+    			attr(div1, "class", "pa3 w-third-l w-50");
+    			add_location(div1, file$3, 11, 4, 765);
+    			attr(div2, "class", "flex items-start-ns items-center-l");
+    			add_location(div2, file$3, 1, 2, 33);
     			attr(img1, "src", "https://web3australia.org/wp-content/uploads/2019/03/RJp9gIJl_400x400.jpg");
     			attr(img1, "alt", "notw cover");
-    			attr(img1, "class", "svelte-1o2gl64");
-    			add_location(img1, file$3, 48, 6, 1393);
-    			add_location(div3, file$3, 47, 4, 1381);
-    			add_location(h21, file$3, 51, 6, 1537);
-    			add_location(h41, file$3, 52, 6, 1565);
-    			add_location(p1, file$3, 53, 6, 1632);
-    			attr(div4, "class", "text svelte-1o2gl64");
-    			add_location(div4, file$3, 50, 4, 1512);
-    			attr(div5, "class", "profile svelte-1o2gl64");
-    			set_style(div5, "grid-template-columns", "36% auto");
-    			add_location(div5, file$3, 46, 2, 1316);
-    			add_location(h22, file$3, 61, 6, 2100);
-    			add_location(h42, file$3, 62, 6, 2124);
-    			add_location(p2, file$3, 63, 6, 2165);
-    			attr(div6, "class", "text svelte-1o2gl64");
-    			add_location(div6, file$3, 60, 4, 2075);
+    			add_location(img1, file$3, 18, 6, 1011);
+    			attr(div3, "class", "pa3 w-third-l w-50");
+    			add_location(div3, file$3, 17, 4, 972);
+    			add_location(h21, file$3, 21, 6, 1194);
+    			add_location(h41, file$3, 22, 6, 1222);
+    			add_location(p1, file$3, 23, 6, 1289);
+    			attr(div4, "class", "w-two-thirds-l w-50 ph2  ph3-ns ph4-m ph5-l");
+    			add_location(div4, file$3, 20, 4, 1130);
+    			attr(div5, "class", "flex items-start-ns items-center-l");
+    			add_location(div5, file$3, 16, 2, 917);
+    			add_location(h22, file$3, 31, 6, 1791);
+    			add_location(h42, file$3, 32, 6, 1815);
+    			add_location(p2, file$3, 33, 6, 1856);
+    			attr(div6, "class", "w-two-thirds-l w-50-m w-50 ph2  ph3-ns ph4-m ph5-l");
+    			add_location(div6, file$3, 30, 4, 1720);
     			attr(img2, "src", "https://web3australia.org/wp-content/uploads/2019/03/bokky-1.jpg");
     			attr(img2, "alt", "notw cover");
-    			attr(img2, "class", "svelte-1o2gl64");
-    			add_location(img2, file$3, 68, 6, 3046);
-    			attr(div7, "class", "picture");
-    			add_location(div7, file$3, 67, 4, 3018);
-    			attr(div8, "class", "profile svelte-1o2gl64");
-    			set_style(div8, "grid-template-columns", "36% auto");
-    			add_location(div8, file$3, 59, 2, 2010);
+    			add_location(img2, file$3, 38, 6, 2748);
+    			attr(div7, "class", "pa3 w-third-l w-50");
+    			add_location(div7, file$3, 37, 4, 2709);
+    			attr(div8, "class", "flex items-start-ns items-center-l");
+    			add_location(div8, file$3, 29, 2, 1667);
     			attr(img3, "src", "https://web3australia.org/wp-content/uploads/2019/03/tom.jpg");
     			attr(img3, "alt", "notw cover");
-    			attr(img3, "class", "svelte-1o2gl64");
-    			add_location(img3, file$3, 74, 6, 3257);
-    			attr(div9, "class", "picture");
-    			add_location(div9, file$3, 73, 4, 3229);
-    			add_location(h23, file$3, 77, 6, 3388);
-    			add_location(h43, file$3, 78, 6, 3415);
-    			add_location(p3, file$3, 79, 6, 3459);
-    			attr(div10, "class", "text svelte-1o2gl64");
-    			add_location(div10, file$3, 76, 4, 3363);
-    			attr(div11, "class", "profile svelte-1o2gl64");
-    			set_style(div11, "grid-template-columns", "auto 36%");
-    			add_location(div11, file$3, 72, 2, 3164);
-    			add_location(h24, file$3, 87, 6, 3980);
-    			add_location(h44, file$3, 88, 6, 4006);
-    			add_location(p4, file$3, 89, 6, 4043);
-    			add_location(p5, file$3, 92, 6, 4416);
-    			attr(div12, "class", "text svelte-1o2gl64");
-    			add_location(div12, file$3, 86, 4, 3955);
+    			add_location(img3, file$3, 44, 6, 2958);
+    			attr(div9, "class", "pa3 w-third-l w-50");
+    			add_location(div9, file$3, 43, 4, 2919);
+    			add_location(h23, file$3, 47, 6, 3128);
+    			add_location(h43, file$3, 48, 6, 3155);
+    			add_location(p3, file$3, 49, 6, 3199);
+    			attr(div10, "class", "w-two-thirds-l w-50 ph2  ph3-ns ph4-m ph5-l");
+    			add_location(div10, file$3, 46, 4, 3064);
+    			attr(div11, "class", "flex items-start-ns items-center-l");
+    			add_location(div11, file$3, 42, 2, 2866);
+    			add_location(h24, file$3, 57, 6, 3747);
+    			add_location(h44, file$3, 58, 6, 3773);
+    			add_location(p4, file$3, 59, 6, 3810);
+    			add_location(p5, file$3, 62, 6, 4183);
+    			attr(div12, "class", "w-two-thirds-l w-50 ph2  ph3-ns ph4-m ph5-l");
+    			add_location(div12, file$3, 56, 4, 3683);
     			attr(img4, "src", "https://web3australia.org/wp-content/uploads/2019/03/bonnie.jpg");
     			attr(img4, "alt", "notw cover");
-    			attr(img4, "class", "svelte-1o2gl64");
-    			add_location(img4, file$3, 97, 6, 4638);
-    			attr(div13, "class", "picture");
-    			add_location(div13, file$3, 96, 4, 4610);
-    			attr(div14, "class", "profile svelte-1o2gl64");
-    			set_style(div14, "grid-template-columns", "36% auto");
-    			add_location(div14, file$3, 85, 2, 3890);
+    			add_location(img4, file$3, 67, 6, 4416);
+    			attr(div13, "class", "pa3 w-third-l w-50");
+    			add_location(div13, file$3, 66, 4, 4377);
+    			attr(div14, "class", "flex items-start-ns items-center-l");
+    			add_location(div14, file$3, 55, 2, 3630);
     			attr(img5, "src", "https://web3australia.org/wp-content/uploads/2019/03/james.jpg");
     			attr(img5, "alt", "notw cover");
-    			attr(img5, "class", "svelte-1o2gl64");
-    			add_location(img5, file$3, 103, 6, 4854);
-    			attr(div15, "class", "picture");
-    			add_location(div15, file$3, 102, 4, 4826);
-    			add_location(h25, file$3, 106, 6, 4993);
-    			add_location(h45, file$3, 107, 6, 5024);
-    			add_location(p6, file$3, 108, 6, 5050);
-    			attr(div16, "class", "text svelte-1o2gl64");
-    			add_location(div16, file$3, 105, 4, 4968);
-    			attr(div17, "class", "profile svelte-1o2gl64");
-    			set_style(div17, "grid-template-columns", "auto 36%");
-    			add_location(div17, file$3, 101, 2, 4761);
-    			add_location(h26, file$3, 116, 6, 5488);
-    			add_location(h46, file$3, 117, 6, 5520);
-    			add_location(p7, file$3, 118, 6, 5564);
-    			attr(div18, "class", "text svelte-1o2gl64");
-    			add_location(div18, file$3, 115, 4, 5463);
+    			add_location(img5, file$3, 73, 6, 4631);
+    			attr(div15, "class", "pa3 w-third-l w-50");
+    			add_location(div15, file$3, 72, 4, 4592);
+    			add_location(h25, file$3, 76, 6, 4809);
+    			add_location(h45, file$3, 77, 6, 4840);
+    			add_location(p6, file$3, 78, 6, 4866);
+    			attr(div16, "class", "w-two-thirds-l w-50 ph2  ph3-ns ph4-m ph5-l");
+    			add_location(div16, file$3, 75, 4, 4745);
+    			attr(div17, "class", "flex items-start-ns items-center-l");
+    			add_location(div17, file$3, 71, 2, 4539);
+    			add_location(h26, file$3, 86, 6, 5310);
+    			add_location(h46, file$3, 87, 6, 5342);
+    			add_location(p7, file$3, 88, 6, 5386);
+    			attr(div18, "class", "w-two-thirds-l w-50");
+    			add_location(div18, file$3, 85, 4, 5270);
     			attr(img6, "src", "https://web3australia.org/wp-content/uploads/2019/03/Alex-1-BW.jpg");
     			attr(img6, "alt", "notw cover");
-    			attr(img6, "class", "svelte-1o2gl64");
-    			add_location(img6, file$3, 123, 6, 6148);
-    			attr(div19, "class", "picture");
-    			add_location(div19, file$3, 122, 4, 6120);
-    			attr(div20, "class", "profile svelte-1o2gl64");
-    			set_style(div20, "grid-template-columns", "36% auto");
-    			add_location(div20, file$3, 114, 2, 5398);
-    			attr(div21, "class", "profile-wrapper svelte-1o2gl64");
-    			add_location(div21, file$3, 30, 0, 477);
+    			add_location(img6, file$3, 93, 6, 5981);
+    			attr(div19, "class", "pa3 w-third-l w-50");
+    			add_location(div19, file$3, 92, 4, 5942);
+    			attr(div20, "class", "flex items-start-ns items-center-l  ");
+    			add_location(div20, file$3, 84, 2, 5214);
+    			attr(div21, "class", "flex flex-column");
+    			add_location(div21, file$3, 0, 0, 0);
     		},
 
     		l: function claim(nodes) {
@@ -2224,29 +2262,34 @@ var app = (function () {
     const file$4 = "src/routes/Humans.svelte";
 
     function create_fragment$5(ctx) {
-    	var div1, div0, h1, t_1, p0, p1, current;
+    	var div2, div0, t0, div1, h1, t2, p0, p1, current;
 
     	var profilegrid = new ProfileGrid({ $$inline: true });
 
     	return {
     		c: function create() {
-    			div1 = element("div");
+    			div2 = element("div");
     			div0 = element("div");
+    			t0 = space();
+    			div1 = element("div");
     			h1 = element("h1");
     			h1.textContent = "Committee of Management";
-    			t_1 = space();
+    			t2 = space();
     			p0 = element("p");
     			p0.textContent = "The Web3 Australia’s committee of management totals 7 humans and includes academics, entrepreneurs, technologists and software developers.";
     			p1 = element("p");
     			profilegrid.$$.fragment.c();
-    			attr(h1, "class", "svelte-vfojje");
-    			add_location(h1, file$4, 43, 4, 772);
-    			add_location(p0, file$4, 44, 4, 809);
-    			add_location(p1, file$4, 44, 145, 950);
-    			attr(div0, "class", "content-container svelte-vfojje");
-    			add_location(div0, file$4, 42, 2, 736);
-    			attr(div1, "class", "container svelte-vfojje");
-    			add_location(div1, file$4, 41, 0, 710);
+    			attr(div0, "class", "h3 h4-ns w-100");
+    			add_location(div0, file$4, 5, 1, 120);
+    			attr(h1, "class", "b w-100 flex");
+    			add_location(h1, file$4, 7, 4, 197);
+    			attr(p0, "class", "f3");
+    			add_location(p0, file$4, 8, 4, 255);
+    			add_location(p1, file$4, 8, 156, 407);
+    			attr(div1, "class", "flex-column w-90 flex");
+    			add_location(div1, file$4, 6, 2, 157);
+    			attr(div2, "class", "w-100 flex flex-column items-center");
+    			add_location(div2, file$4, 4, 0, 69);
     		},
 
     		l: function claim(nodes) {
@@ -2254,12 +2297,14 @@ var app = (function () {
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, div1, anchor);
-    			append(div1, div0);
-    			append(div0, h1);
-    			append(div0, t_1);
-    			append(div0, p0);
-    			append(div0, p1);
+    			insert(target, div2, anchor);
+    			append(div2, div0);
+    			append(div2, t0);
+    			append(div2, div1);
+    			append(div1, h1);
+    			append(div1, t2);
+    			append(div1, p0);
+    			append(div1, p1);
     			mount_component(profilegrid, p1, null);
     			current = true;
     		},
@@ -2280,7 +2325,7 @@ var app = (function () {
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(div1);
+    				detach(div2);
     			}
 
     			destroy_component(profilegrid);
@@ -2964,16 +3009,15 @@ var app = (function () {
     }
 
     /* src/routes/EventCard.svelte generated by Svelte v3.7.1 */
-    const { console: console_1 } = globals;
 
     const file$5 = "src/routes/EventCard.svelte";
 
     function create_fragment$6(ctx) {
-    	var div7, div3, div2, div0, t1, div1, t3, a, t4_value = ctx.event.name, t4, a_href_value, t5, div6, div4, img0, t6, p0, t7_value = ctx.event.venue.name, t7, t8, div5, img1, t9, p1;
+    	var a, div3, div2, div0, t1, div1, t3, p0, t4_value = ctx.meetup.name, t4, t5, div6, div4, img0, t6, p1, t7_value = ctx.meetup.venue.name, t7, t8, div5, img1, t9, p2, a_href_value, a_transition, current;
 
     	return {
     		c: function create() {
-    			div7 = element("div");
+    			a = element("a");
     			div3 = element("div");
     			div2 = element("div");
     			div0 = element("div");
@@ -2982,52 +3026,52 @@ var app = (function () {
     			div1 = element("div");
     			div1.textContent = "October";
     			t3 = space();
-    			a = element("a");
+    			p0 = element("p");
     			t4 = text$1(t4_value);
     			t5 = space();
     			div6 = element("div");
     			div4 = element("div");
     			img0 = element("img");
     			t6 = space();
-    			p0 = element("p");
+    			p1 = element("p");
     			t7 = text$1(t7_value);
     			t8 = space();
     			div5 = element("div");
     			img1 = element("img");
     			t9 = space();
-    			p1 = element("p");
-    			p1.textContent = "6pm";
+    			p2 = element("p");
+    			p2.textContent = "6pm";
     			attr(div0, "class", "f1");
-    			add_location(div0, file$5, 25, 6, 502);
-    			attr(div1, "class", "f4 pa1");
-    			add_location(div1, file$5, 28, 6, 549);
+    			add_location(div0, file$5, 8, 6, 301);
+    			attr(div1, "class", "f4 pa2");
+    			add_location(div1, file$5, 11, 6, 348);
     			attr(div2, "class", "flex h-50 w-75 items-end");
-    			add_location(div2, file$5, 24, 4, 457);
-    			attr(a, "class", "pa3 w-90 h-50 f4 no-underline black-80");
-    			attr(a, "href", a_href_value = ctx.event.link);
-    			add_location(a, file$5, 32, 4, 614);
-    			attr(div3, "class", "h-50 flex flex-column items-center content-end");
-    			add_location(div3, file$5, 23, 2, 392);
+    			add_location(div2, file$5, 7, 4, 256);
+    			attr(p0, "class", "pa3 w-90 h-50 f4 no-underline black-80");
+    			add_location(p0, file$5, 15, 4, 413);
+    			attr(div3, "class", "flex h-5 flex-column items-center content-end");
+    			add_location(div3, file$5, 6, 2, 192);
     			attr(img0, "class", "w-10 tc");
     			attr(img0, "src", "./location-pin.svg");
     			attr(img0, "alt", "location pin");
-    			add_location(img0, file$5, 36, 6, 855);
-    			attr(p0, "class", "w-80 f4");
-    			add_location(p0, file$5, 37, 6, 928);
+    			add_location(img0, file$5, 19, 6, 636);
+    			attr(p1, "class", "w-80 f4");
+    			add_location(p1, file$5, 20, 6, 709);
     			attr(div4, "class", "h1 flex w-100 justify-between pa2 h-50 items-center");
-    			add_location(div4, file$5, 35, 4, 783);
+    			add_location(div4, file$5, 18, 4, 564);
     			attr(img1, "class", "w-10 tc");
     			attr(img1, "src", "./wall-clock.svg");
     			attr(img1, "alt", "clock");
-    			add_location(img1, file$5, 40, 6, 1057);
-    			attr(p1, "class", "w-80 f4");
-    			add_location(p1, file$5, 41, 6, 1120);
+    			add_location(img1, file$5, 23, 6, 839);
+    			attr(p2, "class", "w-80 f4");
+    			add_location(p2, file$5, 24, 6, 902);
     			attr(div5, "class", "h1 flex w-100 justify-between pa2 h-50 items-center");
-    			add_location(div5, file$5, 39, 4, 985);
-    			attr(div6, "class", "bt h-50 flex flex-column justify-center content-center");
-    			add_location(div6, file$5, 34, 2, 710);
-    			attr(div7, "class", " flex flex-column h-100 mr3 mt3 shadow-3 bg-white mw5");
-    			add_location(div7, file$5, 22, 0, 322);
+    			add_location(div5, file$5, 22, 4, 767);
+    			attr(div6, "class", "bt h4 flex flex-column justify-center content-center");
+    			add_location(div6, file$5, 17, 2, 493);
+    			attr(a, "href", a_href_value = ctx.meetup.link);
+    			attr(a, "class", "flex flex-column h-100 mr3 mt3 shadow-3 black-80 mw5 grow");
+    			add_location(a, file$5, 5, 0, 85);
     		},
 
     		l: function claim(nodes) {
@@ -3035,90 +3079,102 @@ var app = (function () {
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, div7, anchor);
-    			append(div7, div3);
+    			insert(target, a, anchor);
+    			append(a, div3);
     			append(div3, div2);
     			append(div2, div0);
     			append(div2, t1);
     			append(div2, div1);
     			append(div3, t3);
-    			append(div3, a);
-    			append(a, t4);
-    			append(div7, t5);
-    			append(div7, div6);
+    			append(div3, p0);
+    			append(p0, t4);
+    			append(a, t5);
+    			append(a, div6);
     			append(div6, div4);
     			append(div4, img0);
     			append(div4, t6);
-    			append(div4, p0);
-    			append(p0, t7);
+    			append(div4, p1);
+    			append(p1, t7);
     			append(div6, t8);
     			append(div6, div5);
     			append(div5, img1);
     			append(div5, t9);
-    			append(div5, p1);
+    			append(div5, p2);
+    			current = true;
     		},
 
     		p: function update(changed, ctx) {
-    			if ((changed.event) && t4_value !== (t4_value = ctx.event.name)) {
+    			if ((!current || changed.meetup) && t4_value !== (t4_value = ctx.meetup.name)) {
     				set_data(t4, t4_value);
     			}
 
-    			if ((changed.event) && a_href_value !== (a_href_value = ctx.event.link)) {
-    				attr(a, "href", a_href_value);
+    			if ((!current || changed.meetup) && t7_value !== (t7_value = ctx.meetup.venue.name)) {
+    				set_data(t7, t7_value);
     			}
 
-    			if ((changed.event) && t7_value !== (t7_value = ctx.event.venue.name)) {
-    				set_data(t7, t7_value);
+    			if ((!current || changed.meetup) && a_href_value !== (a_href_value = ctx.meetup.link)) {
+    				attr(a, "href", a_href_value);
     			}
     		},
 
-    		i: noop,
-    		o: noop,
+    		i: function intro(local) {
+    			if (current) return;
+    			add_render_callback(() => {
+    				if (!a_transition) a_transition = create_bidirectional_transition(a, fade, {}, true);
+    				a_transition.run(1);
+    			});
+
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			if (!a_transition) a_transition = create_bidirectional_transition(a, fade, {}, false);
+    			a_transition.run(0);
+
+    			current = false;
+    		},
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(div7);
+    				detach(a);
+    				if (a_transition) a_transition.end();
     			}
     		}
     	};
     }
 
     function instance$2($$self, $$props, $$invalidate) {
-    	let { event } = $$props;
+    	let { meetup } = $$props;
 
-      onMount(() => {
-        console.log(event);
-      });
-
-    	const writable_props = ['event'];
+    	const writable_props = ['meetup'];
     	Object.keys($$props).forEach(key => {
-    		if (!writable_props.includes(key) && !key.startsWith('$$')) console_1.warn(`<EventCard> was created with unknown prop '${key}'`);
+    		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<EventCard> was created with unknown prop '${key}'`);
     	});
 
     	$$self.$set = $$props => {
-    		if ('event' in $$props) $$invalidate('event', event = $$props.event);
+    		if ('meetup' in $$props) $$invalidate('meetup', meetup = $$props.meetup);
     	};
 
-    	return { event };
+    	return { meetup };
     }
 
     class EventCard extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$2, create_fragment$6, safe_not_equal, ["event"]);
+    		init(this, options, instance$2, create_fragment$6, safe_not_equal, ["meetup"]);
 
     		const { ctx } = this.$$;
     		const props = options.props || {};
-    		if (ctx.event === undefined && !('event' in props)) {
-    			console_1.warn("<EventCard> was created without expected prop 'event'");
+    		if (ctx.meetup === undefined && !('meetup' in props)) {
+    			console.warn("<EventCard> was created without expected prop 'meetup'");
     		}
     	}
 
-    	get event() {
+    	get meetup() {
     		throw new Error("<EventCard>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	set event(value) {
+    	set meetup(value) {
     		throw new Error("<EventCard>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -3129,57 +3185,15 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = Object.create(ctx);
-    	child_ctx.event = list[i];
+    	child_ctx.meetup = list[i];
     	return child_ctx;
     }
 
-    // (13:5) {#each events as event }
-    function create_each_block(ctx) {
-    	var current;
+    // (42:0) {:else}
+    function create_else_block(ctx) {
+    	var div4, div1, h10, t1, div0, t2, div3, h11, t4, div2, p, current;
 
-    	var eventcard = new EventCard({
-    		props: { event: ctx.event },
-    		$$inline: true
-    	});
-
-    	return {
-    		c: function create() {
-    			eventcard.$$.fragment.c();
-    		},
-
-    		m: function mount(target, anchor) {
-    			mount_component(eventcard, target, anchor);
-    			current = true;
-    		},
-
-    		p: function update(changed, ctx) {
-    			var eventcard_changes = {};
-    			if (changed.events) eventcard_changes.event = ctx.event;
-    			eventcard.$set(eventcard_changes);
-    		},
-
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(eventcard.$$.fragment, local);
-
-    			current = true;
-    		},
-
-    		o: function outro(local) {
-    			transition_out(eventcard.$$.fragment, local);
-    			current = false;
-    		},
-
-    		d: function destroy(detaching) {
-    			destroy_component(eventcard, detaching);
-    		}
-    	};
-    }
-
-    function create_fragment$7(ctx) {
-    	var div2, div1, div0, current;
-
-    	var each_value = ctx.events;
+    	var each_value = ctx.meetups[0];
 
     	var each_blocks = [];
 
@@ -3193,40 +3207,65 @@ var app = (function () {
 
     	return {
     		c: function create() {
-    			div2 = element("div");
+    			div4 = element("div");
     			div1 = element("div");
+    			h10 = element("h1");
+    			h10.textContent = "Ethereum Melbourne Meetup";
+    			t1 = space();
     			div0 = element("div");
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
-    			attr(div0, "class", "flex flex-wrap h-100");
-    			add_location(div0, file$6, 11, 4, 286);
-    			attr(div1, "class", "flex-container-location-select h5");
-    			add_location(div1, file$6, 10, 2, 232);
-    			attr(div2, "class", "flex flex-column justify-center items-center w-100 vh-100");
-    			add_location(div2, file$6, 9, 0, 158);
-    		},
 
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    			t2 = space();
+    			div3 = element("div");
+    			h11 = element("h1");
+    			h11.textContent = "Other Melbourne Meetup";
+    			t4 = space();
+    			div2 = element("div");
+    			p = element("p");
+    			p.textContent = "other melb meetup here";
+    			attr(h10, "class", "f3 w-100 mt4 flex justify-center items-center");
+    			add_location(h10, file$6, 44, 6, 967);
+    			attr(div0, "class", "flex flex-wrap");
+    			add_location(div0, file$6, 45, 6, 1064);
+    			attr(div1, "class", "flex flex-column justify-center items-center w-100");
+    			add_location(div1, file$6, 43, 4, 895);
+    			attr(h11, "class", "f3 w-100 flex justify-center items-center h3");
+    			add_location(h11, file$6, 52, 6, 1287);
+    			add_location(p, file$6, 54, 7, 1422);
+    			attr(div2, "class", "flex flex-wrap h-100");
+    			add_location(div2, file$6, 53, 6, 1380);
+    			attr(div3, "class", "flex flex-column justify-center items-center w-100 ma2");
+    			add_location(div3, file$6, 51, 4, 1211);
+    			attr(div4, "class", "vh-100");
+    			add_location(div4, file$6, 42, 2, 870);
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, div2, anchor);
-    			append(div2, div1);
+    			insert(target, div4, anchor);
+    			append(div4, div1);
+    			append(div1, h10);
+    			append(div1, t1);
     			append(div1, div0);
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(div0, null);
     			}
 
+    			append(div4, t2);
+    			append(div4, div3);
+    			append(div3, h11);
+    			append(div3, t4);
+    			append(div3, div2);
+    			append(div2, p);
     			current = true;
     		},
 
     		p: function update(changed, ctx) {
-    			if (changed.events) {
-    				each_value = ctx.events;
+    			if (changed.meetups) {
+    				each_value = ctx.meetups[0];
 
     				for (var i = 0; i < each_value.length; i += 1) {
     					const child_ctx = get_each_context(ctx, each_value, i);
@@ -3264,7 +3303,7 @@ var app = (function () {
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(div2);
+    				detach(div4);
     			}
 
     			destroy_each(each_blocks, detaching);
@@ -3272,210 +3311,78 @@ var app = (function () {
     	};
     }
 
-    function instance$3($$self, $$props, $$invalidate) {
-    	
-
-      let { events } = $$props;
-
-    	const writable_props = ['events'];
-    	Object.keys($$props).forEach(key => {
-    		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<Melbourne> was created with unknown prop '${key}'`);
-    	});
-
-    	$$self.$set = $$props => {
-    		if ('events' in $$props) $$invalidate('events', events = $$props.events);
-    	};
-
-    	return { events };
-    }
-
-    class Melbourne extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-    		init(this, options, instance$3, create_fragment$7, safe_not_equal, ["events"]);
-
-    		const { ctx } = this.$$;
-    		const props = options.props || {};
-    		if (ctx.events === undefined && !('events' in props)) {
-    			console.warn("<Melbourne> was created without expected prop 'events'");
-    		}
-    	}
-
-    	get events() {
-    		throw new Error("<Melbourne>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set events(value) {
-    		throw new Error("<Melbourne>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-    }
-
-    /* src/routes/Sydney.svelte generated by Svelte v3.7.1 */
-
-    function create_fragment$8(ctx) {
-    	return {
-    		c: noop,
-
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-
-    		m: noop,
-    		p: noop,
-    		i: noop,
-    		o: noop,
-    		d: noop
-    	};
-    }
-
-    class Sydney extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-    		init(this, options, null, create_fragment$8, safe_not_equal, []);
-    	}
-    }
-
-    /* src/routes/Brisbane.svelte generated by Svelte v3.7.1 */
-
-    function create_fragment$9(ctx) {
-    	return {
-    		c: noop,
-
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-
-    		m: noop,
-    		p: noop,
-    		i: noop,
-    		o: noop,
-    		d: noop
-    	};
-    }
-
-    class Brisbane extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-    		init(this, options, null, create_fragment$9, safe_not_equal, []);
-    	}
-    }
-
-    /* src/routes/Events.svelte generated by Svelte v3.7.1 */
-
-    const file$7 = "src/routes/Events.svelte";
-
-    // (113:0) {:else}
-    function create_else_block(ctx) {
-    	var switch_instance_anchor, current;
-
-    	var switch_value = ctx.selected.component;
-
-    	function switch_props(ctx) {
-    		return {
-    			props: { events: ctx.events.data },
-    			$$inline: true
-    		};
-    	}
-
-    	if (switch_value) {
-    		var switch_instance = new switch_value(switch_props(ctx));
-    	}
+    // (38:0) {#if !loaded}
+    function create_if_block$1(ctx) {
+    	var div;
 
     	return {
     		c: function create() {
-    			if (switch_instance) switch_instance.$$.fragment.c();
-    			switch_instance_anchor = empty();
+    			div = element("div");
+    			div.textContent = "....loading Melbourne Meetups.";
+    			attr(div, "class", "w-100 vh-100 flex f1 justify-center items center");
+    			add_location(div, file$6, 38, 2, 753);
     		},
 
     		m: function mount(target, anchor) {
-    			if (switch_instance) {
-    				mount_component(switch_instance, target, anchor);
-    			}
+    			insert(target, div, anchor);
+    		},
 
-    			insert(target, switch_instance_anchor, anchor);
+    		p: noop,
+    		i: noop,
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div);
+    			}
+    		}
+    	};
+    }
+
+    // (47:7) {#each meetups[0] as meetup }
+    function create_each_block(ctx) {
+    	var current;
+
+    	var eventcard = new EventCard({
+    		props: { meetup: ctx.meetup },
+    		$$inline: true
+    	});
+
+    	return {
+    		c: function create() {
+    			eventcard.$$.fragment.c();
+    		},
+
+    		m: function mount(target, anchor) {
+    			mount_component(eventcard, target, anchor);
     			current = true;
     		},
 
     		p: function update(changed, ctx) {
-    			var switch_instance_changes = {};
-    			if (changed.events) switch_instance_changes.events = ctx.events.data;
-
-    			if (switch_value !== (switch_value = ctx.selected.component)) {
-    				if (switch_instance) {
-    					group_outros();
-    					const old_component = switch_instance;
-    					transition_out(old_component.$$.fragment, 1, 0, () => {
-    						destroy_component(old_component, 1);
-    					});
-    					check_outros();
-    				}
-
-    				if (switch_value) {
-    					switch_instance = new switch_value(switch_props(ctx));
-
-    					switch_instance.$$.fragment.c();
-    					transition_in(switch_instance.$$.fragment, 1);
-    					mount_component(switch_instance, switch_instance_anchor.parentNode, switch_instance_anchor);
-    				} else {
-    					switch_instance = null;
-    				}
-    			}
-
-    			else if (switch_value) {
-    				switch_instance.$set(switch_instance_changes);
-    			}
+    			var eventcard_changes = {};
+    			if (changed.meetups) eventcard_changes.meetup = ctx.meetup;
+    			eventcard.$set(eventcard_changes);
     		},
 
     		i: function intro(local) {
     			if (current) return;
-    			if (switch_instance) transition_in(switch_instance.$$.fragment, local);
+    			transition_in(eventcard.$$.fragment, local);
 
     			current = true;
     		},
 
     		o: function outro(local) {
-    			if (switch_instance) transition_out(switch_instance.$$.fragment, local);
+    			transition_out(eventcard.$$.fragment, local);
     			current = false;
     		},
 
     		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(switch_instance_anchor);
-    			}
-
-    			if (switch_instance) destroy_component(switch_instance, detaching);
+    			destroy_component(eventcard, detaching);
     		}
     	};
     }
 
-    // (111:0) {#if !events.loaded}
-    function create_if_block$1(ctx) {
-    	var p;
-
-    	return {
-    		c: function create() {
-    			p = element("p");
-    			p.textContent = "...fetching events";
-    			add_location(p, file$7, 111, 2, 2680);
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert(target, p, anchor);
-    		},
-
-    		p: noop,
-    		i: noop,
-    		o: noop,
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(p);
-    			}
-    		}
-    	};
-    }
-
-    function create_fragment$a(ctx) {
+    function create_fragment$7(ctx) {
     	var current_block_type_index, if_block, if_block_anchor, current;
 
     	var if_block_creators = [
@@ -3486,7 +3393,7 @@ var app = (function () {
     	var if_blocks = [];
 
     	function select_block_type(ctx) {
-    		if (!ctx.events.loaded) return 0;
+    		if (!ctx.loaded) return 0;
     		return 1;
     	}
 
@@ -3552,7 +3459,601 @@ var app = (function () {
     	};
     }
 
+    function instance$3($$self, $$props, $$invalidate) {
+    	
+      
+      let loaded = false;
+      let meetups = [];
+
+      let melbMeetups = [
+        { 
+          name: 'Ethereum-Melbourne',
+          sig_id: '225203890',
+          data: null
+        },
+        // {
+        //    name: 'Melb-Other',
+        //    sig_id: '',
+        //    data: null
+        // }
+      ];
+
+      onMount(()=> {
+        melbMeetups.forEach(async (meetup) => {
+          await jsonp_1(`https://api.meetup.com/${meetup.name}/events?page=3&sig_id=${meetup.sig_id}`, null, (err, data) => {
+            if (err) {
+              console.error(err.message);
+            } else {
+              meetups.push(data.data);
+              $$invalidate('loaded', loaded = true);
+            }
+          });
+        });
+      });
+
+    	return { loaded, meetups };
+    }
+
+    class Melbourne extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$3, create_fragment$7, safe_not_equal, []);
+    	}
+    }
+
+    /* src/routes/Sydney.svelte generated by Svelte v3.7.1 */
+
+    const file$7 = "src/routes/Sydney.svelte";
+
+    // (47:0) {:else}
+    function create_else_block$1(ctx) {
+    	var div4, div1, h10, t1, div0, p0, t3, div3, h11, t5, div2, p1;
+
+    	return {
+    		c: function create() {
+    			div4 = element("div");
+    			div1 = element("div");
+    			h10 = element("h1");
+    			h10.textContent = "Sydney Meetup";
+    			t1 = space();
+    			div0 = element("div");
+    			p0 = element("p");
+    			p0.textContent = "Sydney meetup here";
+    			t3 = space();
+    			div3 = element("div");
+    			h11 = element("h1");
+    			h11.textContent = "Other Sydney Meetup";
+    			t5 = space();
+    			div2 = element("div");
+    			p1 = element("p");
+    			p1.textContent = "other Sydney meetup here";
+    			attr(h10, "class", "f3 w-100 flex justify-center items-center h3");
+    			add_location(h10, file$7, 49, 6, 1090);
+    			add_location(p0, file$7, 51, 7, 1216);
+    			attr(div0, "class", "flex flex-wrap h-100");
+    			add_location(div0, file$7, 50, 6, 1174);
+    			attr(div1, "class", "flex flex-column justify-center items-center w-100 h-50 ma2");
+    			add_location(div1, file$7, 48, 4, 1009);
+    			attr(h11, "class", "f3 w-100 flex justify-center items-center h3");
+    			add_location(h11, file$7, 58, 6, 1447);
+    			add_location(p1, file$7, 60, 7, 1579);
+    			attr(div2, "class", "flex flex-wrap h-100");
+    			add_location(div2, file$7, 59, 6, 1537);
+    			attr(div3, "class", "flex flex-column justify-center items-center w-100 h-50 ma2");
+    			add_location(div3, file$7, 57, 4, 1366);
+    			attr(div4, "class", "vh-100");
+    			add_location(div4, file$7, 47, 2, 984);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div4, anchor);
+    			append(div4, div1);
+    			append(div1, h10);
+    			append(div1, t1);
+    			append(div1, div0);
+    			append(div0, p0);
+    			append(div4, t3);
+    			append(div4, div3);
+    			append(div3, h11);
+    			append(div3, t5);
+    			append(div3, div2);
+    			append(div2, p1);
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div4);
+    			}
+    		}
+    	};
+    }
+
+    // (43:0) {#if !loaded}
+    function create_if_block$2(ctx) {
+    	var div;
+
+    	return {
+    		c: function create() {
+    			div = element("div");
+    			div.textContent = "....loading Sydney Meetups.";
+    			attr(div, "class", "w-100 vh-100 flex f1 justify-center items center");
+    			add_location(div, file$7, 43, 2, 870);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div, anchor);
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div);
+    			}
+    		}
+    	};
+    }
+
+    function create_fragment$8(ctx) {
+    	var if_block_anchor;
+
+    	function select_block_type(ctx) {
+    		if (!ctx.loaded) return create_if_block$2;
+    		return create_else_block$1;
+    	}
+
+    	var current_block_type = select_block_type(ctx);
+    	var if_block = current_block_type(ctx);
+
+    	return {
+    		c: function create() {
+    			if_block.c();
+    			if_block_anchor = empty();
+    		},
+
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+
+    		m: function mount(target, anchor) {
+    			if_block.m(target, anchor);
+    			insert(target, if_block_anchor, anchor);
+    		},
+
+    		p: function update(changed, ctx) {
+    			if (current_block_type !== (current_block_type = select_block_type(ctx))) {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			}
+    		},
+
+    		i: noop,
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if_block.d(detaching);
+
+    			if (detaching) {
+    				detach(if_block_anchor);
+    			}
+    		}
+    	};
+    }
+
     function instance$4($$self, $$props, $$invalidate) {
+    	
+
+      let loaded = false;
+
+      onMount(()=> {
+        setTimeout(() => {
+          console.log('test');
+          $$invalidate('loaded', loaded = true);
+        }, 1500);
+
+        // sydEvents.forEach(async (meetup) => {
+        //   await jsonp(`https://api.meetup.com/${meetup.name}/events?page=3&sig_id=${meetup.sig_id}`, null, (err, data) => {
+        //     if (err) {
+        //       console.error(err.message);
+        //     } else {
+        //       events.push(data.data);
+        //       console.log(events);
+        //       loaded = true
+        //     }
+        //   });
+        // })
+      });
+
+    	return { loaded };
+    }
+
+    class Sydney extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$4, create_fragment$8, safe_not_equal, []);
+    	}
+    }
+
+    /* src/routes/Brisbane.svelte generated by Svelte v3.7.1 */
+
+    const file$8 = "src/routes/Brisbane.svelte";
+
+    // (47:0) {:else}
+    function create_else_block$2(ctx) {
+    	var div4, div1, h10, t1, div0, p0, t3, div3, h11, t5, div2, p1;
+
+    	return {
+    		c: function create() {
+    			div4 = element("div");
+    			div1 = element("div");
+    			h10 = element("h1");
+    			h10.textContent = "Brisbane Meetup";
+    			t1 = space();
+    			div0 = element("div");
+    			p0 = element("p");
+    			p0.textContent = "Brisbane meetup here";
+    			t3 = space();
+    			div3 = element("div");
+    			h11 = element("h1");
+    			h11.textContent = "Other Brisbane Meetup";
+    			t5 = space();
+    			div2 = element("div");
+    			p1 = element("p");
+    			p1.textContent = "other Brisbane meetup here";
+    			attr(h10, "class", "f3 w-100 flex justify-center items-center h3");
+    			add_location(h10, file$8, 49, 6, 1089);
+    			add_location(p0, file$8, 51, 7, 1217);
+    			attr(div0, "class", "flex flex-wrap h-100");
+    			add_location(div0, file$8, 50, 6, 1175);
+    			attr(div1, "class", "flex flex-column justify-center items-center w-100 h-50 ma2");
+    			add_location(div1, file$8, 48, 4, 1008);
+    			attr(h11, "class", "f3 w-100 flex justify-center items-center h3");
+    			add_location(h11, file$8, 58, 6, 1450);
+    			add_location(p1, file$8, 60, 7, 1584);
+    			attr(div2, "class", "flex flex-wrap h-100");
+    			add_location(div2, file$8, 59, 6, 1542);
+    			attr(div3, "class", "flex flex-column justify-center items-center w-100 h-50 ma2");
+    			add_location(div3, file$8, 57, 4, 1369);
+    			attr(div4, "class", "vh-100");
+    			add_location(div4, file$8, 47, 2, 983);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div4, anchor);
+    			append(div4, div1);
+    			append(div1, h10);
+    			append(div1, t1);
+    			append(div1, div0);
+    			append(div0, p0);
+    			append(div4, t3);
+    			append(div4, div3);
+    			append(div3, h11);
+    			append(div3, t5);
+    			append(div3, div2);
+    			append(div2, p1);
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div4);
+    			}
+    		}
+    	};
+    }
+
+    // (43:0) {#if !loaded}
+    function create_if_block$3(ctx) {
+    	var div;
+
+    	return {
+    		c: function create() {
+    			div = element("div");
+    			div.textContent = "....loading Brisbane Meetups.";
+    			attr(div, "class", "w-100 vh-100 flex f1 justify-center items center");
+    			add_location(div, file$8, 43, 2, 867);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div, anchor);
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div);
+    			}
+    		}
+    	};
+    }
+
+    function create_fragment$9(ctx) {
+    	var if_block_anchor;
+
+    	function select_block_type(ctx) {
+    		if (!ctx.loaded) return create_if_block$3;
+    		return create_else_block$2;
+    	}
+
+    	var current_block_type = select_block_type(ctx);
+    	var if_block = current_block_type(ctx);
+
+    	return {
+    		c: function create() {
+    			if_block.c();
+    			if_block_anchor = empty();
+    		},
+
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+
+    		m: function mount(target, anchor) {
+    			if_block.m(target, anchor);
+    			insert(target, if_block_anchor, anchor);
+    		},
+
+    		p: function update(changed, ctx) {
+    			if (current_block_type !== (current_block_type = select_block_type(ctx))) {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			}
+    		},
+
+    		i: noop,
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if_block.d(detaching);
+
+    			if (detaching) {
+    				detach(if_block_anchor);
+    			}
+    		}
+    	};
+    }
+
+    function instance$5($$self, $$props, $$invalidate) {
+    	
+
+     let loaded = false;
+
+      onMount(()=> {
+        setTimeout(() => {
+          console.log('test');
+          $$invalidate('loaded', loaded = true);
+        }, 1500);
+
+        // brisEvents.forEach(async (meetup) => {
+        //   await jsonp(`https://api.meetup.com/${meetup.name}/events?page=3&sig_id=${meetup.sig_id}`, null, (err, data) => {
+        //     if (err) {
+        //       console.error(err.message);
+        //     } else {
+        //       events.push(data.data);
+        //       console.log(events);
+        //       loaded = true
+        //     }
+        //   });
+        // })
+      });
+
+    	return { loaded };
+    }
+
+    class Brisbane extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$5, create_fragment$9, safe_not_equal, []);
+    	}
+    }
+
+    /* src/routes/Events.svelte generated by Svelte v3.7.1 */
+
+    const file$9 = "src/routes/Events.svelte";
+
+    function get_each_context$1(ctx, list, i) {
+    	const child_ctx = Object.create(ctx);
+    	child_ctx.city = list[i];
+    	return child_ctx;
+    }
+
+    // (41:3) {#each cities as city}
+    function create_each_block$1(ctx) {
+    	var div, t0_value = ctx.city.name, t0, t1, div_id_value, dispose;
+
+    	return {
+    		c: function create() {
+    			div = element("div");
+    			t0 = text$1(t0_value);
+    			t1 = space();
+    			attr(div, "class", "f3 dim pointer lh-copy svelte-ydus66");
+    			attr(div, "id", div_id_value = ctx.city.name);
+    			toggle_class(div, "active", ctx.current === ctx.city.name);
+    			add_location(div, file$9, 41, 6, 1232);
+    			dispose = listen(div, "click", ctx.handleClick);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div, anchor);
+    			append(div, t0);
+    			append(div, t1);
+    		},
+
+    		p: function update(changed, ctx) {
+    			if ((changed.current || changed.cities)) {
+    				toggle_class(div, "active", ctx.current === ctx.city.name);
+    			}
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div);
+    			}
+
+    			dispose();
+    		}
+    	};
+    }
+
+    function create_fragment$a(ctx) {
+    	var div4, div0, t0, div1, h1, t2, p, t4, div3, div2, t5, current_1;
+
+    	var each_value = ctx.cities;
+
+    	var each_blocks = [];
+
+    	for (var i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
+    	}
+
+    	var switch_value = ctx.selected.component;
+
+    	function switch_props(ctx) {
+    		return { $$inline: true };
+    	}
+
+    	if (switch_value) {
+    		var switch_instance = new switch_value(switch_props());
+    	}
+
+    	return {
+    		c: function create() {
+    			div4 = element("div");
+    			div0 = element("div");
+    			t0 = space();
+    			div1 = element("div");
+    			h1 = element("h1");
+    			h1.textContent = "Our Events";
+    			t2 = space();
+    			p = element("p");
+    			p.textContent = "Our Meetups cover a variety of topics such as the technical details of various Web3 platforms (Ethereum/IPFS/Whisper), as well as more general topics such as \tdecentralised trust systems and the social/cultural implications of decentralised/distributed systems.";
+    			t4 = space();
+    			div3 = element("div");
+    			div2 = element("div");
+
+    			for (var i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t5 = space();
+    			if (switch_instance) switch_instance.$$.fragment.c();
+    			attr(div0, "class", "h3 h4-ns w-100");
+    			add_location(div0, file$9, 31, 2, 662);
+    			add_location(h1, file$9, 33, 4, 768);
+    			attr(p, "class", "f3 mb4 w-80");
+    			add_location(p, file$9, 34, 3, 791);
+    			attr(div1, "class", "w-100 flex flex-column justify-center items-center");
+    			add_location(div1, file$9, 32, 2, 699);
+    			attr(div2, "class", "w-50 flex justify-between");
+    			add_location(div2, file$9, 39, 2, 1158);
+    			attr(div3, "class", "w-100 h3 flex justify-center items-center");
+    			add_location(div3, file$9, 38, 2, 1100);
+    			attr(div4, "class", "w-100 flex flex-column h-100");
+    			add_location(div4, file$9, 30, 0, 617);
+    		},
+
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div4, anchor);
+    			append(div4, div0);
+    			append(div4, t0);
+    			append(div4, div1);
+    			append(div1, h1);
+    			append(div1, t2);
+    			append(div1, p);
+    			append(div4, t4);
+    			append(div4, div3);
+    			append(div3, div2);
+
+    			for (var i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div2, null);
+    			}
+
+    			append(div4, t5);
+
+    			if (switch_instance) {
+    				mount_component(switch_instance, div4, null);
+    			}
+
+    			current_1 = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			if (changed.cities || changed.current) {
+    				each_value = ctx.cities;
+
+    				for (var i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$1(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(changed, child_ctx);
+    					} else {
+    						each_blocks[i] = create_each_block$1(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(div2, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+    				each_blocks.length = each_value.length;
+    			}
+
+    			if (switch_value !== (switch_value = ctx.selected.component)) {
+    				if (switch_instance) {
+    					group_outros();
+    					const old_component = switch_instance;
+    					transition_out(old_component.$$.fragment, 1, 0, () => {
+    						destroy_component(old_component, 1);
+    					});
+    					check_outros();
+    				}
+
+    				if (switch_value) {
+    					switch_instance = new switch_value(switch_props());
+
+    					switch_instance.$$.fragment.c();
+    					transition_in(switch_instance.$$.fragment, 1);
+    					mount_component(switch_instance, div4, null);
+    				} else {
+    					switch_instance = null;
+    				}
+    			}
+    		},
+
+    		i: function intro(local) {
+    			if (current_1) return;
+    			if (switch_instance) transition_in(switch_instance.$$.fragment, local);
+
+    			current_1 = true;
+    		},
+
+    		o: function outro(local) {
+    			if (switch_instance) transition_out(switch_instance.$$.fragment, local);
+    			current_1 = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div4);
+    			}
+
+    			destroy_each(each_blocks, detaching);
+
+    			if (switch_instance) destroy_component(switch_instance);
+    		}
+    	};
+    }
+
+    function instance$6($$self, $$props, $$invalidate) {
     	
       
       const cities = [
@@ -3560,34 +4061,24 @@ var app = (function () {
     		{ name: 'Sydney', component: Sydney },
     		{ name: 'Brisbane',  component: Brisbane }
       ];
-
-      let events = {
-        loaded: false,
-        data: null
-      };
       
-      let selected;
+      let selected = cities[0];
+      let current = 'Melbourne';
+      
+      const handleClick = (event) => {
+        $$invalidate('selected', selected = cities.find( city => {
+          return city.name === event.target.id 
+        }));
+        $$invalidate('current', current = event.target.id);
+      };
 
-      onMount(async () => {
-        $$invalidate('selected', selected = cities[0]);
-        await jsonp_1('https://api.meetup.com/Ethereum-Melbourne/events?page=7&sig_id=225203890', null, (err, data) => {
-          if (err) {
-            console.error(err.message);
-          } else {
-            events.data = data.data; $$invalidate('events', events);
-            events.loaded = true; $$invalidate('events', events);
-            console.log('events.data:', events.data);
-          }
-        }); 
-      });
-
-    	return { events, selected };
+    	return { cities, selected, current, handleClick };
     }
 
     class Events extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$4, create_fragment$a, safe_not_equal, []);
+    		init(this, options, instance$6, create_fragment$a, safe_not_equal, []);
     	}
     }
 
@@ -9571,26 +10062,345 @@ var app = (function () {
     })));
     });
 
-    /* src/routes/Blog.svelte generated by Svelte v3.7.1 */
+    /* src/routes/BlogCard.svelte generated by Svelte v3.7.1 */
+
+    const file$a = "src/routes/BlogCard.svelte";
+
+    function create_fragment$b(ctx) {
+    	var div3, div0, t0, br, t1, t2, div1, img, t3, div2, t4, dispose;
+
+    	return {
+    		c: function create() {
+    			div3 = element("div");
+    			div0 = element("div");
+    			t0 = text$1(ctx.author);
+    			br = element("br");
+    			t1 = text$1(ctx.formattedDate);
+    			t2 = space();
+    			div1 = element("div");
+    			img = element("img");
+    			t3 = space();
+    			div2 = element("div");
+    			t4 = text$1(ctx.title);
+    			add_location(br, file$a, 23, 87, 560);
+    			attr(div0, "class", "flex items-start items-center-ns h4 f3-ns f4-l ph1 ph2-ns ph3-m");
+    			add_location(div0, file$a, 23, 2, 475);
+    			attr(img, "class", "w-100");
+    			attr(img, "src", ctx.poster);
+    			attr(img, "alt", "blog poster image");
+    			add_location(img, file$a, 25, 4, 638);
+    			attr(div1, "class", "w-100 ph1-ns overflow-hidden h5");
+    			add_location(div1, file$a, 24, 2, 588);
+    			attr(div2, "class", "lh-title flex items-start items-center-ns h4 f4 overflow-hidden ph1 ph2-ns ph3-m");
+    			add_location(div2, file$a, 27, 2, 706);
+    			attr(div3, "class", "w-80 flex flex-column shadow-3 mv4");
+    			add_location(div3, file$a, 22, 0, 402);
+    			dispose = listen(div3, "click", ctx.returnPost);
+    		},
+
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div3, anchor);
+    			append(div3, div0);
+    			append(div0, t0);
+    			append(div0, br);
+    			append(div0, t1);
+    			append(div3, t2);
+    			append(div3, div1);
+    			append(div1, img);
+    			append(div3, t3);
+    			append(div3, div2);
+    			append(div2, t4);
+    		},
+
+    		p: function update(changed, ctx) {
+    			if (changed.author) {
+    				set_data(t0, ctx.author);
+    			}
+
+    			if (changed.poster) {
+    				attr(img, "src", ctx.poster);
+    			}
+
+    			if (changed.title) {
+    				set_data(t4, ctx.title);
+    			}
+    		},
+
+    		i: noop,
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div3);
+    			}
+
+    			dispose();
+    		}
+    	};
+    }
+
+    function instance$7($$self, $$props, $$invalidate) {
+    	
+      let { poster, author, date, title, link, post } = $$props;
+
+      const dispatch = createEventDispatcher();
+
+      const returnPost = () => {
+    		dispatch('click', {
+    			post: post
+    		});
+    	};
+
+      let formattedDate = moment(date).format("MMMM Do YYYY");
+
+    	const writable_props = ['poster', 'author', 'date', 'title', 'link', 'post'];
+    	Object.keys($$props).forEach(key => {
+    		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<BlogCard> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$set = $$props => {
+    		if ('poster' in $$props) $$invalidate('poster', poster = $$props.poster);
+    		if ('author' in $$props) $$invalidate('author', author = $$props.author);
+    		if ('date' in $$props) $$invalidate('date', date = $$props.date);
+    		if ('title' in $$props) $$invalidate('title', title = $$props.title);
+    		if ('link' in $$props) $$invalidate('link', link = $$props.link);
+    		if ('post' in $$props) $$invalidate('post', post = $$props.post);
+    	};
+
+    	return {
+    		poster,
+    		author,
+    		date,
+    		title,
+    		link,
+    		post,
+    		returnPost,
+    		formattedDate
+    	};
+    }
+
+    class BlogCard extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$7, create_fragment$b, safe_not_equal, ["poster", "author", "date", "title", "link", "post"]);
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+    		if (ctx.poster === undefined && !('poster' in props)) {
+    			console.warn("<BlogCard> was created without expected prop 'poster'");
+    		}
+    		if (ctx.author === undefined && !('author' in props)) {
+    			console.warn("<BlogCard> was created without expected prop 'author'");
+    		}
+    		if (ctx.date === undefined && !('date' in props)) {
+    			console.warn("<BlogCard> was created without expected prop 'date'");
+    		}
+    		if (ctx.title === undefined && !('title' in props)) {
+    			console.warn("<BlogCard> was created without expected prop 'title'");
+    		}
+    		if (ctx.link === undefined && !('link' in props)) {
+    			console.warn("<BlogCard> was created without expected prop 'link'");
+    		}
+    		if (ctx.post === undefined && !('post' in props)) {
+    			console.warn("<BlogCard> was created without expected prop 'post'");
+    		}
+    	}
+
+    	get poster() {
+    		throw new Error("<BlogCard>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set poster(value) {
+    		throw new Error("<BlogCard>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get author() {
+    		throw new Error("<BlogCard>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set author(value) {
+    		throw new Error("<BlogCard>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get date() {
+    		throw new Error("<BlogCard>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set date(value) {
+    		throw new Error("<BlogCard>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get title() {
+    		throw new Error("<BlogCard>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set title(value) {
+    		throw new Error("<BlogCard>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get link() {
+    		throw new Error("<BlogCard>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set link(value) {
+    		throw new Error("<BlogCard>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get post() {
+    		throw new Error("<BlogCard>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set post(value) {
+    		throw new Error("<BlogCard>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/routes/BlogPost.svelte generated by Svelte v3.7.1 */
+
+    const file$b = "src/routes/BlogPost.svelte";
+
+    function create_fragment$c(ctx) {
+    	var div, button, t1, h1, t2_value = ctx.post.title, t2, t3, article, raw_value = `${ctx.post.content}`, div_intro, div_outro, current, dispose;
+
+    	return {
+    		c: function create() {
+    			div = element("div");
+    			button = element("button");
+    			button.textContent = "Go Back";
+    			t1 = space();
+    			h1 = element("h1");
+    			t2 = text$1(t2_value);
+    			t3 = space();
+    			article = element("article");
+    			add_location(button, file$b, 11, 2, 197);
+    			add_location(h1, file$b, 12, 2, 261);
+    			add_location(article, file$b, 13, 2, 285);
+    			add_location(div, file$b, 10, 0, 172);
+    			dispose = listen(button, "click", ctx.click_handler);
+    		},
+
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div, anchor);
+    			append(div, button);
+    			append(div, t1);
+    			append(div, h1);
+    			append(h1, t2);
+    			append(div, t3);
+    			append(div, article);
+    			article.innerHTML = raw_value;
+    			current = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			if ((!current || changed.post) && t2_value !== (t2_value = ctx.post.title)) {
+    				set_data(t2, t2_value);
+    			}
+
+    			if ((!current || changed.post) && raw_value !== (raw_value = `${ctx.post.content}`)) {
+    				article.innerHTML = raw_value;
+    			}
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			add_render_callback(() => {
+    				if (div_outro) div_outro.end(1);
+    				if (!div_intro) div_intro = create_in_transition(div, fade, {});
+    				div_intro.start();
+    			});
+
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			if (div_intro) div_intro.invalidate();
+
+    			div_outro = create_out_transition(div, fade, {});
+
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div);
+    				if (div_outro) div_outro.end();
+    			}
+
+    			dispose();
+    		}
+    	};
+    }
+
+    function instance$8($$self, $$props, $$invalidate) {
+    	
+
+    const dispatch = createEventDispatcher();
+
+    let { post } = $$props;
+
+    	const writable_props = ['post'];
+    	Object.keys($$props).forEach(key => {
+    		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<BlogPost> was created with unknown prop '${key}'`);
+    	});
+
+    	function click_handler() {
+    		return dispatch("close");
+    	}
+
+    	$$self.$set = $$props => {
+    		if ('post' in $$props) $$invalidate('post', post = $$props.post);
+    	};
+
+    	return { dispatch, post, click_handler };
+    }
+
+    class BlogPost extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$8, create_fragment$c, safe_not_equal, ["post"]);
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+    		if (ctx.post === undefined && !('post' in props)) {
+    			console.warn("<BlogPost> was created without expected prop 'post'");
+    		}
+    	}
+
+    	get post() {
+    		throw new Error("<BlogPost>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set post(value) {
+    		throw new Error("<BlogPost>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/routes/Blogs.svelte generated by Svelte v3.7.1 */
     const { Error: Error_1$1 } = globals;
 
-    const file$8 = "src/routes/Blog.svelte";
+    const file$c = "src/routes/Blogs.svelte";
 
-    function get_each_context$1(ctx, list, i) {
+    function get_each_context$2(ctx, list, i) {
     	const child_ctx = Object.create(ctx);
     	child_ctx.post = list[i];
-    	child_ctx.i = i;
     	return child_ctx;
     }
 
     function get_each_context_1(ctx, list, i) {
     	const child_ctx = Object.create(ctx);
     	child_ctx.post = list[i];
-    	child_ctx.i = i;
     	return child_ctx;
     }
 
-    // (137:0) {:catch error}
+    // (91:4) {:catch error}
     function create_catch_block_1(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -9599,7 +10409,7 @@ var app = (function () {
     			p = element("p");
     			t = text$1(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$8, 137, 1, 2903);
+    			add_location(p, file$c, 91, 5, 2662);
     		},
 
     		m: function mount(target, anchor) {
@@ -9619,9 +10429,9 @@ var app = (function () {
     	};
     }
 
-    // (109:0) {:then blogData}
+    // (75:4) {:then blogData}
     function create_then_block_1(ctx) {
-    	var div0, t0, div1, h2, a, t1_value = ctx.blogData.feed.title, t1, a_href_value, current;
+    	var div3, div0, t0, div1, t1, div2, h2, a, t2_value = ctx.blogData.feed.title, t2, a_href_value, current;
 
     	var each_value_1 = ctx.blogData.items;
 
@@ -9635,8 +10445,15 @@ var app = (function () {
     		each_blocks[i] = null;
     	});
 
+    	var blogpost = new BlogPost({
+    		props: { post: ctx.viewWeb3Post },
+    		$$inline: true
+    	});
+    	blogpost.$on("close", ctx.closeWeb3Post);
+
     	return {
     		c: function create() {
+    			div3 = element("div");
     			div0 = element("div");
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
@@ -9645,35 +10462,49 @@ var app = (function () {
 
     			t0 = space();
     			div1 = element("div");
+    			blogpost.$$.fragment.c();
+    			t1 = space();
+    			div2 = element("div");
     			h2 = element("h2");
     			a = element("a");
-    			t1 = text$1(t1_value);
-    			attr(div0, "class", "blogs svelte-1q8gg7c");
-    			add_location(div0, file$8, 109, 2, 2096);
+    			t2 = text$1(t2_value);
+    			attr(div0, "class", "w-two-thirds-l self-center-l w-100");
+    			add_location(div0, file$c, 76, 8, 1950);
+    			toggle_class(div1, "dn", ctx.dnWeb3Post);
+    			add_location(div1, file$c, 83, 8, 2291);
+    			attr(a, "class", "black-80");
     			attr(a, "href", a_href_value = ctx.blogData.feed.link);
-    			add_location(a, file$8, 132, 9, 2744);
-    			add_location(h2, file$8, 132, 4, 2739);
-    			attr(div1, "class", "blog-group svelte-1q8gg7c");
-    			add_location(div1, file$8, 131, 2, 2710);
+    			add_location(a, file$c, 87, 57, 2531);
+    			attr(h2, "class", "f4-m f4-ns f4");
+    			toggle_class(h2, "dn", ctx.dnCards);
+    			add_location(h2, file$c, 87, 10, 2484);
+    			attr(div2, "class", "items-end-l w-third-l w-100 flex flex-column h-100");
+    			add_location(div2, file$c, 86, 8, 2409);
+    			attr(div3, "class", "bt w-100 flex flex-row-l flex-column-reverse justify-center");
+    			add_location(div3, file$c, 75, 6, 1867);
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, div0, anchor);
+    			insert(target, div3, anchor);
+    			append(div3, div0);
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(div0, null);
     			}
 
-    			insert(target, t0, anchor);
-    			insert(target, div1, anchor);
-    			append(div1, h2);
+    			append(div3, t0);
+    			append(div3, div1);
+    			mount_component(blogpost, div1, null);
+    			append(div3, t1);
+    			append(div3, div2);
+    			append(div2, h2);
     			append(h2, a);
-    			append(a, t1);
+    			append(a, t2);
     			current = true;
     		},
 
     		p: function update(changed, ctx) {
-    			if (changed.web3Promise || changed.moment) {
+    			if (changed.dnCards || changed.web3Promise) {
     				each_value_1 = ctx.blogData.items;
 
     				for (var i = 0; i < each_value_1.length; i += 1) {
@@ -9694,11 +10525,25 @@ var app = (function () {
     				for (i = each_value_1.length; i < each_blocks.length; i += 1) out(i);
     				check_outros();
     			}
+
+    			var blogpost_changes = {};
+    			if (changed.viewWeb3Post) blogpost_changes.post = ctx.viewWeb3Post;
+    			blogpost.$set(blogpost_changes);
+
+    			if (changed.dnWeb3Post) {
+    				toggle_class(div1, "dn", ctx.dnWeb3Post);
+    			}
+
+    			if (changed.dnCards) {
+    				toggle_class(h2, "dn", ctx.dnCards);
+    			}
     		},
 
     		i: function intro(local) {
     			if (current) return;
     			for (var i = 0; i < each_value_1.length; i += 1) transition_in(each_blocks[i]);
+
+    			transition_in(blogpost.$$.fragment, local);
 
     			current = true;
     		},
@@ -9707,126 +10552,93 @@ var app = (function () {
     			each_blocks = each_blocks.filter(Boolean);
     			for (let i = 0; i < each_blocks.length; i += 1) transition_out(each_blocks[i]);
 
-    			current = false;
-    		},
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(div0);
-    			}
-
-    			destroy_each(each_blocks, detaching);
-
-    			if (detaching) {
-    				detach(t0);
-    				detach(div1);
-    			}
-    		}
-    	};
-    }
-
-    // (111:3) {#each blogData.items as post, i}
-    function create_each_block_1(ctx) {
-    	var div3, div0, p0, t0_value = ctx.post.author, t0, t1, p1, t2_value = moment(ctx.post.pubDate).format("MMMM Do YYYY"), t2, t3, div1, img, img_src_value, t4, div2, h3, a, t5_value = ctx.post.title, t5, a_href_value, t6, div3_transition, current;
-
-    	return {
-    		c: function create() {
-    			div3 = element("div");
-    			div0 = element("div");
-    			p0 = element("p");
-    			t0 = text$1(t0_value);
-    			t1 = space();
-    			p1 = element("p");
-    			t2 = text$1(t2_value);
-    			t3 = space();
-    			div1 = element("div");
-    			img = element("img");
-    			t4 = space();
-    			div2 = element("div");
-    			h3 = element("h3");
-    			a = element("a");
-    			t5 = text$1(t5_value);
-    			t6 = space();
-    			add_location(p0, file$8, 119, 10, 2363);
-    			add_location(p1, file$8, 120, 10, 2394);
-    			attr(div0, "class", "blog-heading svelte-1q8gg7c");
-    			add_location(div0, file$8, 118, 8, 2325);
-    			attr(img, "src", img_src_value = ctx.post.thumbnail);
-    			attr(img, "alt", "post thumbnail image");
-    			attr(img, "class", "svelte-1q8gg7c");
-    			add_location(img, file$8, 123, 10, 2501);
-    			attr(div1, "class", "blog-img svelte-1q8gg7c");
-    			add_location(div1, file$8, 122, 8, 2468);
-    			attr(a, "href", a_href_value = ctx.post.link);
-    			add_location(a, file$8, 126, 14, 2618);
-    			add_location(h3, file$8, 126, 10, 2614);
-    			attr(div2, "class", "blog-text svelte-1q8gg7c");
-    			add_location(div2, file$8, 125, 8, 2580);
-    			attr(div3, "class", "blog svelte-1q8gg7c");
-    			add_location(div3, file$8, 111, 6, 2160);
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert(target, div3, anchor);
-    			append(div3, div0);
-    			append(div0, p0);
-    			append(p0, t0);
-    			append(div0, t1);
-    			append(div0, p1);
-    			append(p1, t2);
-    			append(div3, t3);
-    			append(div3, div1);
-    			append(div1, img);
-    			append(div3, t4);
-    			append(div3, div2);
-    			append(div2, h3);
-    			append(h3, a);
-    			append(a, t5);
-    			append(div3, t6);
-    			current = true;
-    		},
-
-    		p: noop,
-
-    		i: function intro(local) {
-    			if (current) return;
-    			add_render_callback(() => {
-    				if (!div3_transition) div3_transition = create_bidirectional_transition(div3, fly, {
-            delay: 250, 
-            duration: 1000,
-            x: -500,
-            opacity: 0.5,
-            easing: quintOut
-          }, true);
-    				div3_transition.run(1);
-    			});
-
-    			current = true;
-    		},
-
-    		o: function outro(local) {
-    			if (!div3_transition) div3_transition = create_bidirectional_transition(div3, fly, {
-            delay: 250, 
-            duration: 1000,
-            x: -500,
-            opacity: 0.5,
-            easing: quintOut
-          }, false);
-    			div3_transition.run(0);
-
+    			transition_out(blogpost.$$.fragment, local);
     			current = false;
     		},
 
     		d: function destroy(detaching) {
     			if (detaching) {
     				detach(div3);
-    				if (div3_transition) div3_transition.end();
     			}
+
+    			destroy_each(each_blocks, detaching);
+
+    			destroy_component(blogpost);
     		}
     	};
     }
 
-    // (107:20)   <p>...waiting</p> {:then blogData}
+    // (78:7) {#each blogData.items as post}
+    function create_each_block_1(ctx) {
+    	var div, t, current;
+
+    	var blogcard = new BlogCard({
+    		props: {
+    		post: ctx.post,
+    		poster: ctx.post.thumbnail,
+    		author: ctx.post.author,
+    		title: ctx.post.title,
+    		link: ctx.post.link,
+    		date: ctx.post.pubDate
+    	},
+    		$$inline: true
+    	});
+    	blogcard.$on("click", ctx.openWeb3Post);
+
+    	return {
+    		c: function create() {
+    			div = element("div");
+    			blogcard.$$.fragment.c();
+    			t = space();
+    			toggle_class(div, "dn", ctx.dnCards);
+    			add_location(div, file$c, 78, 10, 2048);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div, anchor);
+    			mount_component(blogcard, div, null);
+    			append(div, t);
+    			current = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			var blogcard_changes = {};
+    			if (changed.web3Promise) blogcard_changes.post = ctx.post;
+    			if (changed.web3Promise) blogcard_changes.poster = ctx.post.thumbnail;
+    			if (changed.web3Promise) blogcard_changes.author = ctx.post.author;
+    			if (changed.web3Promise) blogcard_changes.title = ctx.post.title;
+    			if (changed.web3Promise) blogcard_changes.link = ctx.post.link;
+    			if (changed.web3Promise) blogcard_changes.date = ctx.post.pubDate;
+    			blogcard.$set(blogcard_changes);
+
+    			if (changed.dnCards) {
+    				toggle_class(div, "dn", ctx.dnCards);
+    			}
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(blogcard.$$.fragment, local);
+
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			transition_out(blogcard.$$.fragment, local);
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div);
+    			}
+
+    			destroy_component(blogcard);
+    		}
+    	};
+    }
+
+    // (73:24)       <p>...waiting</p>     {:then blogData}
     function create_pending_block_1(ctx) {
     	var p;
 
@@ -9834,7 +10646,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$8, 107, 1, 2059);
+    			add_location(p, file$c, 73, 5, 1822);
     		},
 
     		m: function mount(target, anchor) {
@@ -9853,7 +10665,7 @@ var app = (function () {
     	};
     }
 
-    // (172:0) {:catch error}
+    // (112:4) {:catch error}
     function create_catch_block(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -9862,7 +10674,7 @@ var app = (function () {
     			p = element("p");
     			t = text$1(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$8, 172, 1, 3845);
+    			add_location(p, file$c, 112, 5, 3564);
     		},
 
     		m: function mount(target, anchor) {
@@ -9882,20 +10694,31 @@ var app = (function () {
     	};
     }
 
-    // (144:0) {:then blogData}
+    // (96:4) {:then blogData}
     function create_then_block(ctx) {
-    	var div0, div0_transition, t0, div1, h2, a, t1_value = ctx.blogData.feed.title, t1, a_href_value, current;
+    	var div3, div0, t0, div1, t1, div2, h2, a, t2_value = ctx.blogData.feed.title, t2, a_href_value, current;
 
     	var each_value = ctx.blogData.items;
 
     	var each_blocks = [];
 
     	for (var i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
+    		each_blocks[i] = create_each_block$2(get_each_context$2(ctx, each_value, i));
     	}
+
+    	const out = i => transition_out(each_blocks[i], 1, 1, () => {
+    		each_blocks[i] = null;
+    	});
+
+    	var blogpost = new BlogPost({
+    		props: { post: ctx.viewFlexPost },
+    		$$inline: true
+    	});
+    	blogpost.$on("close", ctx.closeFlexPost);
 
     	return {
     		c: function create() {
+    			div3 = element("div");
     			div0 = element("div");
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
@@ -9904,172 +10727,182 @@ var app = (function () {
 
     			t0 = space();
     			div1 = element("div");
+    			blogpost.$$.fragment.c();
+    			t1 = space();
+    			div2 = element("div");
     			h2 = element("h2");
     			a = element("a");
-    			t1 = text$1(t1_value);
-    			attr(div0, "class", "blogs svelte-1q8gg7c");
-    			add_location(div0, file$8, 144, 2, 3039);
-    			attr(a, "href", a_href_value = ctx.blogData.feed.link);
-    			add_location(a, file$8, 167, 9, 3686);
-    			add_location(h2, file$8, 167, 4, 3681);
-    			attr(div1, "class", "blog-heading svelte-1q8gg7c");
-    			add_location(div1, file$8, 166, 2, 3650);
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert(target, div0, anchor);
-
-    			for (var i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(div0, null);
-    			}
-
-    			insert(target, t0, anchor);
-    			insert(target, div1, anchor);
-    			append(div1, h2);
-    			append(h2, a);
-    			append(a, t1);
-    			current = true;
-    		},
-
-    		p: function update(changed, ctx) {
-    			if (changed.flexPromise || changed.moment) {
-    				each_value = ctx.blogData.items;
-
-    				for (var i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context$1(ctx, each_value, i);
-
-    					if (each_blocks[i]) {
-    						each_blocks[i].p(changed, child_ctx);
-    					} else {
-    						each_blocks[i] = create_each_block$1(child_ctx);
-    						each_blocks[i].c();
-    						each_blocks[i].m(div0, null);
-    					}
-    				}
-
-    				for (; i < each_blocks.length; i += 1) {
-    					each_blocks[i].d(1);
-    				}
-    				each_blocks.length = each_value.length;
-    			}
-    		},
-
-    		i: function intro(local) {
-    			if (current) return;
-    			add_render_callback(() => {
-    				if (!div0_transition) div0_transition = create_bidirectional_transition(div0, fly, {
-            delay: 250, 
-            duration: 1000,
-            x: -500,
-            opacity: 0.5,
-            easing: quintOut
-          }, true);
-    				div0_transition.run(1);
-    			});
-
-    			current = true;
-    		},
-
-    		o: function outro(local) {
-    			if (!div0_transition) div0_transition = create_bidirectional_transition(div0, fly, {
-            delay: 250, 
-            duration: 1000,
-            x: -500,
-            opacity: 0.5,
-            easing: quintOut
-          }, false);
-    			div0_transition.run(0);
-
-    			current = false;
-    		},
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach(div0);
-    			}
-
-    			destroy_each(each_blocks, detaching);
-
-    			if (detaching) {
-    				if (div0_transition) div0_transition.end();
-    				detach(t0);
-    				detach(div1);
-    			}
-    		}
-    	};
-    }
-
-    // (152:3) {#each blogData.items as post, i}
-    function create_each_block$1(ctx) {
-    	var div3, div0, p0, t0_value = ctx.post.author, t0, t1, p1, t2_value = moment(ctx.post.pubDate).format("MMMM Do YYYY"), t2, t3, div1, img, img_src_value, t4, div2, h3, a, t5_value = ctx.post.title, t5, a_href_value, t6;
-
-    	return {
-    		c: function create() {
-    			div3 = element("div");
-    			div0 = element("div");
-    			p0 = element("p");
-    			t0 = text$1(t0_value);
-    			t1 = space();
-    			p1 = element("p");
     			t2 = text$1(t2_value);
-    			t3 = space();
-    			div1 = element("div");
-    			img = element("img");
-    			t4 = space();
-    			div2 = element("div");
-    			h3 = element("h3");
-    			a = element("a");
-    			t5 = text$1(t5_value);
-    			t6 = space();
-    			add_location(p0, file$8, 154, 10, 3303);
-    			add_location(p1, file$8, 155, 10, 3334);
-    			attr(div0, "class", "blog-heading svelte-1q8gg7c");
-    			add_location(div0, file$8, 153, 8, 3265);
-    			attr(img, "src", img_src_value = ctx.post.thumbnail);
-    			attr(img, "alt", "post thumbnail image");
-    			attr(img, "class", "svelte-1q8gg7c");
-    			add_location(img, file$8, 158, 10, 3441);
-    			attr(div1, "class", "blog-img svelte-1q8gg7c");
-    			add_location(div1, file$8, 157, 8, 3408);
-    			attr(a, "href", a_href_value = ctx.post.link);
-    			add_location(a, file$8, 161, 14, 3558);
-    			add_location(h3, file$8, 161, 10, 3554);
-    			attr(div2, "class", "blog-text svelte-1q8gg7c");
-    			add_location(div2, file$8, 160, 8, 3520);
-    			attr(div3, "class", "blog svelte-1q8gg7c");
-    			add_location(div3, file$8, 152, 4, 3238);
+    			attr(div0, "class", "w-two-thirds-l self-center-l w-100");
+    			add_location(div0, file$c, 97, 8, 2875);
+    			toggle_class(div1, "dn", ctx.dnFlexPost);
+    			add_location(div1, file$c, 104, 8, 3216);
+    			attr(a, "class", "black-80");
+    			attr(a, "href", a_href_value = ctx.blogData.feed.link);
+    			toggle_class(a, "dn", ctx.dnCards);
+    			add_location(a, file$c, 108, 15, 3414);
+    			add_location(h2, file$c, 108, 10, 3409);
+    			attr(div2, "class", "items-end-l w-third-l w-100 flex flex-column h-100");
+    			add_location(div2, file$c, 107, 8, 3334);
+    			attr(div3, "class", "bt w-100 flex flex-row-l flex-column-reverse justify-center");
+    			add_location(div3, file$c, 96, 6, 2792);
     		},
 
     		m: function mount(target, anchor) {
     			insert(target, div3, anchor);
     			append(div3, div0);
-    			append(div0, p0);
-    			append(p0, t0);
-    			append(div0, t1);
-    			append(div0, p1);
-    			append(p1, t2);
-    			append(div3, t3);
+
+    			for (var i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div0, null);
+    			}
+
+    			append(div3, t0);
     			append(div3, div1);
-    			append(div1, img);
-    			append(div3, t4);
+    			mount_component(blogpost, div1, null);
+    			append(div3, t1);
     			append(div3, div2);
-    			append(div2, h3);
-    			append(h3, a);
-    			append(a, t5);
-    			append(div3, t6);
+    			append(div2, h2);
+    			append(h2, a);
+    			append(a, t2);
+    			current = true;
     		},
 
-    		p: noop,
+    		p: function update(changed, ctx) {
+    			if (changed.dnCards || changed.flexPromise) {
+    				each_value = ctx.blogData.items;
+
+    				for (var i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$2(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(changed, child_ctx);
+    						transition_in(each_blocks[i], 1);
+    					} else {
+    						each_blocks[i] = create_each_block$2(child_ctx);
+    						each_blocks[i].c();
+    						transition_in(each_blocks[i], 1);
+    						each_blocks[i].m(div0, null);
+    					}
+    				}
+
+    				group_outros();
+    				for (i = each_value.length; i < each_blocks.length; i += 1) out(i);
+    				check_outros();
+    			}
+
+    			var blogpost_changes = {};
+    			if (changed.viewFlexPost) blogpost_changes.post = ctx.viewFlexPost;
+    			blogpost.$set(blogpost_changes);
+
+    			if (changed.dnFlexPost) {
+    				toggle_class(div1, "dn", ctx.dnFlexPost);
+    			}
+
+    			if (changed.dnCards) {
+    				toggle_class(a, "dn", ctx.dnCards);
+    			}
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			for (var i = 0; i < each_value.length; i += 1) transition_in(each_blocks[i]);
+
+    			transition_in(blogpost.$$.fragment, local);
+
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			each_blocks = each_blocks.filter(Boolean);
+    			for (let i = 0; i < each_blocks.length; i += 1) transition_out(each_blocks[i]);
+
+    			transition_out(blogpost.$$.fragment, local);
+    			current = false;
+    		},
 
     		d: function destroy(detaching) {
     			if (detaching) {
     				detach(div3);
     			}
+
+    			destroy_each(each_blocks, detaching);
+
+    			destroy_component(blogpost);
     		}
     	};
     }
 
-    // (142:20)   <p>...waiting</p> {:then blogData}
+    // (99:7) {#each blogData.items as post}
+    function create_each_block$2(ctx) {
+    	var div, t, current;
+
+    	var blogcard = new BlogCard({
+    		props: {
+    		post: ctx.post,
+    		poster: ctx.post.thumbnail,
+    		author: ctx.post.author,
+    		title: ctx.post.title,
+    		link: ctx.post.link,
+    		date: ctx.post.pubDate
+    	},
+    		$$inline: true
+    	});
+    	blogcard.$on("click", ctx.openFlexPost);
+
+    	return {
+    		c: function create() {
+    			div = element("div");
+    			blogcard.$$.fragment.c();
+    			t = space();
+    			toggle_class(div, "dn", ctx.dnCards);
+    			add_location(div, file$c, 99, 10, 2973);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div, anchor);
+    			mount_component(blogcard, div, null);
+    			append(div, t);
+    			current = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			var blogcard_changes = {};
+    			if (changed.flexPromise) blogcard_changes.post = ctx.post;
+    			if (changed.flexPromise) blogcard_changes.poster = ctx.post.thumbnail;
+    			if (changed.flexPromise) blogcard_changes.author = ctx.post.author;
+    			if (changed.flexPromise) blogcard_changes.title = ctx.post.title;
+    			if (changed.flexPromise) blogcard_changes.link = ctx.post.link;
+    			if (changed.flexPromise) blogcard_changes.date = ctx.post.pubDate;
+    			blogcard.$set(blogcard_changes);
+
+    			if (changed.dnCards) {
+    				toggle_class(div, "dn", ctx.dnCards);
+    			}
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(blogcard.$$.fragment, local);
+
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			transition_out(blogcard.$$.fragment, local);
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div);
+    			}
+
+    			destroy_component(blogcard);
+    		}
+    	};
+    }
+
+    // (94:24)       <p>...waiting</p>     {:then blogData}
     function create_pending_block(ctx) {
     	var p;
 
@@ -10077,7 +10910,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$8, 142, 1, 3002);
+    			add_location(p, file$c, 94, 5, 2747);
     		},
 
     		m: function mount(target, anchor) {
@@ -10096,8 +10929,8 @@ var app = (function () {
     	};
     }
 
-    function create_fragment$b(ctx) {
-    	var h1, t1, div0, promise, t2, div1, promise_1, current;
+    function create_fragment$d(ctx) {
+    	var div4, div0, t0, div1, h1, t2, div3, div2, promise, t3, promise_1, current;
 
     	let info = {
     		ctx,
@@ -10129,23 +10962,34 @@ var app = (function () {
 
     	return {
     		c: function create() {
+    			div4 = element("div");
+    			div0 = element("div");
+    			t0 = space();
+    			div1 = element("div");
     			h1 = element("h1");
     			h1.textContent = "Our Blogs";
-    			t1 = space();
-    			div0 = element("div");
+    			t2 = space();
+    			div3 = element("div");
+    			div2 = element("div");
 
     			info.block.c();
 
-    			t2 = space();
-    			div1 = element("div");
+    			t3 = space();
 
     			info_1.block.c();
-    			attr(h1, "class", "svelte-1q8gg7c");
-    			add_location(h1, file$8, 103, 0, 1998);
-    			attr(div0, "class", "main svelte-1q8gg7c");
-    			add_location(div0, file$8, 104, 0, 2017);
-    			attr(div1, "class", "main svelte-1q8gg7c");
-    			add_location(div1, file$8, 140, 0, 2961);
+    			attr(div0, "class", "h3 h4-ns w-100");
+    			add_location(div0, file$c, 66, 2, 1585);
+    			attr(h1, "class", "w-75");
+    			toggle_class(h1, "dn", ctx.dnCards);
+    			add_location(h1, file$c, 68, 4, 1662);
+    			attr(div1, "class", "flex justify-center");
+    			add_location(div1, file$c, 67, 2, 1622);
+    			attr(div2, "class", "w-80");
+    			add_location(div2, file$c, 71, 4, 1773);
+    			attr(div3, "class", "w-100 h-75 flex justify-center");
+    			add_location(div3, file$c, 70, 2, 1724);
+    			attr(div4, "class", "flex flex-column w-100 h-100");
+    			add_location(div4, file$c, 65, 0, 1540);
     		},
 
     		l: function claim(nodes) {
@@ -10153,19 +10997,23 @@ var app = (function () {
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, h1, anchor);
-    			insert(target, t1, anchor);
-    			insert(target, div0, anchor);
+    			insert(target, div4, anchor);
+    			append(div4, div0);
+    			append(div4, t0);
+    			append(div4, div1);
+    			append(div1, h1);
+    			append(div4, t2);
+    			append(div4, div3);
+    			append(div3, div2);
 
-    			info.block.m(div0, info.anchor = null);
-    			info.mount = () => div0;
-    			info.anchor = null;
+    			info.block.m(div2, info.anchor = null);
+    			info.mount = () => div2;
+    			info.anchor = t3;
 
-    			insert(target, t2, anchor);
-    			insert(target, div1, anchor);
+    			append(div2, t3);
 
-    			info_1.block.m(div1, info_1.anchor = null);
-    			info_1.mount = () => div1;
+    			info_1.block.m(div2, info_1.anchor = null);
+    			info_1.mount = () => div2;
     			info_1.anchor = null;
 
     			current = true;
@@ -10173,6 +11021,10 @@ var app = (function () {
 
     		p: function update(changed, new_ctx) {
     			ctx = new_ctx;
+    			if (changed.dnCards) {
+    				toggle_class(h1, "dn", ctx.dnCards);
+    			}
+
     			info.ctx = ctx;
 
     			if (promise !== (promise = ctx.web3Promise) && handle_promise(promise, info)) ; else {
@@ -10209,19 +11061,12 @@ var app = (function () {
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(h1);
-    				detach(t1);
-    				detach(div0);
+    				detach(div4);
     			}
 
     			info.block.d();
     			info.token = null;
     			info = null;
-
-    			if (detaching) {
-    				detach(t2);
-    				detach(div1);
-    			}
 
     			info_1.block.d();
     			info_1.token = null;
@@ -10230,12 +11075,16 @@ var app = (function () {
     	};
     }
 
-    function instance$5($$self) {
+    function instance$9($$self, $$props, $$invalidate) {
     	
+
+      let viewWeb3Post;
+      let viewFlexPost;
 
       const getWeb3Blog = async () => {
         let response = await axios$1.get('https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/web3-australia');
         let blogData = await response.data;
+        $$invalidate('viewWeb3Post', viewWeb3Post = blogData.items[0]);
         console.log(blogData);
         if (blogData.status == "ok") {
           return blogData;
@@ -10245,35 +11094,73 @@ var app = (function () {
       };
 
       let web3Promise = getWeb3Blog();
+      let dnCards = false;
+      let dnWeb3Post = true;
+      let dnFlexPost = true;
+
+      const openFlexPost = (event) => {
+        $$invalidate('viewFlexPost', viewFlexPost = event.detail.post);
+        $$invalidate('dnCards', dnCards = !dnCards);
+        $$invalidate('dnFlexPost', dnFlexPost = !dnFlexPost);
+      };
+
+       const openWeb3Post = (event) => {
+        $$invalidate('viewWeb3Post', viewWeb3Post = event.detail.post);
+        $$invalidate('dnCards', dnCards = !dnCards);
+        $$invalidate('dnWeb3Post', dnWeb3Post = !dnWeb3Post);
+      };
+
+      const closeFlexPost = () => {
+        $$invalidate('dnCards', dnCards = !dnCards);
+        $$invalidate('dnFlexPost', dnFlexPost = !dnFlexPost);
+      };
+
+       const closeWeb3Post = () => {
+        $$invalidate('dnCards', dnCards = !dnCards);
+        $$invalidate('dnWeb3Post', dnWeb3Post = !dnWeb3Post);
+      };
 
       const getFlexBlog = async () => {
         let response = await axios$1.get('https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/flex-dapps');
         let blogData = await response.data;
+        $$invalidate('viewFlexPost', viewFlexPost = blogData.items[0]);
         console.log(blogData);
         if (blogData.status == "ok") {
           return blogData;
     		} else {
     			throw new Error(text);
-    		}
+        }
       };
 
       let flexPromise = getFlexBlog();
 
-    	return { web3Promise, flexPromise };
+    	return {
+    		viewWeb3Post,
+    		viewFlexPost,
+    		web3Promise,
+    		dnCards,
+    		dnWeb3Post,
+    		dnFlexPost,
+    		openFlexPost,
+    		openWeb3Post,
+    		closeFlexPost,
+    		closeWeb3Post,
+    		flexPromise
+    	};
     }
 
-    class Blog extends SvelteComponentDev {
+    class Blogs extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$5, create_fragment$b, safe_not_equal, []);
+    		init(this, options, instance$9, create_fragment$d, safe_not_equal, []);
     	}
     }
 
     /* src/routes/Form.svelte generated by Svelte v3.7.1 */
 
-    const file$9 = "src/routes/Form.svelte";
+    const file$d = "src/routes/Form.svelte";
 
-    function create_fragment$c(ctx) {
+    function create_fragment$e(ctx) {
     	var div, form, p, label0, t0, input0, t1, label1, t3, input1, t4, label2, t6, select, option0, option1, option2, option3, option4, t12, label3, t14, textarea, t15, button;
 
     	return {
@@ -10313,52 +11200,51 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "Submit";
     			attr(input0, "name", "bot-field");
-    			add_location(input0, file$9, 3, 50, 228);
-    			add_location(label0, file$9, 3, 6, 184);
+    			add_location(input0, file$d, 3, 50, 191);
+    			add_location(label0, file$d, 3, 6, 147);
     			attr(p, "class", "dn");
-    			add_location(p, file$9, 2, 4, 163);
+    			add_location(p, file$d, 2, 4, 126);
     			attr(label1, "for", "email");
-    			add_location(label1, file$9, 5, 4, 276);
+    			add_location(label1, file$d, 5, 4, 239);
     			attr(input1, "type", "text");
     			attr(input1, "name", "email");
     			attr(input1, "id", "email");
-    			add_location(input1, file$9, 6, 4, 319);
+    			add_location(input1, file$d, 6, 4, 282);
     			attr(label2, "for", "topic");
-    			add_location(label2, file$9, 7, 4, 367);
+    			add_location(label2, file$d, 7, 4, 330);
     			option0.__value = "Apply for rmoney";
     			option0.value = option0.__value;
-    			add_location(option0, file$9, 9, 6, 453);
+    			add_location(option0, file$d, 9, 6, 416);
     			option1.__value = "another option";
     			option1.value = option1.__value;
-    			add_location(option1, file$9, 10, 6, 509);
+    			add_location(option1, file$d, 10, 6, 472);
     			option2.__value = "Become Involved";
     			option2.value = option2.__value;
-    			add_location(option2, file$9, 11, 6, 564);
+    			add_location(option2, file$d, 11, 6, 527);
     			option3.__value = "generic option";
     			option3.value = option3.__value;
-    			add_location(option3, file$9, 12, 6, 624);
+    			add_location(option3, file$d, 12, 6, 587);
     			option4.__value = "General Enquiry";
     			option4.value = option4.__value;
-    			add_location(option4, file$9, 13, 6, 679);
+    			add_location(option4, file$d, 13, 6, 642);
     			attr(select, "name", "topic");
     			attr(select, "id", "topic");
-    			add_location(select, file$9, 8, 4, 414);
+    			add_location(select, file$d, 8, 4, 377);
     			attr(label3, "for", "enquiry");
-    			add_location(label3, file$9, 15, 4, 754);
+    			add_location(label3, file$d, 15, 4, 717);
     			attr(textarea, "name", "enquiry");
     			attr(textarea, "id", "enquiry");
     			attr(textarea, "cols", "30");
     			attr(textarea, "rows", "10");
-    			add_location(textarea, file$9, 16, 4, 801);
+    			add_location(textarea, file$d, 16, 4, 764);
     			attr(button, "type", "submit");
-    			add_location(button, file$9, 17, 4, 875);
-    			attr(form, "name", "contact");
+    			add_location(button, file$d, 17, 4, 838);
     			attr(form, "method", "POST");
-    			attr(form, "netlify-honeypot", "bot-field");
-    			attr(form, "data-netlify", "true");
-    			add_location(form, file$9, 1, 2, 73);
-    			attr(div, "class", "h-100 w-100 flex flex-column justify-center items-center");
-    			add_location(div, file$9, 0, 0, 0);
+    			attr(form, "netlify", "");
+    			attr(form, "action", "/thanks");
+    			add_location(form, file$d, 1, 1, 73);
+    			attr(div, "class", "vh-100 w-100 flex flex-column justify-center items-center");
+    			add_location(div, file$d, 0, 0, 0);
     		},
 
     		l: function claim(nodes) {
@@ -10408,42 +11294,92 @@ var app = (function () {
     class Form extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, null, create_fragment$c, safe_not_equal, []);
+    		init(this, options, null, create_fragment$e, safe_not_equal, []);
+    	}
+    }
+
+    /* src/routes/Thanks.svelte generated by Svelte v3.7.1 */
+
+    const file$e = "src/routes/Thanks.svelte";
+
+    function create_fragment$f(ctx) {
+    	var div;
+
+    	return {
+    		c: function create() {
+    			div = element("div");
+    			div.textContent = "Success! Thanks for getting in touch. ☺️";
+    			attr(div, "class", "h-100 w-100 f2 flex justify-center items-center");
+    			add_location(div, file$e, 0, 0, 0);
+    		},
+
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, div, anchor);
+    		},
+
+    		p: noop,
+    		i: noop,
+    		o: noop,
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(div);
+    			}
+    		}
+    	};
+    }
+
+    class Thanks extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, null, create_fragment$f, safe_not_equal, []);
     	}
     }
 
     /* src/App.svelte generated by Svelte v3.7.1 */
 
-    const file$a = "src/App.svelte";
+    const file$f = "src/App.svelte";
 
-    function create_fragment$d(ctx) {
-    	var link, t0, t1, div, t2, t3, current;
+    function create_fragment$g(ctx) {
+    	var link, t0, div1, t1, div0, t2, current;
 
-    	var navbar = new NavBar({ $$inline: true });
+    	var navbar = new NavBar({
+    		props: { class: "w-100" },
+    		$$inline: true
+    	});
 
     	var router = new Router({
     		props: { routes: ctx.routes },
     		$$inline: true
     	});
 
-    	var footer = new Footer({ $$inline: true });
+    	var footer = new Footer({
+    		props: { class: "w-100" },
+    		$$inline: true
+    	});
 
     	return {
     		c: function create() {
     			link = element("link");
     			t0 = space();
+    			div1 = element("div");
     			navbar.$$.fragment.c();
     			t1 = space();
-    			div = element("div");
-    			t2 = space();
+    			div0 = element("div");
     			router.$$.fragment.c();
-    			t3 = space();
+    			t2 = space();
     			footer.$$.fragment.c();
     			attr(link, "rel", "stylesheet");
     			attr(link, "href", "https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css");
-    			add_location(link, file$a, 1, 1, 15);
-    			attr(div, "class", "w-100 bg-white");
-    			add_location(div, file$a, 34, 1, 701);
+    			add_location(link, file$f, 1, 1, 15);
+    			attr(div0, "class", "w-100");
+    			add_location(div0, file$f, 35, 2, 792);
+    			attr(div1, "class", "black-80 lh-copy h-100 w-100 flex flex-row flex-wrap");
+    			add_location(div1, file$f, 33, 0, 698);
     		},
 
     		l: function claim(nodes) {
@@ -10453,13 +11389,13 @@ var app = (function () {
     		m: function mount(target, anchor) {
     			append(document.head, link);
     			insert(target, t0, anchor);
-    			mount_component(navbar, target, anchor);
-    			insert(target, t1, anchor);
-    			insert(target, div, anchor);
-    			insert(target, t2, anchor);
-    			mount_component(router, target, anchor);
-    			insert(target, t3, anchor);
-    			mount_component(footer, target, anchor);
+    			insert(target, div1, anchor);
+    			mount_component(navbar, div1, null);
+    			append(div1, t1);
+    			append(div1, div0);
+    			mount_component(router, div0, null);
+    			append(div1, t2);
+    			mount_component(footer, div1, null);
     			current = true;
     		},
 
@@ -10492,28 +11428,21 @@ var app = (function () {
 
     			if (detaching) {
     				detach(t0);
+    				detach(div1);
     			}
 
-    			destroy_component(navbar, detaching);
+    			destroy_component(navbar);
 
-    			if (detaching) {
-    				detach(t1);
-    				detach(div);
-    				detach(t2);
-    			}
+    			destroy_component(router);
 
-    			destroy_component(router, detaching);
-
-    			if (detaching) {
-    				detach(t3);
-    			}
-
-    			destroy_component(footer, detaching);
+    			destroy_component(footer);
     		}
     	};
     }
 
-    function instance$6($$self) {
+    function instance$a($$self) {
+    	
+
     	
 
     	const routes = {
@@ -10523,9 +11452,11 @@ var app = (function () {
     		
     		'/Events': Events,
 
-    		'/Blog': Blog,
+    		'/Blogs': Blogs,
 
     		'/ContactForm': Form,
+
+    		'/Thanks' : Thanks,
     };
 
     	return { routes };
@@ -10534,7 +11465,7 @@ var app = (function () {
     class App extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$6, create_fragment$d, safe_not_equal, []);
+    		init(this, options, instance$a, create_fragment$g, safe_not_equal, []);
     	}
     }
 

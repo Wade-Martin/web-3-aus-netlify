@@ -1,5 +1,5 @@
-<div class="h-100 w-100 flex flex-column justify-center items-center">
-  <form name="contact" method="POST" netlify-honeypot="bot-field" data-netlify="true"> 
+<div class="vh-100 w-100 flex flex-column justify-center items-center">
+ <form  method="POST" netlify  action="/thanks"> 
     <p class="dn">
       <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
     </p>

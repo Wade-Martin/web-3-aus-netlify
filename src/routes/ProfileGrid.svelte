@@ -1,36 +1,6 @@
-<script>
-  // let src = './Group4.jpg';
-</script>
-
-<style>
-  @import url('https://fonts.googleapis.com/css?family=Space+Mono:400,400i,700,700i&display=swap');
-
-  .profile-wrapper {
-    font-family: 'Space Mono', monospace;
-    display: flex;
-    flex-wrap: wrap;
-    margin: 5px;
-  }
-  img {
-    size: 400px 400px;
-    margin: 10px;
-  }
-
-  .profile {
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly; 
-  }
-
-  .text {
-    width: 60%;
-  }
-
-</style>
-
-<div class="profile-wrapper">
-  <div class="profile">
-    <div class="text">
+<div class="flex flex-column">
+  <div class="flex items-start-ns items-center-l">
+    <div class="w-two-thirds-l w-50 ph2  ph3-ns ph4-m ph5-l">
       <h2>James Zaki</h2>
       <h4>Blockchain/IoT Engineer and Consultant</h4>
       <p>
@@ -39,16 +9,16 @@
         As organiser of the OzBerry IoT MeetUp and smart-contract developer/auditor, James is exploring applications using IoT and Blockchain technologies that can positively impact society.
       </p>
     </div>
-    <div class="picture">
+    <div class="pa3 w-third-l w-50">
       <img src="https://web3australia.org/wp-content/uploads/2019/03/jz.jpg" alt="notw cover"/>
     </div>
   </div>
 
-  <div class="profile" style="grid-template-columns:36% auto">
-    <div>
+  <div class="flex items-start-ns items-center-l">  
+    <div class="pa3 w-third-l w-50">
       <img src="https://web3australia.org/wp-content/uploads/2019/03/RJp9gIJl_400x400.jpg" alt="notw cover"/>
     </div>
-    <div class="text">
+    <div class="w-two-thirds-l w-50 ph2  ph3-ns ph4-m ph5-l">
       <h2>Ellie Rennie</h2>
       <h4>Associate Professor, RMIT Blockchain Innovation Hub</h4>
       <p>
@@ -57,24 +27,24 @@
     </div>
   </div>
 
-  <div class="profile" style="grid-template-columns:36% auto">
-    <div class="text">
+  <div class="flex items-start-ns items-center-l">
+    <div class="w-two-thirds-l w-50-m w-50 ph2  ph3-ns ph4-m ph5-l">
       <h2>Bok Khoo</h2>
       <h4>Decentralised Future Fund</h4>
       <p>
         Bok Khoo, or BokkyPooBah, is an actuary and software developer working in the Ethereum ecosystem. He is one of the early and top contributors to Ethereum.StackExchange.com. He assisted in the reconciliation of refunds to the original token holders in the pioneer decentralised autonomous organisation, The DAO. He has conducted 39 public Ethereum smart contract audits, and built the early and primitive decentralised exchange CryptoDerivatives.Market in Nov 2016. He helped establish the Decentralised Future Fund DAO that funded the representation of 10 Australian Ethereum community members at conferences worldwide in 2018. He has also released some very nice open source Ethereum smart contract libraries like the Gas-Efficient Solidity DateTime Library and BokkyPooBah’s Red-Black Binary Search Tree Library.
       </p>
     </div>
-    <div class="picture">
+    <div class="pa3 w-third-l w-50">
       <img src="https://web3australia.org/wp-content/uploads/2019/03/bokky-1.jpg" alt="notw cover"/>
     </div>
   </div>
 
-  <div class="profile" style="grid-template-columns:auto 36%">
-    <div class="picture">
+  <div class="flex items-start-ns items-center-l">
+    <div class="pa3 w-third-l w-50">
       <img src="https://web3australia.org/wp-content/uploads/2019/03/tom.jpg" alt="notw cover"/>
     </div>
-    <div class="text">
+    <div class="w-two-thirds-l w-50 ph2  ph3-ns ph4-m ph5-l">
       <h2>Thomas Nash</h2>
       <h4>CTO & Co-Founder, Flex Dapps</h4>
       <p>
@@ -83,8 +53,8 @@
     </div>
   </div>
 
-  <div class="profile" style="grid-template-columns:36% auto">
-    <div class="text">
+  <div class="flex items-start-ns items-center-l">
+    <div class="w-two-thirds-l w-50 ph2  ph3-ns ph4-m ph5-l">
       <h2>Bonnie Yiu</h2>
       <h4>Co-Founder, Consulere</h4>
       <p>
@@ -94,16 +64,16 @@
         Prior to that Bonnie was an Associate at international law firms in Sydney and Silicon Valley, specialising in Financial Services and Venture Capital laws.
       </p>
     </div>
-    <div class="picture">
+    <div class="pa3 w-third-l w-50">
       <img src="https://web3australia.org/wp-content/uploads/2019/03/bonnie.jpg" alt="notw cover"/>      
     </div>
   </div>
 
-  <div class="profile" style="grid-template-columns:auto 36%">
-    <div class="picture">
+  <div class="flex items-start-ns items-center-l">
+    <div class="pa3 w-third-l w-50">
       <img src="https://web3australia.org/wp-content/uploads/2019/03/james.jpg" alt="notw cover"/>      
     </div>
-    <div class="text">
+    <div class="w-two-thirds-l w-50 ph2  ph3-ns ph4-m ph5-l">
       <h2>James Eddington</h2>
       <h4>Classified</h4>
       <p>
@@ -112,15 +82,15 @@
     </div>
   </div>
 
-  <div class="profile" style="grid-template-columns:36% auto">
-    <div class="text">
+  <div class="flex items-start-ns items-center-l  " >
+    <div class="w-two-thirds-l w-50">
       <h2>Alexander Ramsey</h2>
       <h4>CEO & Co-Founder, Flex Dapps</h4>
       <p>
         Alexander is a serial company founder and community builder who has worked in emerging industries including game development, esports, 3D systems and immersive media, with experience that encompasses commercial operations, programming, design and community engagement. Alex is currently the CEO and Co-founder of Flex Dapps, an Australian software development company specialising in decentralised applications. He is also a community organiser of Web3 Melbourne, a grassroots technology-agnostic developer community.
       </p>
     </div>
-    <div class="picture">
+    <div class="pa3 w-third-l w-50">
       <img src="https://web3australia.org/wp-content/uploads/2019/03/Alex-1-BW.jpg" alt="notw cover"/>       
     </div>
   </div>

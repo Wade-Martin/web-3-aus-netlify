@@ -6,8 +6,8 @@
   }
 </style>
 
-<footer class="w-100 bottom-0 flex bg-white">
-    <div class="ml6">
+<footer class="w-100 bg-light-blue h4 flex justify-center items-center bg-white">
+    <div class="w-80">
       <h4>Contact Us</h4>
       <p>
         Send us a message<br>

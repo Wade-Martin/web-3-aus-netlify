@@ -1,115 +1,52 @@
-<style>
-  .tab {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    border: 1px solid #ccc;
-    background-color: #f1f1f1;
-  }
-
-/* Style the buttons that are used to open the tab content */
-  .tab button {
-    background-color: inherit;
-    float: left;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 14px 16px;
-    transition: 0.3s;
-  }
-
-/* Change background color of buttons on hover */
-  .tab button:hover {
-    background-color: #ddd;
-  } 
-
-/* Create an active/current tablink class */
-  .tab button.active {
-    background-color: #ccc;
-  }
-
-</style>
-
 <script>
-  import jsonp from 'jsonp';
   import Melbourne from './Melbourne.svelte';
   import Sydney from './Sydney.svelte';
   import Brisbane from './Brisbane.svelte';
-  import { onMount } from 'svelte';
   
   const cities = [
 		{ name: 'Melbourne', component: Melbourne },
 		{ name: 'Sydney', component: Sydney },
 		{ name: 'Brisbane',  component: Brisbane }
   ];
-
-  let events = {
-    loaded: false,
-    data: null
-  };
   
-  let selected;
-
+  let selected = cities[0];
+  let current = 'Melbourne';
+  
   const handleClick = (event) => {
-    console.log('handling click')
-    getMeetups(event)
-  };
+    selected = cities.find( city => {
+      return city.name === event.target.id 
+    });
+    current = event.target.id;
+  }
 
-  onMount(async () => {
-    selected = cities[0]
-    await jsonp('https://api.meetup.com/Ethereum-Melbourne/events?page=7&sig_id=225203890', null, (err, data) => {
-      if (err) {
-        console.error(err.message);
-      } else {
-        events.data = data.data;
-        events.loaded = true;
-        console.log('events.data:', events.data)
-      }
-    }); 
-  });
-  
-  const getMeetups = async (event) => {
-    console.log('getting meetups')
-    events.loaded = false;
-    events.data = null;
-    let city = event.target.id;
-    switch (city) {
-      case 'Melbourne':
-        await jsonp('https://api.meetup.com/Ethereum-Melbourne/events?page=3&sig_id=225203890', null, (err, data) => {
-          if (err) {
-            console.error(err.message);
-          } else {
-            selected = cities[0];
-            events.data = data.data;
-            events.loaded = true;
-            console.log('events.data:', events.data)
-          }
-        }); 
-        break;
-      case 'Sydney':
-          selected = cities[1];
-          console.log('call sydney meetup api request')
-        break;
-      case 'Brisbane':
-          selected = cities[2];
-          console.log('call brisbane meetup api request')
-        break;
-      default:
-          console.log('this is the default')
-    }
-  };
 </script>
 
-<!-- <div class="tab">
-	{#each cities as city}
-    <button class="tablinks" id="{city.name}" on:click={handleClick}> Meetups in {city.name} </button>
-	{/each}
-</div> -->
+<style>
+.active {
+  border-bottom: .25rem solid  rgba( 0, 0, 0, .9 );
+}
+</style>
 
-{#if !events.loaded}
-  <p>...fetching events</p>
-{:else}
-  <svelte:component this={selected.component} events={events.data}/>
-{/if}
+
+<div class="w-100 flex flex-column h-100">
+  <div class="h3 h4-ns w-100"></div>
+  <div class="w-100 flex flex-column justify-center items-center">
+    <h1>Our Events</h1>
+	  <p class="f3 mb4 w-80">
+		  Our Meetups cover a variety of topics such as the technical details of various Web3 platforms (Ethereum/IPFS/Whisper), as well as more general topics such as 	decentralised trust systems and the social/cultural implications of decentralised/distributed systems.
+	  </p>
+  </div>
+  <div class="w-100 h3 flex justify-center items-center">
+  <div class="w-50 flex justify-between"  >
+	  {#each cities as city}
+      <div class:active="{current === city.name}" class="f3 dim pointer lh-copy" id="{city.name}" on:click={handleClick}> {city.name} </div>
+	  {/each}
+    </div>
+  </div>
+  <svelte:component this={selected.component} />
+</div>
+
+
+
+
+

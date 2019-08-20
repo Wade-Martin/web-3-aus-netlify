@@ -5,7 +5,7 @@ html, body {
 }
 
 body {
-	color: #333;
+	color: #24292E;
 	margin: 0;
 	box-sizing: border-box;
 	font-family: 'Space Mono', monospace;
@@ -33,24 +33,11 @@ input:disabled {
 	color: #ccc;
 }
 
-input[type="range"] {
-	height: 0;
-}
-
-button {
-	color: #333;
-	background-color: #f4f4f4;
-	outline: none;
-}
-
-button:active {
-	background-color: #ddd;
-}
-
-button:focus {
-	border-color: #666;
-}
 
 .dim { opacity: 1; transition: opacity .15s ease-in; }
+
 .dim:hover, .dim:focus { opacity: .5; transition: opacity .15s ease-in; }
+
 .dim:active { opacity: .8; transition: opacity .15s ease-out; }
+
+.pointer:hover { cursor: pointer; }
