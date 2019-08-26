@@ -8,8 +8,10 @@ export let post;
 
 </script>
 
-<div in:fade out:fade>
+
+
+<div in:fade out:fade class="w-100 w-90-m w-90-l">
   <button on:click='{() => dispatch("close")}'>Go Back</button>
-  <h1>{post.title}</h1>
-  <article>{@html `${post.content}`}</article>
+  <p class="f4 f3-m f3-l">{post.title}</p>
+  <article class=" self-center overflow-scroll overflow-scroll-ls overflow-auto-m overflow-auto-l">{@html `${post.content}`}</article>
 </div>

@@ -13,7 +13,6 @@
 <style>
   svg {
     z-index: -5;
-    transform: scale(1.15, 1.15)
   }
 
   .grid {
@@ -21,15 +20,11 @@
     grid-template-columns: 1fr 95%;
   }
 
-  .text-grid {
-    display: grid;
-    grid-template-columns: 1fr 60% 1fr;
-  }
 </style>
 
 <main class="w-100">
   {#if visible}
-    <svg class="absolute o-50" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet">
+    <svg class="absolute o-50 w-100 h5 h-50-m h-75-l" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet">
       <defs>
         <clipPath id="a">
           <path d="M0 0h1920v1080H0z"/>
@@ -74,23 +69,24 @@
   {/if}
   
 <div class="flex flex-column w-100 h-100">
-  <div class="grid vh-75 ml1 ml2-ns ml4-m ml6-l mb5">
+  <div class="grid h-50 mt2 h-75-l  ml2-ns ml4-m ml6-l mb3 mb4-m mb5-l">
     <div></div>
     <div class="flex f3 f2-m f1-l flex-column justify-center content-center">
      <h1 class="black-90"> WEB 3 <br> AUSTRALIA </h1>
     </div>
   </div>
-  <section class="text-grid">
-    <div>
-    </div>
-    <article class="flex mb5 flex-column justify-center" >
-      <h2 class="self-center f2">Web3 Australia’s Goals</h2>
-	    <p class="f3">Advance the development and safe implementation of Web3 and decentralised technologies.</p>
-	    <p class="f3">Provide community education on technologies that preserve data rights and data security.</p>
-	    <p class="f3">Promote the prevention of consumer data misuse, including mass surveillance and invasion of privacy by global technology companies and governments.</p>
+  <div class="w-100 flex flex-column justify-center items-center">
+    <article class="flex w-100 mb3 mb4-m mb5 flex-column justify-center items-center" >
+      <div class="flex w-100 w-70-l items-center justify center">
+        <p class="f4 f2-m f2-l w-100 tc">Web3 Australia’s Goals</p>
+      </div>
+      <div class="flex flex-column w-90 w-80-l items-center justify-center f5 f3-m f3-l tc">
+        <p>Advance the development and safe implementation of Web3 and decentralised technologies.</p>
+	      <p>Provide community education on technologies that preserve data rights and data security.</p>
+	      <p>Promote the prevention of consumer data misuse, including mass surveillance and invasion of privacy by global technology companies and governments.</p>
+      </div>
+	    
     </article>
-    <div>
-    </div>
-  </section>
+  </div>
 </div>
 </main>

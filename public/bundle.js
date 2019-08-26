@@ -1217,48 +1217,123 @@ var app = (function () {
     const file = "src/NavBar.svelte";
 
     function create_fragment$1(ctx) {
-    	var nav, h3, a0, link_action, t1, div, a1, link_action_1, t3, a2, link_action_2, t5, a3, link_action_3, t7, a4, link_action_4;
+    	var nav, div9, div0, t0, div8, div3, div2, svg, path, t1, div1, a0, link_action, t3, a1, link_action_1, t5, a2, link_action_2, t7, a3, link_action_3, t9, a4, link_action_4, t11, div4, a5, link_action_5, t13, div7, div5, t14, a6, link_action_6, t16, a7, link_action_7, t18, a8, link_action_8, t20, a9, link_action_9, t22, a10, link_action_10, t24, div6, dispose;
 
     	return {
     		c: function create() {
     			nav = element("nav");
-    			h3 = element("h3");
-    			a0 = element("a");
-    			a0.textContent = "Web3 Australia";
+    			div9 = element("div");
+    			div0 = element("div");
+    			t0 = space();
+    			div8 = element("div");
+    			div3 = element("div");
+    			div2 = element("div");
+    			svg = svg_element("svg");
+    			path = svg_element("path");
     			t1 = space();
-    			div = element("div");
+    			div1 = element("div");
+    			a0 = element("a");
+    			a0.textContent = "Home";
+    			t3 = space();
     			a1 = element("a");
     			a1.textContent = "Events";
-    			t3 = space();
+    			t5 = space();
     			a2 = element("a");
     			a2.textContent = "Humans";
-    			t5 = space();
+    			t7 = space();
     			a3 = element("a");
     			a3.textContent = "Blogs";
-    			t7 = space();
+    			t9 = space();
     			a4 = element("a");
     			a4.textContent = "Contact Us";
+    			t11 = space();
+    			div4 = element("div");
+    			a5 = element("a");
+    			a5.textContent = "Web3 Australia";
+    			t13 = space();
+    			div7 = element("div");
+    			div5 = element("div");
+    			t14 = space();
+    			a6 = element("a");
+    			a6.textContent = "Home";
+    			t16 = space();
+    			a7 = element("a");
+    			a7.textContent = "Events";
+    			t18 = space();
+    			a8 = element("a");
+    			a8.textContent = "Humans";
+    			t20 = space();
+    			a9 = element("a");
+    			a9.textContent = "Blogs";
+    			t22 = space();
+    			a10 = element("a");
+    			a10.textContent = "Contact Us";
+    			t24 = space();
+    			div6 = element("div");
+    			attr(div0, "class", "w-10");
+    			add_location(div0, file, 23, 4, 426);
+    			attr(path, "d", "M4,   10h24c1.104,0,2-0.896,2-2s-0.896-2-2-2H4C2.896,6,2,6.896,2,8S2.896,10,4,10z M28,14H4c-1.104,0-2,0.896-2,2  s0.896,2,2,2h24c1.104,0,2-0.896, 2-2S29.104,14,28,14z M28,22H4c-1.104,0-2,0.896-2,2s0.896,2,2,2h24c1.104,0,2-0.896,2-2  S29.104,22,28,22z");
+    			add_location(path, file, 28, 14, 739);
+    			attr(svg, "class", "z-1 w2 h2 dn-l bg-center v-mid pointer");
+    			attr(svg, "viewBox", "0 0 32 32");
+    			attr(svg, "xmlns", "http://www.w3.org/2000/svg");
+    			add_location(svg, file, 27, 12, 589);
+    			attr(a0, "class", "dim w-100 pa1 db tl black-80 no-underline");
     			attr(a0, "href", "/");
-    			attr(a0, "class", "svelte-68dx9x");
-    			add_location(a0, file, 18, 27, 307);
-    			attr(h3, "class", "w-25 dim ml6");
-    			add_location(h3, file, 18, 2, 282);
-    			attr(a1, "class", "dim svelte-68dx9x");
+    			add_location(a0, file, 31, 14, 1170);
+    			attr(a1, "class", "dim w-100 pa1 db tl black-80 no-underline");
     			attr(a1, "href", "/Events");
-    			add_location(a1, file, 20, 4, 395);
-    			attr(a2, "class", "dim svelte-68dx9x");
+    			add_location(a1, file, 32, 14, 1264);
+    			attr(a2, "class", "dim w-100 pa1 db tl black-80 no-underline");
     			attr(a2, "href", "/Board");
-    			add_location(a2, file, 21, 4, 449);
-    			attr(a3, "class", "dim svelte-68dx9x");
+    			add_location(a2, file, 33, 14, 1366);
+    			attr(a3, "class", "dim w-100 pa1 db tl black-80 no-underline");
     			attr(a3, "href", "/Blogs");
-    			add_location(a3, file, 22, 4, 502);
-    			attr(a4, "class", "dim svelte-68dx9x");
+    			add_location(a3, file, 34, 14, 1467);
+    			attr(a4, "class", "dim w-100 pa1 db tl black-80 no-underline");
     			attr(a4, "href", "/ContactForm");
-    			add_location(a4, file, 23, 4, 554);
-    			attr(div, "class", "flex-auto w-75 tr mr6");
-    			add_location(div, file, 19, 2, 355);
-    			attr(nav, "class", "top-0 fixed w-100 h4 bg-white flex items-center svelte-68dx9x");
-    			add_location(nav, file, 17, 0, 218);
+    			add_location(a4, file, 35, 14, 1567);
+    			attr(div1, "class", "absolute mr6 dn-l w4 shadow-3 z-1 bg-white black-80 no-underline");
+    			toggle_class(div1, "dn", ctx.dnDropdown);
+    			toggle_class(div1, "db", ctx.dbDropdown);
+    			add_location(div1, file, 30, 12, 1033);
+    			attr(div2, "class", "overflow-hidden");
+    			add_location(div2, file, 26, 10, 547);
+    			attr(div3, "class", "w-75 flex dn-l items-end");
+    			add_location(div3, file, 25, 8, 498);
+    			attr(a5, "class", "f5 f5-ns f3-m f3-l black-80 no-underline");
+    			attr(a5, "href", "/");
+    			add_location(a5, file, 39, 49, 1764);
+    			attr(div4, "class", "dim h-100 w-50 flex items-end");
+    			add_location(div4, file, 39, 6, 1721);
+    			attr(div5, "class", "w-10");
+    			add_location(div5, file, 41, 8, 1947);
+    			attr(a6, "class", "dim ma1 black-80 no-underline");
+    			attr(a6, "href", "/");
+    			add_location(a6, file, 42, 10, 1982);
+    			attr(a7, "class", "dim ma1 black-80 no-underline");
+    			attr(a7, "href", "/Events");
+    			add_location(a7, file, 43, 10, 2060);
+    			attr(a8, "class", "dim ma1 black-80 no-underline");
+    			attr(a8, "href", "/Board");
+    			add_location(a8, file, 44, 10, 2146);
+    			attr(a9, "class", "dim ma1 black-80 no-underline");
+    			attr(a9, "href", "/Blogs");
+    			add_location(a9, file, 45, 10, 2231);
+    			attr(a10, "class", "dim ma1 black-80 no-underline");
+    			attr(a10, "href", "/ContactForm");
+    			add_location(a10, file, 46, 10, 2315);
+    			attr(div6, "class", "w-10");
+    			add_location(div6, file, 47, 8, 2408);
+    			attr(div7, "class", "w-100 h-100 items-end dn dn-ns dn-m flex-l justify-between");
+    			add_location(div7, file, 40, 6, 1866);
+    			attr(div8, "class", "flex dn h-100 w-80");
+    			add_location(div8, file, 24, 6, 457);
+    			attr(div9, "class", "w-100 h-75 flex");
+    			add_location(div9, file, 22, 2, 392);
+    			attr(nav, "class", "top-0 fixed w-100 h-5 bg-white flex flex-column shadow-2 z-1 svelte-1e6b5ke");
+    			add_location(nav, file, 21, 0, 315);
+    			dispose = listen(svg, "click", ctx.toggleDropdown);
     		},
 
     		l: function claim(nodes) {
@@ -1267,25 +1342,66 @@ var app = (function () {
 
     		m: function mount(target, anchor) {
     			insert(target, nav, anchor);
-    			append(nav, h3);
-    			append(h3, a0);
+    			append(nav, div9);
+    			append(div9, div0);
+    			append(div9, t0);
+    			append(div9, div8);
+    			append(div8, div3);
+    			append(div3, div2);
+    			append(div2, svg);
+    			append(svg, path);
+    			append(div2, t1);
+    			append(div2, div1);
+    			append(div1, a0);
     			link_action = link.call(null, a0) || {};
-    			append(nav, t1);
-    			append(nav, div);
-    			append(div, a1);
+    			append(div1, t3);
+    			append(div1, a1);
     			link_action_1 = link.call(null, a1) || {};
-    			append(div, t3);
-    			append(div, a2);
+    			append(div1, t5);
+    			append(div1, a2);
     			link_action_2 = link.call(null, a2) || {};
-    			append(div, t5);
-    			append(div, a3);
+    			append(div1, t7);
+    			append(div1, a3);
     			link_action_3 = link.call(null, a3) || {};
-    			append(div, t7);
-    			append(div, a4);
+    			append(div1, t9);
+    			append(div1, a4);
     			link_action_4 = link.call(null, a4) || {};
+    			append(div8, t11);
+    			append(div8, div4);
+    			append(div4, a5);
+    			link_action_5 = link.call(null, a5) || {};
+    			append(div8, t13);
+    			append(div8, div7);
+    			append(div7, div5);
+    			append(div7, t14);
+    			append(div7, a6);
+    			link_action_6 = link.call(null, a6) || {};
+    			append(div7, t16);
+    			append(div7, a7);
+    			link_action_7 = link.call(null, a7) || {};
+    			append(div7, t18);
+    			append(div7, a8);
+    			link_action_8 = link.call(null, a8) || {};
+    			append(div7, t20);
+    			append(div7, a9);
+    			link_action_9 = link.call(null, a9) || {};
+    			append(div7, t22);
+    			append(div7, a10);
+    			link_action_10 = link.call(null, a10) || {};
+    			append(div7, t24);
+    			append(div7, div6);
     		},
 
-    		p: noop,
+    		p: function update(changed, ctx) {
+    			if (changed.dnDropdown) {
+    				toggle_class(div1, "dn", ctx.dnDropdown);
+    			}
+
+    			if (changed.dbDropdown) {
+    				toggle_class(div1, "db", ctx.dbDropdown);
+    			}
+    		},
+
     		i: noop,
     		o: noop,
 
@@ -1299,14 +1415,35 @@ var app = (function () {
     			if (link_action_2 && typeof link_action_2.destroy === 'function') link_action_2.destroy();
     			if (link_action_3 && typeof link_action_3.destroy === 'function') link_action_3.destroy();
     			if (link_action_4 && typeof link_action_4.destroy === 'function') link_action_4.destroy();
+    			if (link_action_5 && typeof link_action_5.destroy === 'function') link_action_5.destroy();
+    			if (link_action_6 && typeof link_action_6.destroy === 'function') link_action_6.destroy();
+    			if (link_action_7 && typeof link_action_7.destroy === 'function') link_action_7.destroy();
+    			if (link_action_8 && typeof link_action_8.destroy === 'function') link_action_8.destroy();
+    			if (link_action_9 && typeof link_action_9.destroy === 'function') link_action_9.destroy();
+    			if (link_action_10 && typeof link_action_10.destroy === 'function') link_action_10.destroy();
+    			dispose();
     		}
     	};
+    }
+
+    function instance$1($$self, $$props, $$invalidate) {
+    	let dnDropdown = true;
+      let dbDropdown = false;
+      
+
+      const toggleDropdown = () => {
+        console.log('toggleDropdown', dnDropdown);
+        $$invalidate('dnDropdown', dnDropdown = !dnDropdown);
+        $$invalidate('dbDropdown', dbDropdown = !dbDropdown);
+      };
+
+    	return { dnDropdown, dbDropdown, toggleDropdown };
     }
 
     class NavBar extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, null, create_fragment$1, safe_not_equal, []);
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, []);
     	}
     }
 
@@ -1330,15 +1467,15 @@ var app = (function () {
     			t3 = space();
     			a = element("a");
     			a.textContent = "hello@web3australia.org";
-    			add_location(h4, file$1, 10, 6, 296);
-    			add_location(br, file$1, 12, 25, 351);
+    			add_location(h4, file$1, 11, 6, 299);
+    			add_location(br, file$1, 13, 25, 354);
     			attr(a, "href", "mailto:hello@web3australia.com");
-    			add_location(a, file$1, 13, 8, 364);
-    			add_location(p, file$1, 11, 6, 322);
+    			add_location(a, file$1, 14, 8, 367);
+    			add_location(p, file$1, 12, 6, 325);
     			attr(div, "class", "w-80");
-    			add_location(div, file$1, 9, 4, 271);
-    			attr(footer, "class", "w-100 bg-light-blue h4 flex justify-center items-center bg-white svelte-1qbfbsc");
-    			add_location(footer, file$1, 8, 0, 185);
+    			add_location(div, file$1, 10, 4, 274);
+    			attr(footer, "class", "bg-light-blue h4 flex justify-center items-center svelte-imifa9");
+    			add_location(footer, file$1, 9, 0, 203);
     		},
 
     		l: function claim(nodes) {
@@ -1413,7 +1550,7 @@ var app = (function () {
 
     const file$2 = "src/routes/LandingPage.svelte";
 
-    // (31:2) {#if visible}
+    // (26:2) {#if visible}
     function create_if_block(ctx) {
     	var svg, defs, clipPath0, path0, clipPath1, path1, g4, g3, g0, path2, path2_intro, path3, path3_intro, path4, path4_intro, path5, path5_intro, g1, path6, path6_intro, path7, path7_intro, path8, path8_intro, path9, path9_intro, path10, path10_intro, path11, path11_intro, g2, path12, path12_intro, path13, path13_intro, path14, path14_intro, path15, path15_intro, path16, path16_intro, path17, path17_intro, path18, path18_intro, path19, path19_intro, path20, path20_intro, path21, path21_intro, path22, path22_intro, path23, path23_intro;
 
@@ -1453,142 +1590,140 @@ var app = (function () {
     			path22 = svg_element("path");
     			path23 = svg_element("path");
     			attr(path0, "d", "M0 0h1920v1080H0z");
-    			add_location(path0, file$2, 34, 10, 645);
+    			add_location(path0, file$2, 29, 10, 530);
     			attr(clipPath0, "id", "a");
-    			add_location(clipPath0, file$2, 33, 8, 617);
+    			add_location(clipPath0, file$2, 28, 8, 502);
     			attr(path1, "d", "M0 0h1920v1080H0z");
-    			add_location(path1, file$2, 37, 10, 731);
+    			add_location(path1, file$2, 32, 10, 616);
     			attr(clipPath1, "id", "b");
-    			add_location(clipPath1, file$2, 36, 8, 703);
-    			add_location(defs, file$2, 32, 6, 602);
+    			add_location(clipPath1, file$2, 31, 8, 588);
+    			add_location(defs, file$2, 27, 6, 487);
     			attr(path2, "fill", "none");
     			attr(path2, "stroke", "#070506");
     			attr(path2, "stroke-miterlimit", "10");
     			attr(path2, "d", "M1195.26293945 218.46099854l57.26599884     278.16699218-57.26599884 278.16699219");
-    			add_location(path2, file$2, 43, 12, 916);
+    			add_location(path2, file$2, 38, 12, 801);
     			attr(path3, "fill", "none");
     			attr(path3, "stroke", "#070506");
     			attr(path3, "stroke-miterlimit", "10");
     			attr(path3, "d", "M1195.26293945 218.46099854l41.62599945     279.18299222-41.62599945 277.15099215");
-    			add_location(path3, file$2, 44, 12, 1103);
+    			add_location(path3, file$2, 39, 12, 988);
     			attr(path4, "fill", "none");
     			attr(path4, "stroke", "#070506");
     			attr(path4, "stroke-miterlimit", "10");
     			attr(path4, "d", "M1195.26293945 218.46099854l25.98600006     280.19899225-25.98600006 276.13499212");
-    			add_location(path4, file$2, 45, 12, 1290);
+    			add_location(path4, file$2, 40, 12, 1175);
     			attr(path5, "fill", "none");
     			attr(path5, "stroke", "#070506");
     			attr(path5, "stroke-miterlimit", "10");
     			attr(path5, "d", "M1195.26293945 218.46099854l10.34599972     281.21499228-10.34599972 275.11899209");
-    			add_location(path5, file$2, 46, 12, 1477);
+    			add_location(path5, file$2, 41, 12, 1362);
     			attr(g0, "display", "block");
-    			add_location(g0, file$2, 42, 10, 884);
+    			add_location(g0, file$2, 37, 10, 769);
     			attr(path6, "fill", "none");
     			attr(path6, "stroke", "#070506");
     			attr(path6, "stroke-miterlimit", "10");
     			attr(path6, "d", "M724.71299744 852.57098389l-79.44999695-226.38799286    79.07499695-324.69599152");
-    			add_location(path6, file$2, 49, 12, 1709);
+    			add_location(path6, file$2, 44, 12, 1594);
     			attr(path7, "fill", "none");
     			attr(path7, "stroke", "#070506");
     			attr(path7, "stroke-miterlimit", "10");
     			attr(path7, "d", "M724.71300125 852.57098389L658.9109993    616.40699005l65.55200195-315.23200226");
-    			add_location(path7, file$2, 50, 12, 1895);
+    			add_location(path7, file$2, 45, 12, 1780);
     			attr(path8, "fill", "none");
     			attr(path8, "stroke", "#070506");
     			attr(path8, "stroke-miterlimit", "10");
     			attr(path8, "d", "M724.71300125 852.57098389l-52.15200043-245.939991    51.96430016-305.51899338");
-    			add_location(path8, file$2, 51, 12, 2080);
+    			add_location(path8, file$2, 46, 12, 1965);
     			attr(path9, "fill", "none");
     			attr(path9, "stroke", "#070506");
     			attr(path9, "stroke-miterlimit", "10");
     			attr(path9, "d", "M724.71300316 852.57098389l-38.50400162-255.71699143    38.25400162-295.61699295");
-    			add_location(path9, file$2, 52, 12, 2264);
+    			add_location(path9, file$2, 47, 12, 2149);
     			attr(path10, "fill", "none");
     			attr(path10, "stroke", "#070506");
     			attr(path10, "stroke-miterlimit", "10");
     			attr(path10, "d", "M724.94700432 852.70199585l-24.8543001-265.491992     24.2290001-285.71699238");
-    			add_location(path10, file$2, 53, 12, 2450);
+    			add_location(path10, file$2, 48, 12, 2335);
     			attr(path11, "fill", "none");
     			attr(path11, "stroke", "#070506");
     			attr(path11, "stroke-miterlimit", "10");
     			attr(path11, "d", "M724.71300077 852.57098389L713.50700045     577.3019917l10.70600032-275.56499219");
-    			add_location(path11, file$2, 54, 12, 2633);
+    			add_location(path11, file$2, 49, 12, 2518);
     			attr(g1, "display", "block");
-    			add_location(g1, file$2, 48, 10, 1677);
+    			add_location(g1, file$2, 43, 10, 1562);
     			attr(path12, "fill", "none");
     			attr(path12, "stroke", "#070506");
     			attr(path12, "stroke-miterlimit", "10");
     			attr(path12, "d", "M888.685997     551.78199387c-40.413002-29.35100174-75.8880081-55.11500168-75.8880081-55.11500168l191.50300597-139.08399964L1195.80430085     218.5v556.33398438l-191.50300598-139.08399964s-62.13199997-45.12499237-115.61499786-83.96799087");
-    			add_location(path12, file$2, 57, 12, 2864);
+    			add_location(path12, file$2, 52, 12, 2749);
     			attr(path13, "fill", "none");
     			attr(path13, "stroke", "#070506");
     			attr(path13, "stroke-miterlimit", "10");
     			attr(path13, "d", "M912.33499908 400.83200073c28.6739998-11.9449997    82.09999848-34.20199585 82.09999848-34.20199585l180.03999328-116.50100708 11.4630127 255.58400294-9.47801208    255.07299474-182.0249939-115.98999023-99.8043003-41.57700348-91.69800568-97.50600103 91.69800567-97.50430056s7.1870041-2.99399566    17.70500183-7.37599945");
-    			add_location(path13, file$2, 58, 12, 3207);
+    			add_location(path13, file$2, 53, 12, 3092);
     			attr(path14, "fill", "none");
     			attr(path14, "stroke", "#070506");
     			attr(path14, "stroke-miterlimit", "10");
     			attr(path14, "d", "M900.52199554 390.02400208c32.94099808-5.62399292     84.04699762-14.34899903 84.04699762-14.34899903l168.57799476-93.91700744 22.92401123 233.00000757-22.75500489     231.27899938-168.7470011-92.19499206-111.26699884-18.99501038-80.23600006-120.08899694 80.23600006-120.08699793s11.55599976-1.97299957    27.22000122-4.64700317");
-    			add_location(path14, file$2, 59, 12, 3632);
+    			add_location(path14, file$2, 54, 12, 3517);
     			attr(path15, "fill", "none");
     			attr(path15, "stroke", "#070506");
     			attr(path15, "stroke-miterlimit", "10");
     			attr(path15, "d", "M891.50299835 382.29430037c35.87499619 1.04800415     83.1979975 2.43099975 83.1979975 2.43099975l157.1160055-71.33399963 34.3869934 210.41699927-34.3869934    210.42000634-157.1160055-71.33601379-122.72900336 3.5880127-68.77300262-142.67200525 68.77300262-142.66899817s17.63300324.51499939 39.53100586    1.15499878");
-    			add_location(path15, file$2, 60, 12, 4066);
+    			add_location(path15, file$2, 55, 12, 3951);
     			attr(path16, "fill", "none");
     			attr(path16, "stroke", "#070506");
     			attr(path16, "stroke-miterlimit", "10");
     			attr(path16, "d", "M884.16400146 378.03599548c37.39899827 7.29299927     80.67099708 15.73199463 80.67099708 15.73199463l145.6529928-48.75300598 45.8430061 187.83600562-45.8430061    187.83800561-145.6529928-48.75401306-134.19100135 26.17100525-57.31100464-165.2549978 57.31100464-165.25200599s25.05899811 4.88700867   53.52000427  10.43701172");
-    			add_location(path16, file$2, 61, 12, 4488);
+    			add_location(path16, file$2, 56, 12, 4373);
     			attr(path17, "fill", "none");
     			attr(path17, "stroke", "#070506");
     			attr(path17, "stroke-miterlimit", "10");
     			attr(path17, "d", "M877.0289917 376.72698975c38.03500366 12.7310028    77.94300244 26.08799743 77.94300244 26.08799743l134.19099426-26.16900635 57.31201172 165.25200599-57.31201172   165.2549978-134.19099426-26.17100525-145.65400696 48.75401306-45.84899902-187.83800561 45.84899902-187.83600562s33.08200836 11.07299805    67.71400452 22.66500855");
-    			add_location(path17, file$2, 62, 12, 4918);
+    			add_location(path17, file$2, 57, 12, 4803);
     			attr(path18, "fill", "none");
     			attr(path18, "stroke", "#070506");
     			attr(path18, "stroke-miterlimit", "10");
     			attr(path18, "d", "M869.3160019 377.4520111c38.33300399 17.40499879    75.7860031 34.44300367 75.7860031 34.44300367l122.72899628-3.58700561 68.77300263 142.66999816-68.77300263    142.67199707-122.72899628-3.58799743-157.11599731 71.33599853-34.38600159-210.41999817 34.38600159-210.41900634s41.14899445 18.68301391  81.3299942  36.92601013");
-    			add_location(path18, file$2, 63, 12, 5350);
+    			add_location(path18, file$2, 58, 12, 5235);
     			attr(path19, "fill", "none");
     			attr(path19, "stroke", "#070506");
     			attr(path19, "stroke-miterlimit", "10");
     			attr(path19, "d", "M860.6210022 379.33799744c38.68499756 21.55200195     74.61499841 41.56900024 74.61499841 41.56900024l111.26699774 18.9960022 80.23500824 120.08799743-80.23500824 120.08799744-111.26699774    18.9960022-168.57799585 93.91799927-22.92500305-233.0019989 22.92500305-233.0019989s48.85399628 27.21800231 93.96299744 52.34899902");
-    			add_location(path19, file$2, 64, 12, 5778);
+    			add_location(path19, file$2, 59, 12, 5663);
     			attr(path20, "fill", "none");
     			attr(path20, "stroke", "#070506");
     			attr(path20, "stroke-miterlimit", "10");
     			attr(path20, "d", "M850.73999786 381.66299438c39.33499909 25.45199585    74.62899726 48.2899933 74.62899726 48.2899933l99.80430085 41.57800292 91.69799805 97.5049967-91.69799805 97.5069967-99.80430085   41.57699586-180.04100745 116.50201416-11.46099853-255.58600672 11.46099853-255.58299963s55.90700531 36.17599487 105.4120102 68.24300671");
-    			add_location(path20, file$2, 65, 12, 6207);
+    			add_location(path20, file$2, 60, 12, 6092);
     			attr(path21, "fill", "none");
     			attr(path21, "stroke", "#070506");
     			attr(path21, "stroke-miterlimit", "10");
     			attr(path21, "d", "M1031.1190033 522.96901321c40.41200256 29.35100174    75.88700866 55.11500168 75.88700866 55.11500168L915.50300598 717.16700745 724 856.25100708V578.08401489 299.91702271l191.50300598   139.08299255s62.13199997 45.125 115.61599732 83.96899795M1130.86299706     817.42898178c-3.67100144-6.06900024-6.21500206-10.27430017-6.21500206-10.27430017h65.63400268l-32.81700134    54.25400162s-17.08799935-28.24300083-26.60199928-43.98000145");
-    			add_location(path21, file$2, 66, 12, 6632);
+    			add_location(path21, file$2, 61, 12, 6517);
     			attr(path22, "fill", "none");
     			attr(path22, "stroke", "#070506");
     			attr(path22, "stroke-miterlimit", "10");
     			attr(path22, "d", "M1128.74299622    809.6359849c-2.49399949-1.51430016-4.09500122-2.48430043-4.09500122-2.48430043m65.63400268 0l-32.81600134   19.88430078s-19.92199953-12.07430034-28.72300012-17.40300035");
-    			add_location(path22, file$2, 67, 12, 7169);
+    			add_location(path22, file$2, 62, 12, 7054);
     			attr(path23, "fill", "none");
     			attr(path23, "stroke", "#070506");
     			attr(path23, "stroke-miterlimit", "10");
     			attr(path23, "d", "M1128.74299622    812.15501213c-2.49399949-3.04599953-4.09500122-5-4.09500122-5m65.63400268 0l-32.81600134    40.06399918s-19.92199953-24.32099963-28.72300012-35.06399918");
-    			add_location(path23, file$2, 68, 12, 7461);
+    			add_location(path23, file$2, 63, 12, 7346);
     			attr(g2, "display", "block");
-    			add_location(g2, file$2, 56, 10, 2832);
+    			add_location(g2, file$2, 51, 10, 2717);
     			attr(g3, "clip-path", "url(#b)");
     			attr(g3, "display", "block");
-    			add_location(g3, file$2, 41, 8, 833);
+    			add_location(g3, file$2, 36, 8, 718);
     			attr(g4, "clip-path", "url(#a)");
-    			add_location(g4, file$2, 40, 6, 801);
-    			attr(svg, "class", "absolute o-50 svelte-iap7jv");
-    			attr(svg, "width", "100%");
-    			attr(svg, "height", "100%");
+    			add_location(g4, file$2, 35, 6, 686);
+    			attr(svg, "class", "absolute o-50 w-100 h5 h-50-m h-75-l svelte-ov17uu");
     			attr(svg, "xmlns", "http://www.w3.org/2000/svg");
     			attr(svg, "viewBox", "0 0 1920 1080");
     			attr(svg, "preserveAspectRatio", "xMidYMid meet");
-    			add_location(svg, file$2, 31, 4, 445);
+    			add_location(svg, file$2, 26, 4, 334);
     		},
 
     		m: function mount(target, anchor) {
@@ -1794,7 +1929,7 @@ var app = (function () {
     }
 
     function create_fragment$3(ctx) {
-    	var main, t0, div5, div2, div0, t1, div1, h1, t2, br, t3, t4, section, div3, t5, article, h2, t7, p0, t9, p1, t11, p2, t13, div4;
+    	var main, t0, div6, div2, div0, t1, div1, h1, t2, br, t3, t4, div5, article, div3, p0, t6, div4, p1, t8, p2, t10, p3;
 
     	var if_block = (ctx.visible) && create_if_block();
 
@@ -1803,7 +1938,7 @@ var app = (function () {
     			main = element("main");
     			if (if_block) if_block.c();
     			t0 = space();
-    			div5 = element("div");
+    			div6 = element("div");
     			div2 = element("div");
     			div0 = element("div");
     			t1 = space();
@@ -1813,49 +1948,46 @@ var app = (function () {
     			br = element("br");
     			t3 = text$1(" AUSTRALIA");
     			t4 = space();
-    			section = element("section");
-    			div3 = element("div");
-    			t5 = space();
+    			div5 = element("div");
     			article = element("article");
-    			h2 = element("h2");
-    			h2.textContent = "Web3 Australia’s Goals";
-    			t7 = space();
+    			div3 = element("div");
     			p0 = element("p");
-    			p0.textContent = "Advance the development and safe implementation of Web3 and decentralised technologies.";
-    			t9 = space();
-    			p1 = element("p");
-    			p1.textContent = "Provide community education on technologies that preserve data rights and data security.";
-    			t11 = space();
-    			p2 = element("p");
-    			p2.textContent = "Promote the prevention of consumer data misuse, including mass surveillance and invasion of privacy by global technology companies and governments.";
-    			t13 = space();
+    			p0.textContent = "Web3 Australia’s Goals";
+    			t6 = space();
     			div4 = element("div");
-    			add_location(div0, file$2, 77, 4, 7887);
-    			add_location(br, file$2, 79, 33, 8010);
+    			p1 = element("p");
+    			p1.textContent = "Advance the development and safe implementation of Web3 and decentralised technologies.";
+    			t8 = space();
+    			p2 = element("p");
+    			p2.textContent = "Provide community education on technologies that preserve data rights and data security.";
+    			t10 = space();
+    			p3 = element("p");
+    			p3.textContent = "Promote the prevention of consumer data misuse, including mass surveillance and invasion of privacy by global technology companies and governments.";
+    			add_location(div0, file$2, 72, 4, 7791);
+    			add_location(br, file$2, 74, 33, 7914);
     			attr(h1, "class", "black-90");
-    			add_location(h1, file$2, 79, 5, 7982);
+    			add_location(h1, file$2, 74, 5, 7886);
     			attr(div1, "class", "flex f3 f2-m f1-l flex-column justify-center content-center");
-    			add_location(div1, file$2, 78, 4, 7903);
-    			attr(div2, "class", "grid vh-75 ml1 ml2-ns ml4-m ml6-l mb5 svelte-iap7jv");
-    			add_location(div2, file$2, 76, 2, 7831);
-    			add_location(div3, file$2, 83, 4, 8085);
-    			attr(h2, "class", "self-center f2");
-    			add_location(h2, file$2, 86, 6, 8167);
-    			attr(p0, "class", "f3");
-    			add_location(p0, file$2, 87, 5, 8227);
-    			attr(p1, "class", "f3");
-    			add_location(p1, file$2, 88, 5, 8338);
-    			attr(p2, "class", "f3");
-    			add_location(p2, file$2, 89, 5, 8450);
-    			attr(article, "class", "flex mb5 flex-column justify-center");
-    			add_location(article, file$2, 85, 4, 8106);
-    			add_location(div4, file$2, 91, 4, 8635);
-    			attr(section, "class", "text-grid svelte-iap7jv");
-    			add_location(section, file$2, 82, 2, 8053);
-    			attr(div5, "class", "flex flex-column w-100 h-100");
-    			add_location(div5, file$2, 75, 0, 7786);
+    			add_location(div1, file$2, 73, 4, 7807);
+    			attr(div2, "class", "grid h-50 mt2 h-75-l  ml2-ns ml4-m ml6-l mb3 mb4-m mb5-l svelte-ov17uu");
+    			add_location(div2, file$2, 71, 2, 7716);
+    			attr(p0, "class", "f4 f2-m f2-l w-100 tc");
+    			add_location(p0, file$2, 80, 8, 8184);
+    			attr(div3, "class", "flex w-100 w-70-l items-center justify center");
+    			add_location(div3, file$2, 79, 6, 8116);
+    			add_location(p1, file$2, 83, 8, 8358);
+    			add_location(p2, file$2, 84, 7, 8460);
+    			add_location(p3, file$2, 85, 7, 8563);
+    			attr(div4, "class", "flex flex-column w-90 w-80-l items-center justify-center f5 f3-m f3-l tc");
+    			add_location(div4, file$2, 82, 6, 8263);
+    			attr(article, "class", "flex w-100 mb3 mb4-m mb5 flex-column justify-center items-center");
+    			add_location(article, file$2, 78, 4, 8026);
+    			attr(div5, "class", "w-100 flex flex-column justify-center items-center");
+    			add_location(div5, file$2, 77, 2, 7957);
+    			attr(div6, "class", "flex flex-column w-100 h-100");
+    			add_location(div6, file$2, 70, 0, 7671);
     			attr(main, "class", "w-100");
-    			add_location(main, file$2, 29, 0, 404);
+    			add_location(main, file$2, 24, 0, 293);
     		},
 
     		l: function claim(nodes) {
@@ -1866,8 +1998,8 @@ var app = (function () {
     			insert(target, main, anchor);
     			if (if_block) if_block.m(main, null);
     			append(main, t0);
-    			append(main, div5);
-    			append(div5, div2);
+    			append(main, div6);
+    			append(div6, div2);
     			append(div2, div0);
     			append(div2, t1);
     			append(div2, div1);
@@ -1875,20 +2007,18 @@ var app = (function () {
     			append(h1, t2);
     			append(h1, br);
     			append(h1, t3);
-    			append(div5, t4);
-    			append(div5, section);
-    			append(section, div3);
-    			append(section, t5);
-    			append(section, article);
-    			append(article, h2);
-    			append(article, t7);
-    			append(article, p0);
-    			append(article, t9);
-    			append(article, p1);
-    			append(article, t11);
-    			append(article, p2);
-    			append(section, t13);
-    			append(section, div4);
+    			append(div6, t4);
+    			append(div6, div5);
+    			append(div5, article);
+    			append(article, div3);
+    			append(div3, p0);
+    			append(article, t6);
+    			append(article, div4);
+    			append(div4, p1);
+    			append(div4, t8);
+    			append(div4, p2);
+    			append(div4, t10);
+    			append(div4, p3);
     		},
 
     		p: function update(changed, ctx) {
@@ -1923,7 +2053,7 @@ var app = (function () {
     	};
     }
 
-    function instance$1($$self, $$props, $$invalidate) {
+    function instance$2($$self, $$props, $$invalidate) {
     	
       
       let visible = false;
@@ -1938,7 +2068,7 @@ var app = (function () {
     class LandingPage extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$1, create_fragment$3, safe_not_equal, []);
+    		init(this, options, instance$2, create_fragment$3, safe_not_equal, []);
     	}
     }
 
@@ -1947,7 +2077,7 @@ var app = (function () {
     const file$3 = "src/routes/ProfileGrid.svelte";
 
     function create_fragment$4(ctx) {
-    	var div21, div2, div0, h20, t1, h40, t3, p0, t4, br0, t5, br1, t6, t7, div1, img0, t8, div5, div3, img1, t9, div4, h21, t11, h41, t13, p1, t15, div8, div6, h22, t17, h42, t19, p2, t21, div7, img2, t22, div11, div9, img3, t23, div10, h23, t25, h43, t27, p3, t29, div14, div12, h24, t31, h44, t33, p4, t35, p5, t37, div13, img4, t38, div17, div15, img5, t39, div16, h25, t41, h45, t43, p6, t45, div20, div18, h26, t47, h46, t49, p7, t51, div19, img6;
+    	var div21, div2, div0, h20, t1, p0, t3, p1, t4, br0, t5, br1, t6, t7, div1, img0, t8, div5, div3, img1, t9, div4, h21, t11, p2, t13, p3, t15, div8, div6, h22, t17, p4, t19, p5, t21, div7, img2, t22, div11, div9, img3, t23, div10, h23, t25, p6, t27, p7, t29, div14, div12, h24, t31, p8, t33, p9, t35, p10, t37, div13, img4, t38, div17, div15, img5, t39, div16, h25, t41, p11, t43, p12, t45, div20, div18, h26, t47, p13, t49, p14, t51, div19, img6;
 
     	return {
     		c: function create() {
@@ -1957,10 +2087,10 @@ var app = (function () {
     			h20 = element("h2");
     			h20.textContent = "James Zaki";
     			t1 = space();
-    			h40 = element("h4");
-    			h40.textContent = "Blockchain/IoT Engineer and Consultant";
-    			t3 = space();
     			p0 = element("p");
+    			p0.textContent = "Blockchain/IoT Engineer and Consultant";
+    			t3 = space();
+    			p1 = element("p");
     			t4 = text$1("With 15 years experience in engineering and software development, James has worked in a variety of domains from industrial/home automation to local tech companies and start-ups.");
     			br0 = element("br");
     			t5 = text$1("\n        The last 7 years have covered development, product management, and tech advisor roles, both locally and abroad.");
@@ -1978,22 +2108,22 @@ var app = (function () {
     			h21 = element("h2");
     			h21.textContent = "Ellie Rennie";
     			t11 = space();
-    			h41 = element("h4");
-    			h41.textContent = "Associate Professor, RMIT Blockchain Innovation Hub";
+    			p2 = element("p");
+    			p2.textContent = "Associate Professor, RMIT Blockchain Innovation Hub";
     			t13 = space();
-    			p1 = element("p");
-    			p1.textContent = "Ellie Rennie’s research spans internet studies, public policy, and political theory. In recent years she has been conducting qualitative   research to better understand how social norms influence internet adoption and use. She has an ongoing interest in civil society,         distributed governance systems, and social innovation.";
+    			p3 = element("p");
+    			p3.textContent = "Ellie Rennie’s research spans internet studies, public policy, and political theory. In recent years she has been conducting qualitative   research to better understand how social norms influence internet adoption and use. She has an ongoing interest in civil society,         distributed governance systems, and social innovation.";
     			t15 = space();
     			div8 = element("div");
     			div6 = element("div");
     			h22 = element("h2");
     			h22.textContent = "Bok Khoo";
     			t17 = space();
-    			h42 = element("h4");
-    			h42.textContent = "Decentralised Future Fund";
+    			p4 = element("p");
+    			p4.textContent = "Decentralised Future Fund";
     			t19 = space();
-    			p2 = element("p");
-    			p2.textContent = "Bok Khoo, or BokkyPooBah, is an actuary and software developer working in the Ethereum ecosystem. He is one of the early and top contributors to Ethereum.StackExchange.com. He assisted in the reconciliation of refunds to the original token holders in the pioneer decentralised autonomous organisation, The DAO. He has conducted 39 public Ethereum smart contract audits, and built the early and primitive decentralised exchange CryptoDerivatives.Market in Nov 2016. He helped establish the Decentralised Future Fund DAO that funded the representation of 10 Australian Ethereum community members at conferences worldwide in 2018. He has also released some very nice open source Ethereum smart contract libraries like the Gas-Efficient Solidity DateTime Library and BokkyPooBah’s Red-Black Binary Search Tree Library.";
+    			p5 = element("p");
+    			p5.textContent = "Bok Khoo, or BokkyPooBah, is an actuary and software developer working in the Ethereum ecosystem. He is one of the early and top contributors to Ethereum.StackExchange.com. He assisted in the reconciliation of refunds to the original token holders in the pioneer decentralised autonomous organisation, The DAO. He has conducted 39 public Ethereum smart contract audits, and built the early and primitive decentralised exchange CryptoDerivatives.Market in Nov 2016. He helped establish the Decentralised Future Fund DAO that funded the representation of 10 Australian Ethereum community members at conferences worldwide in 2018. He has also released some very nice open source Ethereum smart contract libraries like the Gas-Efficient Solidity DateTime Library and BokkyPooBah’s Red-Black Binary Search Tree Library.";
     			t21 = space();
     			div7 = element("div");
     			img2 = element("img");
@@ -2006,25 +2136,25 @@ var app = (function () {
     			h23 = element("h2");
     			h23.textContent = "Thomas Nash";
     			t25 = space();
-    			h43 = element("h4");
-    			h43.textContent = "CTO & Co-Founder, Flex Dapps";
+    			p6 = element("p");
+    			p6.textContent = "CTO & Co-Founder, Flex Dapps";
     			t27 = space();
-    			p3 = element("p");
-    			p3.textContent = "A Software Engineer for 5 years and Co-founder of Flex Dapps, Tom has been working with the Ethereum blockchain since 2016. He has a deep interest in everything decentralised and has run countless beginner and intermediate level workshops over the last 18 months. If you ask around for technical blockchain experts in Australia, Tom’s name is one that will pop up time and time again.";
+    			p7 = element("p");
+    			p7.textContent = "A Software Engineer for 5 years and Co-founder of Flex Dapps, Tom has been working with the Ethereum blockchain since 2016. He has a deep interest in everything decentralised and has run countless beginner and intermediate level workshops over the last 18 months. If you ask around for technical blockchain experts in Australia, Tom’s name is one that will pop up time and time again.";
     			t29 = space();
     			div14 = element("div");
     			div12 = element("div");
     			h24 = element("h2");
     			h24.textContent = "Bonnie Yiu";
     			t31 = space();
-    			h44 = element("h4");
-    			h44.textContent = "Co-Founder, Consulere";
+    			p8 = element("p");
+    			p8.textContent = "Co-Founder, Consulere";
     			t33 = space();
-    			p4 = element("p");
-    			p4.textContent = "Bonnie Yiu is co-founder of Consulere.io, a blockchain, IoT and AI consulting company. Bonnie regularly publishes and presents on blockchain-related matters, and recently appeared as a speaker at the World Economic Forum (WEF) in Davos, Switzerland in January 2019. Bonnie is also a Founding Governing Member of the Decentralised Future Fund.";
+    			p9 = element("p");
+    			p9.textContent = "Bonnie Yiu is co-founder of Consulere.io, a blockchain, IoT and AI consulting company. Bonnie regularly publishes and presents on blockchain-related matters, and recently appeared as a speaker at the World Economic Forum (WEF) in Davos, Switzerland in January 2019. Bonnie is also a Founding Governing Member of the Decentralised Future Fund.";
     			t35 = space();
-    			p5 = element("p");
-    			p5.textContent = "Prior to that Bonnie was an Associate at international law firms in Sydney and Silicon Valley, specialising in Financial Services and Venture Capital laws.";
+    			p10 = element("p");
+    			p10.textContent = "Prior to that Bonnie was an Associate at international law firms in Sydney and Silicon Valley, specialising in Financial Services and Venture Capital laws.";
     			t37 = space();
     			div13 = element("div");
     			img4 = element("img");
@@ -2037,112 +2167,127 @@ var app = (function () {
     			h25 = element("h2");
     			h25.textContent = "James Eddington";
     			t41 = space();
-    			h45 = element("h4");
-    			h45.textContent = "Classified";
+    			p11 = element("p");
+    			p11.textContent = "Classified";
     			t43 = space();
-    			p6 = element("p");
-    			p6.textContent = "James is a web3 technology and privacy enthusiast, with specific expertise in cryptocurrency custodianship and the decentralised finance industry. Having worked in traditional financial services and with Melbourne based blockchain venture studio Typehuman, James now pursues his own interests in Web3.";
+    			p12 = element("p");
+    			p12.textContent = "James is a web3 technology and privacy enthusiast, with specific expertise in cryptocurrency custodianship and the decentralised finance industry. Having worked in traditional financial services and with Melbourne based blockchain venture studio Typehuman, James now pursues his own interests in Web3.";
     			t45 = space();
     			div20 = element("div");
     			div18 = element("div");
     			h26 = element("h2");
     			h26.textContent = "Alexander Ramsey";
     			t47 = space();
-    			h46 = element("h4");
-    			h46.textContent = "CEO & Co-Founder, Flex Dapps";
+    			p13 = element("p");
+    			p13.textContent = "CEO & Co-Founder, Flex Dapps";
     			t49 = space();
-    			p7 = element("p");
-    			p7.textContent = "Alexander is a serial company founder and community builder who has worked in emerging industries including game development, esports, 3D systems and immersive media, with experience that encompasses commercial operations, programming, design and community engagement. Alex is currently the CEO and Co-founder of Flex Dapps, an Australian software development company specialising in decentralised applications. He is also a community organiser of Web3 Melbourne, a grassroots technology-agnostic developer community.";
+    			p14 = element("p");
+    			p14.textContent = "Alexander is a serial company founder and community builder who has worked in emerging industries including game development, esports, 3D systems and immersive media, with experience that encompasses commercial operations, programming, design and community engagement. Alex is currently the CEO and Co-founder of Flex Dapps, an Australian software development company specialising in decentralised applications. He is also a community organiser of Web3 Melbourne, a grassroots technology-agnostic developer community.";
     			t51 = space();
     			div19 = element("div");
     			img6 = element("img");
     			add_location(h20, file$3, 3, 6, 150);
-    			add_location(h40, file$3, 4, 6, 176);
-    			add_location(br0, file$3, 6, 185, 419);
-    			add_location(br1, file$3, 7, 119, 543);
-    			add_location(p0, file$3, 5, 6, 230);
+    			attr(p0, "class", "f5 f4-m f4-l");
+    			add_location(p0, file$3, 4, 6, 176);
+    			add_location(br0, file$3, 6, 185, 467);
+    			add_location(br1, file$3, 7, 119, 591);
+    			attr(p1, "class", " f7 f6-ns f5-m f4-l");
+    			add_location(p1, file$3, 5, 7, 250);
     			attr(div0, "class", "w-two-thirds-l w-50 ph2  ph3-ns ph4-m ph5-l");
     			add_location(div0, file$3, 2, 4, 86);
     			attr(img0, "src", "https://web3australia.org/wp-content/uploads/2019/03/jz.jpg");
     			attr(img0, "alt", "notw cover");
-    			add_location(img0, file$3, 12, 6, 804);
+    			add_location(img0, file$3, 12, 6, 852);
     			attr(div1, "class", "pa3 w-third-l w-50");
-    			add_location(div1, file$3, 11, 4, 765);
+    			add_location(div1, file$3, 11, 4, 813);
     			attr(div2, "class", "flex items-start-ns items-center-l");
     			add_location(div2, file$3, 1, 2, 33);
     			attr(img1, "src", "https://web3australia.org/wp-content/uploads/2019/03/RJp9gIJl_400x400.jpg");
     			attr(img1, "alt", "notw cover");
-    			add_location(img1, file$3, 18, 6, 1011);
+    			add_location(img1, file$3, 18, 6, 1059);
     			attr(div3, "class", "pa3 w-third-l w-50");
-    			add_location(div3, file$3, 17, 4, 972);
-    			add_location(h21, file$3, 21, 6, 1194);
-    			add_location(h41, file$3, 22, 6, 1222);
-    			add_location(p1, file$3, 23, 6, 1289);
+    			add_location(div3, file$3, 17, 4, 1020);
+    			add_location(h21, file$3, 21, 6, 1242);
+    			attr(p2, "class", "f5 f4-m f4-l");
+    			add_location(p2, file$3, 22, 6, 1270);
+    			attr(p3, "class", " f7 f6-ns f5-m f4-l");
+    			add_location(p3, file$3, 23, 6, 1356);
     			attr(div4, "class", "w-two-thirds-l w-50 ph2  ph3-ns ph4-m ph5-l");
-    			add_location(div4, file$3, 20, 4, 1130);
+    			add_location(div4, file$3, 20, 4, 1178);
     			attr(div5, "class", "flex items-start-ns items-center-l");
-    			add_location(div5, file$3, 16, 2, 917);
-    			add_location(h22, file$3, 31, 6, 1791);
-    			add_location(h42, file$3, 32, 6, 1815);
-    			add_location(p2, file$3, 33, 6, 1856);
+    			add_location(div5, file$3, 16, 2, 965);
+    			add_location(h22, file$3, 31, 6, 1886);
+    			attr(p4, "class", "f5 f4-m f4-l");
+    			add_location(p4, file$3, 32, 6, 1910);
+    			attr(p5, "class", "f7 f6-ns f5-m f4-l");
+    			add_location(p5, file$3, 33, 7, 1971);
     			attr(div6, "class", "w-two-thirds-l w-50-m w-50 ph2  ph3-ns ph4-m ph5-l");
-    			add_location(div6, file$3, 30, 4, 1720);
+    			add_location(div6, file$3, 30, 4, 1815);
     			attr(img2, "src", "https://web3australia.org/wp-content/uploads/2019/03/bokky-1.jpg");
     			attr(img2, "alt", "notw cover");
-    			add_location(img2, file$3, 38, 6, 2748);
+    			add_location(img2, file$3, 38, 6, 2890);
     			attr(div7, "class", "pa3 w-third-l w-50");
-    			add_location(div7, file$3, 37, 4, 2709);
+    			add_location(div7, file$3, 37, 4, 2851);
     			attr(div8, "class", "flex items-start-ns items-center-l");
-    			add_location(div8, file$3, 29, 2, 1667);
+    			add_location(div8, file$3, 29, 2, 1762);
     			attr(img3, "src", "https://web3australia.org/wp-content/uploads/2019/03/tom.jpg");
     			attr(img3, "alt", "notw cover");
-    			add_location(img3, file$3, 44, 6, 2958);
+    			add_location(img3, file$3, 44, 6, 3100);
     			attr(div9, "class", "pa3 w-third-l w-50");
-    			add_location(div9, file$3, 43, 4, 2919);
-    			add_location(h23, file$3, 47, 6, 3128);
-    			add_location(h43, file$3, 48, 6, 3155);
-    			add_location(p3, file$3, 49, 6, 3199);
+    			add_location(div9, file$3, 43, 4, 3061);
+    			add_location(h23, file$3, 47, 6, 3270);
+    			attr(p6, "class", "f5 f4-m f4-l");
+    			add_location(p6, file$3, 48, 6, 3297);
+    			attr(p7, "class", " f7 f6-ns f5-m f4-l");
+    			add_location(p7, file$3, 49, 7, 3361);
     			attr(div10, "class", "w-two-thirds-l w-50 ph2  ph3-ns ph4-m ph5-l");
-    			add_location(div10, file$3, 46, 4, 3064);
+    			add_location(div10, file$3, 46, 4, 3206);
     			attr(div11, "class", "flex items-start-ns items-center-l");
-    			add_location(div11, file$3, 42, 2, 2866);
-    			add_location(h24, file$3, 57, 6, 3747);
-    			add_location(h44, file$3, 58, 6, 3773);
-    			add_location(p4, file$3, 59, 6, 3810);
-    			add_location(p5, file$3, 62, 6, 4183);
+    			add_location(div11, file$3, 42, 2, 3008);
+    			add_location(h24, file$3, 57, 6, 3937);
+    			attr(p8, "class", "f5 f4-m f4-l");
+    			add_location(p8, file$3, 58, 6, 3963);
+    			attr(p9, "class", " f7 f6-ns f5-m f4-l");
+    			add_location(p9, file$3, 59, 7, 4020);
+    			attr(p10, "class", " f7 f6-ns f5-m f4-l");
+    			add_location(p10, file$3, 62, 7, 4422);
     			attr(div12, "class", "w-two-thirds-l w-50 ph2  ph3-ns ph4-m ph5-l");
-    			add_location(div12, file$3, 56, 4, 3683);
+    			add_location(div12, file$3, 56, 4, 3873);
     			attr(img4, "src", "https://web3australia.org/wp-content/uploads/2019/03/bonnie.jpg");
     			attr(img4, "alt", "notw cover");
-    			add_location(img4, file$3, 67, 6, 4416);
+    			add_location(img4, file$3, 67, 6, 4683);
     			attr(div13, "class", "pa3 w-third-l w-50");
-    			add_location(div13, file$3, 66, 4, 4377);
+    			add_location(div13, file$3, 66, 4, 4644);
     			attr(div14, "class", "flex items-start-ns items-center-l");
-    			add_location(div14, file$3, 55, 2, 3630);
+    			add_location(div14, file$3, 55, 2, 3820);
     			attr(img5, "src", "https://web3australia.org/wp-content/uploads/2019/03/james.jpg");
     			attr(img5, "alt", "notw cover");
-    			add_location(img5, file$3, 73, 6, 4631);
+    			add_location(img5, file$3, 73, 6, 4898);
     			attr(div15, "class", "pa3 w-third-l w-50");
-    			add_location(div15, file$3, 72, 4, 4592);
-    			add_location(h25, file$3, 76, 6, 4809);
-    			add_location(h45, file$3, 77, 6, 4840);
-    			add_location(p6, file$3, 78, 6, 4866);
+    			add_location(div15, file$3, 72, 4, 4859);
+    			add_location(h25, file$3, 76, 6, 5076);
+    			attr(p11, "class", "f5 f4-m f4-l");
+    			add_location(p11, file$3, 77, 6, 5107);
+    			attr(p12, "class", " f7 f6-ns f5-m f4-l");
+    			add_location(p12, file$3, 78, 7, 5153);
     			attr(div16, "class", "w-two-thirds-l w-50 ph2  ph3-ns ph4-m ph5-l");
-    			add_location(div16, file$3, 75, 4, 4745);
+    			add_location(div16, file$3, 75, 4, 5012);
     			attr(div17, "class", "flex items-start-ns items-center-l");
-    			add_location(div17, file$3, 71, 2, 4539);
-    			add_location(h26, file$3, 86, 6, 5310);
-    			add_location(h46, file$3, 87, 6, 5342);
-    			add_location(p7, file$3, 88, 6, 5386);
+    			add_location(div17, file$3, 71, 2, 4806);
+    			add_location(h26, file$3, 86, 6, 5625);
+    			attr(p13, "class", "f5 f4-m f4-l");
+    			add_location(p13, file$3, 87, 6, 5657);
+    			attr(p14, "class", " f7 f6-ns f5-m f4-l");
+    			add_location(p14, file$3, 88, 7, 5722);
     			attr(div18, "class", "w-two-thirds-l w-50");
-    			add_location(div18, file$3, 85, 4, 5270);
+    			add_location(div18, file$3, 85, 4, 5585);
     			attr(img6, "src", "https://web3australia.org/wp-content/uploads/2019/03/Alex-1-BW.jpg");
     			attr(img6, "alt", "notw cover");
-    			add_location(img6, file$3, 93, 6, 5981);
+    			add_location(img6, file$3, 93, 6, 6345);
     			attr(div19, "class", "pa3 w-third-l w-50");
-    			add_location(div19, file$3, 92, 4, 5942);
+    			add_location(div19, file$3, 92, 4, 6306);
     			attr(div20, "class", "flex items-start-ns items-center-l  ");
-    			add_location(div20, file$3, 84, 2, 5214);
+    			add_location(div20, file$3, 84, 2, 5529);
     			attr(div21, "class", "flex flex-column");
     			add_location(div21, file$3, 0, 0, 0);
     		},
@@ -2157,14 +2302,14 @@ var app = (function () {
     			append(div2, div0);
     			append(div0, h20);
     			append(div0, t1);
-    			append(div0, h40);
-    			append(div0, t3);
     			append(div0, p0);
-    			append(p0, t4);
-    			append(p0, br0);
-    			append(p0, t5);
-    			append(p0, br1);
-    			append(p0, t6);
+    			append(div0, t3);
+    			append(div0, p1);
+    			append(p1, t4);
+    			append(p1, br0);
+    			append(p1, t5);
+    			append(p1, br1);
+    			append(p1, t6);
     			append(div2, t7);
     			append(div2, div1);
     			append(div1, img0);
@@ -2176,17 +2321,17 @@ var app = (function () {
     			append(div5, div4);
     			append(div4, h21);
     			append(div4, t11);
-    			append(div4, h41);
+    			append(div4, p2);
     			append(div4, t13);
-    			append(div4, p1);
+    			append(div4, p3);
     			append(div21, t15);
     			append(div21, div8);
     			append(div8, div6);
     			append(div6, h22);
     			append(div6, t17);
-    			append(div6, h42);
+    			append(div6, p4);
     			append(div6, t19);
-    			append(div6, p2);
+    			append(div6, p5);
     			append(div8, t21);
     			append(div8, div7);
     			append(div7, img2);
@@ -2198,19 +2343,19 @@ var app = (function () {
     			append(div11, div10);
     			append(div10, h23);
     			append(div10, t25);
-    			append(div10, h43);
+    			append(div10, p6);
     			append(div10, t27);
-    			append(div10, p3);
+    			append(div10, p7);
     			append(div21, t29);
     			append(div21, div14);
     			append(div14, div12);
     			append(div12, h24);
     			append(div12, t31);
-    			append(div12, h44);
+    			append(div12, p8);
     			append(div12, t33);
-    			append(div12, p4);
+    			append(div12, p9);
     			append(div12, t35);
-    			append(div12, p5);
+    			append(div12, p10);
     			append(div14, t37);
     			append(div14, div13);
     			append(div13, img4);
@@ -2222,17 +2367,17 @@ var app = (function () {
     			append(div17, div16);
     			append(div16, h25);
     			append(div16, t41);
-    			append(div16, h45);
+    			append(div16, p11);
     			append(div16, t43);
-    			append(div16, p6);
+    			append(div16, p12);
     			append(div21, t45);
     			append(div21, div20);
     			append(div20, div18);
     			append(div18, h26);
     			append(div18, t47);
-    			append(div18, h46);
+    			append(div18, p13);
     			append(div18, t49);
-    			append(div18, p7);
+    			append(div18, p14);
     			append(div20, t51);
     			append(div20, div19);
     			append(div19, img6);
@@ -2262,7 +2407,7 @@ var app = (function () {
     const file$4 = "src/routes/Humans.svelte";
 
     function create_fragment$5(ctx) {
-    	var div2, div0, t0, div1, h1, t2, p0, p1, current;
+    	var div2, div0, t0, div1, p0, t2, p1, p2, current;
 
     	var profilegrid = new ProfileGrid({ $$inline: true });
 
@@ -2272,20 +2417,20 @@ var app = (function () {
     			div0 = element("div");
     			t0 = space();
     			div1 = element("div");
-    			h1 = element("h1");
-    			h1.textContent = "Committee of Management";
-    			t2 = space();
     			p0 = element("p");
-    			p0.textContent = "The Web3 Australia’s committee of management totals 7 humans and includes academics, entrepreneurs, technologists and software developers.";
+    			p0.textContent = "Committee of Management";
+    			t2 = space();
     			p1 = element("p");
+    			p1.textContent = "The Web3 Australia’s committee of management totals 7 humans and includes academics, entrepreneurs, technologists and software developers.";
+    			p2 = element("p");
     			profilegrid.$$.fragment.c();
     			attr(div0, "class", "h3 h4-ns w-100");
     			add_location(div0, file$4, 5, 1, 120);
-    			attr(h1, "class", "b w-100 flex");
-    			add_location(h1, file$4, 7, 4, 197);
-    			attr(p0, "class", "f3");
-    			add_location(p0, file$4, 8, 4, 255);
-    			add_location(p1, file$4, 8, 156, 407);
+    			attr(p0, "class", "b w-100 flex f4 f3-m f3-l");
+    			add_location(p0, file$4, 7, 4, 197);
+    			attr(p1, "class", "f5 f4-m f4-l");
+    			add_location(p1, file$4, 8, 4, 266);
+    			add_location(p2, file$4, 8, 166, 428);
     			attr(div1, "class", "flex-column w-90 flex");
     			add_location(div1, file$4, 6, 2, 157);
     			attr(div2, "class", "w-100 flex flex-column items-center");
@@ -2301,11 +2446,11 @@ var app = (function () {
     			append(div2, div0);
     			append(div2, t0);
     			append(div2, div1);
-    			append(div1, h1);
-    			append(div1, t2);
     			append(div1, p0);
+    			append(div1, t2);
     			append(div1, p1);
-    			mount_component(profilegrid, p1, null);
+    			append(div1, p2);
+    			mount_component(profilegrid, p2, null);
     			current = true;
     		},
 
@@ -3042,35 +3187,35 @@ var app = (function () {
     			p2 = element("p");
     			p2.textContent = "6pm";
     			attr(div0, "class", "f1");
-    			add_location(div0, file$5, 8, 6, 301);
+    			add_location(div0, file$5, 8, 6, 296);
     			attr(div1, "class", "f4 pa2");
-    			add_location(div1, file$5, 11, 6, 348);
+    			add_location(div1, file$5, 11, 6, 343);
     			attr(div2, "class", "flex h-50 w-75 items-end");
-    			add_location(div2, file$5, 7, 4, 256);
-    			attr(p0, "class", "pa3 w-90 h-50 f4 no-underline black-80");
-    			add_location(p0, file$5, 15, 4, 413);
-    			attr(div3, "class", "flex h-5 flex-column items-center content-end");
-    			add_location(div3, file$5, 6, 2, 192);
-    			attr(img0, "class", "w-10 tc");
+    			add_location(div2, file$5, 7, 4, 251);
+    			attr(p0, "class", "ma2 tc w-90 h-50 f4 no-underline black-80");
+    			add_location(p0, file$5, 15, 4, 408);
+    			attr(div3, "class", "flex h4 flex-column items-center content-end");
+    			add_location(div3, file$5, 6, 2, 188);
+    			attr(img0, "class", "w-10 ml2");
     			attr(img0, "src", "./location-pin.svg");
     			attr(img0, "alt", "location pin");
-    			add_location(img0, file$5, 19, 6, 636);
-    			attr(p1, "class", "w-80 f4");
-    			add_location(p1, file$5, 20, 6, 709);
-    			attr(div4, "class", "h1 flex w-100 justify-between pa2 h-50 items-center");
-    			add_location(div4, file$5, 18, 4, 564);
-    			attr(img1, "class", "w-10 tc");
+    			add_location(img0, file$5, 19, 6, 627);
+    			attr(p1, "class", "w-80 f4 self-start ");
+    			add_location(p1, file$5, 20, 6, 701);
+    			attr(div4, "class", "flex w-100 justify-between h-50 items-center");
+    			add_location(div4, file$5, 18, 4, 562);
+    			attr(img1, "class", "w-10 ml2");
     			attr(img1, "src", "./wall-clock.svg");
     			attr(img1, "alt", "clock");
-    			add_location(img1, file$5, 23, 6, 839);
+    			add_location(img1, file$5, 23, 6, 836);
     			attr(p2, "class", "w-80 f4");
-    			add_location(p2, file$5, 24, 6, 902);
-    			attr(div5, "class", "h1 flex w-100 justify-between pa2 h-50 items-center");
-    			add_location(div5, file$5, 22, 4, 767);
+    			add_location(p2, file$5, 24, 6, 900);
+    			attr(div5, "class", "flex w-100 justify-between h-50 items-center");
+    			add_location(div5, file$5, 22, 4, 771);
     			attr(div6, "class", "bt h4 flex flex-column justify-center content-center");
-    			add_location(div6, file$5, 17, 2, 493);
+    			add_location(div6, file$5, 17, 2, 491);
     			attr(a, "href", a_href_value = ctx.meetup.link);
-    			attr(a, "class", "flex flex-column h-100 mr3 mt3 shadow-3 black-80 mw5 grow");
+    			attr(a, "class", "flex flex-column h-100 ma3 shadow-3 black-80 mw5 grow");
     			add_location(a, file$5, 5, 0, 85);
     		},
 
@@ -3143,7 +3288,7 @@ var app = (function () {
     	};
     }
 
-    function instance$2($$self, $$props, $$invalidate) {
+    function instance$3($$self, $$props, $$invalidate) {
     	let { meetup } = $$props;
 
     	const writable_props = ['meetup'];
@@ -3161,7 +3306,7 @@ var app = (function () {
     class EventCard extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$2, create_fragment$6, safe_not_equal, ["meetup"]);
+    		init(this, options, instance$3, create_fragment$6, safe_not_equal, ["meetup"]);
 
     		const { ctx } = this.$$;
     		const props = options.props || {};
@@ -3226,21 +3371,21 @@ var app = (function () {
     			div2 = element("div");
     			p = element("p");
     			p.textContent = "other melb meetup here";
-    			attr(h10, "class", "f3 w-100 mt4 flex justify-center items-center");
-    			add_location(h10, file$6, 44, 6, 967);
-    			attr(div0, "class", "flex flex-wrap");
-    			add_location(div0, file$6, 45, 6, 1064);
+    			attr(h10, "class", "f5 f4-m f3-l w-100 mt4 flex justify-center items-center");
+    			add_location(h10, file$6, 44, 6, 975);
+    			attr(div0, "class", "flex flex-wrap-m flex-row-m flex-row-l flex-column justify-center-m");
+    			add_location(div0, file$6, 45, 6, 1082);
     			attr(div1, "class", "flex flex-column justify-center items-center w-100");
-    			add_location(div1, file$6, 43, 4, 895);
-    			attr(h11, "class", "f3 w-100 flex justify-center items-center h3");
-    			add_location(h11, file$6, 52, 6, 1287);
-    			add_location(p, file$6, 54, 7, 1422);
+    			add_location(div1, file$6, 43, 4, 903);
+    			attr(h11, "class", "f5 f4-m f3-l w-100 flex justify-center items-center h3");
+    			add_location(h11, file$6, 52, 6, 1354);
+    			add_location(p, file$6, 54, 7, 1499);
     			attr(div2, "class", "flex flex-wrap h-100");
-    			add_location(div2, file$6, 53, 6, 1380);
-    			attr(div3, "class", "flex flex-column justify-center items-center w-100 ma2");
-    			add_location(div3, file$6, 51, 4, 1211);
-    			attr(div4, "class", "vh-100");
-    			add_location(div4, file$6, 42, 2, 870);
+    			add_location(div2, file$6, 53, 6, 1457);
+    			attr(div3, "class", "flex flex-column justify-center items-center w-100");
+    			add_location(div3, file$6, 51, 4, 1282);
+    			attr(div4, "class", "h-100");
+    			add_location(div4, file$6, 42, 2, 879);
     		},
 
     		m: function mount(target, anchor) {
@@ -3319,7 +3464,7 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			div.textContent = "....loading Melbourne Meetups.";
-    			attr(div, "class", "w-100 vh-100 flex f1 justify-center items center");
+    			attr(div, "class", "w-100 h-100 flex f4 f3-m f2-l justify-center items center");
     			add_location(div, file$6, 38, 2, 753);
     		},
 
@@ -3459,7 +3604,7 @@ var app = (function () {
     	};
     }
 
-    function instance$3($$self, $$props, $$invalidate) {
+    function instance$4($$self, $$props, $$invalidate) {
     	
       
       let loaded = false;
@@ -3480,7 +3625,7 @@ var app = (function () {
 
       onMount(()=> {
         melbMeetups.forEach(async (meetup) => {
-          await jsonp_1(`https://api.meetup.com/${meetup.name}/events?page=3&sig_id=${meetup.sig_id}`, null, (err, data) => {
+          await jsonp_1(`https://api.meetup.com/${meetup.name}/events?page=4&sig_id=${meetup.sig_id}`, null, (err, data) => {
             if (err) {
               console.error(err.message);
             } else {
@@ -3497,7 +3642,7 @@ var app = (function () {
     class Melbourne extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$3, create_fragment$7, safe_not_equal, []);
+    		init(this, options, instance$4, create_fragment$7, safe_not_equal, []);
     	}
     }
 
@@ -3527,22 +3672,22 @@ var app = (function () {
     			div2 = element("div");
     			p1 = element("p");
     			p1.textContent = "other Sydney meetup here";
-    			attr(h10, "class", "f3 w-100 flex justify-center items-center h3");
-    			add_location(h10, file$7, 49, 6, 1090);
-    			add_location(p0, file$7, 51, 7, 1216);
+    			attr(h10, "class", "f5 f4-m f3-l w-100 flex justify-center items-center h3");
+    			add_location(h10, file$7, 49, 6, 1100);
+    			add_location(p0, file$7, 51, 7, 1236);
     			attr(div0, "class", "flex flex-wrap h-100");
-    			add_location(div0, file$7, 50, 6, 1174);
-    			attr(div1, "class", "flex flex-column justify-center items-center w-100 h-50 ma2");
-    			add_location(div1, file$7, 48, 4, 1009);
-    			attr(h11, "class", "f3 w-100 flex justify-center items-center h3");
-    			add_location(h11, file$7, 58, 6, 1447);
-    			add_location(p1, file$7, 60, 7, 1579);
+    			add_location(div0, file$7, 50, 6, 1194);
+    			attr(div1, "class", "flex flex-column justify-center items-center w-100 h-50");
+    			add_location(div1, file$7, 48, 4, 1023);
+    			attr(h11, "class", "f5 f4-m f3-l w-100 flex justify-center items-center h3");
+    			add_location(h11, file$7, 58, 6, 1463);
+    			add_location(p1, file$7, 60, 7, 1605);
     			attr(div2, "class", "flex flex-wrap h-100");
-    			add_location(div2, file$7, 59, 6, 1537);
-    			attr(div3, "class", "flex flex-column justify-center items-center w-100 h-50 ma2");
-    			add_location(div3, file$7, 57, 4, 1366);
+    			add_location(div2, file$7, 59, 6, 1563);
+    			attr(div3, "class", "flex flex-column justify-center items-center w-100 h-50");
+    			add_location(div3, file$7, 57, 4, 1386);
     			attr(div4, "class", "vh-100");
-    			add_location(div4, file$7, 47, 2, 984);
+    			add_location(div4, file$7, 47, 2, 998);
     		},
 
     		m: function mount(target, anchor) {
@@ -3576,8 +3721,8 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			div.textContent = "....loading Sydney Meetups.";
-    			attr(div, "class", "w-100 vh-100 flex f1 justify-center items center");
-    			add_location(div, file$7, 43, 2, 870);
+    			attr(div, "class", "w-100 vh-100 flex f4 f3-m f2-l justify-center items center");
+    			add_location(div, file$7, 43, 2, 874);
     		},
 
     		m: function mount(target, anchor) {
@@ -3642,7 +3787,7 @@ var app = (function () {
     	};
     }
 
-    function instance$4($$self, $$props, $$invalidate) {
+    function instance$5($$self, $$props, $$invalidate) {
     	
 
       let loaded = false;
@@ -3654,12 +3799,12 @@ var app = (function () {
         }, 1500);
 
         // sydEvents.forEach(async (meetup) => {
-        //   await jsonp(`https://api.meetup.com/${meetup.name}/events?page=3&sig_id=${meetup.sig_id}`, null, (err, data) => {
+        //   await jsonp(`https://api.meetup.com/${meetup.name}/meetups?page=3&sig_id=${meetup.sig_id}`, null, (err, data) => {
         //     if (err) {
         //       console.error(err.message);
         //     } else {
-        //       events.push(data.data);
-        //       console.log(events);
+        //       meetups.push(data.data);
+        //       console.log(meetups);
         //       loaded = true
         //     }
         //   });
@@ -3672,7 +3817,7 @@ var app = (function () {
     class Sydney extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$4, create_fragment$8, safe_not_equal, []);
+    		init(this, options, instance$5, create_fragment$8, safe_not_equal, []);
     	}
     }
 
@@ -3702,22 +3847,22 @@ var app = (function () {
     			div2 = element("div");
     			p1 = element("p");
     			p1.textContent = "other Brisbane meetup here";
-    			attr(h10, "class", "f3 w-100 flex justify-center items-center h3");
-    			add_location(h10, file$8, 49, 6, 1089);
-    			add_location(p0, file$8, 51, 7, 1217);
+    			attr(h10, "class", "f5 f4-m f3-l w-100 flex justify-center items-center h3");
+    			add_location(h10, file$8, 49, 6, 1098);
+    			add_location(p0, file$8, 51, 7, 1236);
     			attr(div0, "class", "flex flex-wrap h-100");
-    			add_location(div0, file$8, 50, 6, 1175);
-    			attr(div1, "class", "flex flex-column justify-center items-center w-100 h-50 ma2");
-    			add_location(div1, file$8, 48, 4, 1008);
-    			attr(h11, "class", "f3 w-100 flex justify-center items-center h3");
-    			add_location(h11, file$8, 58, 6, 1450);
-    			add_location(p1, file$8, 60, 7, 1584);
+    			add_location(div0, file$8, 50, 6, 1194);
+    			attr(div1, "class", "flex flex-column justify-center items-center w-100 h-50");
+    			add_location(div1, file$8, 48, 4, 1021);
+    			attr(h11, "class", "f5 f4-m f3-l w-100 flex justify-center items-center h3");
+    			add_location(h11, file$8, 58, 6, 1469);
+    			add_location(p1, file$8, 60, 7, 1613);
     			attr(div2, "class", "flex flex-wrap h-100");
-    			add_location(div2, file$8, 59, 6, 1542);
-    			attr(div3, "class", "flex flex-column justify-center items-center w-100 h-50 ma2");
-    			add_location(div3, file$8, 57, 4, 1369);
+    			add_location(div2, file$8, 59, 6, 1571);
+    			attr(div3, "class", "flex flex-column justify-center items-center w-100 h-50");
+    			add_location(div3, file$8, 57, 4, 1392);
     			attr(div4, "class", "vh-100");
-    			add_location(div4, file$8, 47, 2, 983);
+    			add_location(div4, file$8, 47, 2, 996);
     		},
 
     		m: function mount(target, anchor) {
@@ -3751,8 +3896,8 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			div.textContent = "....loading Brisbane Meetups.";
-    			attr(div, "class", "w-100 vh-100 flex f1 justify-center items center");
-    			add_location(div, file$8, 43, 2, 867);
+    			attr(div, "class", "w-100 vh-100 flex f4 f3-m f2-l justify-center items center");
+    			add_location(div, file$8, 43, 2, 870);
     		},
 
     		m: function mount(target, anchor) {
@@ -3817,7 +3962,7 @@ var app = (function () {
     	};
     }
 
-    function instance$5($$self, $$props, $$invalidate) {
+    function instance$6($$self, $$props, $$invalidate) {
     	
 
      let loaded = false;
@@ -3833,8 +3978,8 @@ var app = (function () {
         //     if (err) {
         //       console.error(err.message);
         //     } else {
-        //       events.push(data.data);
-        //       console.log(events);
+        //       meetups.push(data.data);
+        //       console.log(meetups);
         //       loaded = true
         //     }
         //   });
@@ -3847,7 +3992,7 @@ var app = (function () {
     class Brisbane extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$5, create_fragment$9, safe_not_equal, []);
+    		init(this, options, instance$6, create_fragment$9, safe_not_equal, []);
     	}
     }
 
@@ -3861,7 +4006,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (41:3) {#each cities as city}
+    // (40:5) {#each cities as city}
     function create_each_block$1(ctx) {
     	var div, t0_value = ctx.city.name, t0, t1, div_id_value, dispose;
 
@@ -3870,10 +4015,10 @@ var app = (function () {
     			div = element("div");
     			t0 = text$1(t0_value);
     			t1 = space();
-    			attr(div, "class", "f3 dim pointer lh-copy svelte-ydus66");
+    			attr(div, "class", "f5 f4-m f3-l ma1 dim pointer lh-copy svelte-ydus66");
     			attr(div, "id", div_id_value = ctx.city.name);
     			toggle_class(div, "active", ctx.current === ctx.city.name);
-    			add_location(div, file$9, 41, 6, 1232);
+    			add_location(div, file$9, 40, 8, 1281);
     			dispose = listen(div, "click", ctx.handleClick);
     		},
 
@@ -3900,7 +4045,7 @@ var app = (function () {
     }
 
     function create_fragment$a(ctx) {
-    	var div4, div0, t0, div1, h1, t2, p, t4, div3, div2, t5, current_1;
+    	var div4, div3, div0, h1, t1, p, t3, div2, div1, t4, current_1;
 
     	var each_value = ctx.cities;
 
@@ -3923,37 +4068,36 @@ var app = (function () {
     	return {
     		c: function create() {
     			div4 = element("div");
+    			div3 = element("div");
     			div0 = element("div");
-    			t0 = space();
-    			div1 = element("div");
     			h1 = element("h1");
     			h1.textContent = "Our Events";
-    			t2 = space();
+    			t1 = space();
     			p = element("p");
     			p.textContent = "Our Meetups cover a variety of topics such as the technical details of various Web3 platforms (Ethereum/IPFS/Whisper), as well as more general topics such as \tdecentralised trust systems and the social/cultural implications of decentralised/distributed systems.";
-    			t4 = space();
-    			div3 = element("div");
+    			t3 = space();
     			div2 = element("div");
+    			div1 = element("div");
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			t5 = space();
+    			t4 = space();
     			if (switch_instance) switch_instance.$$.fragment.c();
-    			attr(div0, "class", "h3 h4-ns w-100");
-    			add_location(div0, file$9, 31, 2, 662);
-    			add_location(h1, file$9, 33, 4, 768);
-    			attr(p, "class", "f3 mb4 w-80");
-    			add_location(p, file$9, 34, 3, 791);
-    			attr(div1, "class", "w-100 flex flex-column justify-center items-center");
-    			add_location(div1, file$9, 32, 2, 699);
-    			attr(div2, "class", "w-50 flex justify-between");
-    			add_location(div2, file$9, 39, 2, 1158);
-    			attr(div3, "class", "w-100 h3 flex justify-center items-center");
-    			add_location(div3, file$9, 38, 2, 1100);
-    			attr(div4, "class", "w-100 flex flex-column h-100");
-    			add_location(div4, file$9, 30, 0, 617);
+    			add_location(h1, file$9, 32, 6, 767);
+    			attr(p, "class", "f5 f4-m f3-l tc mb4-l w-80-l w-90");
+    			add_location(p, file$9, 33, 5, 792);
+    			attr(div0, "class", "w-100 flex flex-column justify-center items-center");
+    			add_location(div0, file$9, 31, 4, 696);
+    			attr(div1, "class", "w-90  w-75-m w-50-l flex justify-between");
+    			add_location(div1, file$9, 38, 4, 1188);
+    			attr(div2, "class", "w-100 flex justify-center items-center");
+    			add_location(div2, file$9, 37, 4, 1131);
+    			attr(div3, "class", "w-100 flex flex-column h-100");
+    			add_location(div3, file$9, 30, 2, 649);
+    			attr(div4, "class", "w-100 h-100 flex");
+    			add_location(div4, file$9, 29, 0, 616);
     		},
 
     		l: function claim(nodes) {
@@ -3962,24 +4106,23 @@ var app = (function () {
 
     		m: function mount(target, anchor) {
     			insert(target, div4, anchor);
-    			append(div4, div0);
-    			append(div4, t0);
-    			append(div4, div1);
-    			append(div1, h1);
-    			append(div1, t2);
-    			append(div1, p);
-    			append(div4, t4);
     			append(div4, div3);
+    			append(div3, div0);
+    			append(div0, h1);
+    			append(div0, t1);
+    			append(div0, p);
+    			append(div3, t3);
     			append(div3, div2);
+    			append(div2, div1);
 
     			for (var i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(div2, null);
+    				each_blocks[i].m(div1, null);
     			}
 
-    			append(div4, t5);
+    			append(div3, t4);
 
     			if (switch_instance) {
-    				mount_component(switch_instance, div4, null);
+    				mount_component(switch_instance, div3, null);
     			}
 
     			current_1 = true;
@@ -3997,7 +4140,7 @@ var app = (function () {
     					} else {
     						each_blocks[i] = create_each_block$1(child_ctx);
     						each_blocks[i].c();
-    						each_blocks[i].m(div2, null);
+    						each_blocks[i].m(div1, null);
     					}
     				}
 
@@ -4022,7 +4165,7 @@ var app = (function () {
 
     					switch_instance.$$.fragment.c();
     					transition_in(switch_instance.$$.fragment, 1);
-    					mount_component(switch_instance, div4, null);
+    					mount_component(switch_instance, div3, null);
     				} else {
     					switch_instance = null;
     				}
@@ -4053,7 +4196,7 @@ var app = (function () {
     	};
     }
 
-    function instance$6($$self, $$props, $$invalidate) {
+    function instance$7($$self, $$props, $$invalidate) {
     	
       
       const cities = [
@@ -4078,7 +4221,7 @@ var app = (function () {
     class Events extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$6, create_fragment$a, safe_not_equal, []);
+    		init(this, options, instance$7, create_fragment$a, safe_not_equal, []);
     	}
     }
 
@@ -10082,18 +10225,18 @@ var app = (function () {
     			t3 = space();
     			div2 = element("div");
     			t4 = text$1(ctx.title);
-    			add_location(br, file$a, 23, 87, 560);
-    			attr(div0, "class", "flex items-start items-center-ns h4 f3-ns f4-l ph1 ph2-ns ph3-m");
-    			add_location(div0, file$a, 23, 2, 475);
+    			add_location(br, file$a, 23, 105, 587);
+    			attr(div0, "class", "flex ml2-l items-start items-center-ns h3 h4-m h4-l f5 f3-m f3-l ph1 ph2-ns ph3-m");
+    			add_location(div0, file$a, 23, 2, 484);
     			attr(img, "class", "w-100");
     			attr(img, "src", ctx.poster);
     			attr(img, "alt", "blog poster image");
-    			add_location(img, file$a, 25, 4, 638);
-    			attr(div1, "class", "w-100 ph1-ns overflow-hidden h5");
-    			add_location(div1, file$a, 24, 2, 588);
-    			attr(div2, "class", "lh-title flex items-start items-center-ns h4 f4 overflow-hidden ph1 ph2-ns ph3-m");
-    			add_location(div2, file$a, 27, 2, 706);
-    			attr(div3, "class", "w-80 flex flex-column shadow-3 mv4");
+    			add_location(img, file$a, 25, 4, 687);
+    			attr(div1, "class", "w-100 ph1-ns overflow-hidden h4 h5-m h5-l self-center");
+    			add_location(div1, file$a, 24, 2, 615);
+    			attr(div2, "class", "lh-title ml2-l flex items-center h4 f5 f3-m f3-l overflow-hidden ph1 ph2-ns ph3-m");
+    			add_location(div2, file$a, 27, 2, 755);
+    			attr(div3, "class", " w-100 w-90-l flex flex-column shadow-3 mv4");
     			add_location(div3, file$a, 22, 0, 402);
     			dispose = listen(div3, "click", ctx.returnPost);
     		},
@@ -10143,7 +10286,7 @@ var app = (function () {
     	};
     }
 
-    function instance$7($$self, $$props, $$invalidate) {
+    function instance$8($$self, $$props, $$invalidate) {
     	
       let { poster, author, date, title, link, post } = $$props;
 
@@ -10186,7 +10329,7 @@ var app = (function () {
     class BlogCard extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$7, create_fragment$b, safe_not_equal, ["poster", "author", "date", "title", "link", "post"]);
+    		init(this, options, instance$8, create_fragment$b, safe_not_equal, ["poster", "author", "date", "title", "link", "post"]);
 
     		const { ctx } = this.$$;
     		const props = options.props || {};
@@ -10264,7 +10407,7 @@ var app = (function () {
     const file$b = "src/routes/BlogPost.svelte";
 
     function create_fragment$c(ctx) {
-    	var div, button, t1, h1, t2_value = ctx.post.title, t2, t3, article, raw_value = `${ctx.post.content}`, div_intro, div_outro, current, dispose;
+    	var div, button, t1, p, t2_value = ctx.post.title, t2, t3, article, raw_value = `${ctx.post.content}`, div_intro, div_outro, current, dispose;
 
     	return {
     		c: function create() {
@@ -10272,14 +10415,17 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "Go Back";
     			t1 = space();
-    			h1 = element("h1");
+    			p = element("p");
     			t2 = text$1(t2_value);
     			t3 = space();
     			article = element("article");
-    			add_location(button, file$b, 11, 2, 197);
-    			add_location(h1, file$b, 12, 2, 261);
-    			add_location(article, file$b, 13, 2, 285);
-    			add_location(div, file$b, 10, 0, 172);
+    			add_location(button, file$b, 13, 2, 227);
+    			attr(p, "class", "f4 f3-m f3-l");
+    			add_location(p, file$b, 14, 2, 291);
+    			attr(article, "class", " self-center overflow-scroll overflow-scroll-ls overflow-auto-m overflow-auto-l");
+    			add_location(article, file$b, 15, 2, 334);
+    			attr(div, "class", "w-100 w-90-m w-90-l");
+    			add_location(div, file$b, 12, 0, 174);
     			dispose = listen(button, "click", ctx.click_handler);
     		},
 
@@ -10291,8 +10437,8 @@ var app = (function () {
     			insert(target, div, anchor);
     			append(div, button);
     			append(div, t1);
-    			append(div, h1);
-    			append(h1, t2);
+    			append(div, p);
+    			append(p, t2);
     			append(div, t3);
     			append(div, article);
     			article.innerHTML = raw_value;
@@ -10339,7 +10485,7 @@ var app = (function () {
     	};
     }
 
-    function instance$8($$self, $$props, $$invalidate) {
+    function instance$9($$self, $$props, $$invalidate) {
     	
 
     const dispatch = createEventDispatcher();
@@ -10365,7 +10511,7 @@ var app = (function () {
     class BlogPost extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$8, create_fragment$c, safe_not_equal, ["post"]);
+    		init(this, options, instance$9, create_fragment$c, safe_not_equal, ["post"]);
 
     		const { ctx } = this.$$;
     		const props = options.props || {};
@@ -10400,7 +10546,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (91:4) {:catch error}
+    // (93:4) {:catch error}
     function create_catch_block_1(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -10409,7 +10555,7 @@ var app = (function () {
     			p = element("p");
     			t = text$1(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$c, 91, 5, 2662);
+    			add_location(p, file$c, 93, 5, 2754);
     		},
 
     		m: function mount(target, anchor) {
@@ -10429,7 +10575,7 @@ var app = (function () {
     	};
     }
 
-    // (75:4) {:then blogData}
+    // (77:4) {:then blogData}
     function create_then_block_1(ctx) {
     	var div3, div0, t0, div1, t1, div2, h2, a, t2_value = ctx.blogData.feed.title, t2, a_href_value, current;
 
@@ -10468,20 +10614,21 @@ var app = (function () {
     			h2 = element("h2");
     			a = element("a");
     			t2 = text$1(t2_value);
-    			attr(div0, "class", "w-two-thirds-l self-center-l w-100");
-    			add_location(div0, file$c, 76, 8, 1950);
+    			attr(div0, "class", "w-100 w-two-thirds-l self-center-l");
+    			toggle_class(div0, "dn", ctx.dnCards);
+    			add_location(div0, file$c, 78, 8, 2029);
+    			attr(div1, "class", "self-center w-90 pa3");
     			toggle_class(div1, "dn", ctx.dnWeb3Post);
-    			add_location(div1, file$c, 83, 8, 2291);
-    			attr(a, "class", "black-80");
+    			add_location(div1, file$c, 85, 8, 2371);
+    			attr(a, "class", "black-80 w-100 ml3 ml0-l w-75 f5 f3-m f3-l");
     			attr(a, "href", a_href_value = ctx.blogData.feed.link);
-    			add_location(a, file$c, 87, 57, 2531);
-    			attr(h2, "class", "f4-m f4-ns f4");
-    			toggle_class(h2, "dn", ctx.dnCards);
-    			add_location(h2, file$c, 87, 10, 2484);
-    			attr(div2, "class", "items-end-l w-third-l w-100 flex flex-column h-100");
-    			add_location(div2, file$c, 86, 8, 2409);
+    			add_location(a, file$c, 89, 15, 2589);
+    			add_location(h2, file$c, 89, 10, 2584);
+    			attr(div2, "class", "w-third-l w-100 h-100");
+    			toggle_class(div2, "dn", ctx.dnCards);
+    			add_location(div2, file$c, 88, 8, 2518);
     			attr(div3, "class", "bt w-100 flex flex-row-l flex-column-reverse justify-center");
-    			add_location(div3, file$c, 75, 6, 1867);
+    			add_location(div3, file$c, 77, 6, 1946);
     		},
 
     		m: function mount(target, anchor) {
@@ -10504,7 +10651,7 @@ var app = (function () {
     		},
 
     		p: function update(changed, ctx) {
-    			if (changed.dnCards || changed.web3Promise) {
+    			if (changed.web3Promise) {
     				each_value_1 = ctx.blogData.items;
 
     				for (var i = 0; i < each_value_1.length; i += 1) {
@@ -10526,6 +10673,10 @@ var app = (function () {
     				check_outros();
     			}
 
+    			if (changed.dnCards) {
+    				toggle_class(div0, "dn", ctx.dnCards);
+    			}
+
     			var blogpost_changes = {};
     			if (changed.viewWeb3Post) blogpost_changes.post = ctx.viewWeb3Post;
     			blogpost.$set(blogpost_changes);
@@ -10535,7 +10686,7 @@ var app = (function () {
     			}
 
     			if (changed.dnCards) {
-    				toggle_class(h2, "dn", ctx.dnCards);
+    				toggle_class(div2, "dn", ctx.dnCards);
     			}
     		},
 
@@ -10568,7 +10719,7 @@ var app = (function () {
     	};
     }
 
-    // (78:7) {#each blogData.items as post}
+    // (80:7) {#each blogData.items as post}
     function create_each_block_1(ctx) {
     	var div, t, current;
 
@@ -10590,8 +10741,7 @@ var app = (function () {
     			div = element("div");
     			blogcard.$$.fragment.c();
     			t = space();
-    			toggle_class(div, "dn", ctx.dnCards);
-    			add_location(div, file$c, 78, 10, 2048);
+    			add_location(div, file$c, 80, 10, 2146);
     		},
 
     		m: function mount(target, anchor) {
@@ -10610,10 +10760,6 @@ var app = (function () {
     			if (changed.web3Promise) blogcard_changes.link = ctx.post.link;
     			if (changed.web3Promise) blogcard_changes.date = ctx.post.pubDate;
     			blogcard.$set(blogcard_changes);
-
-    			if (changed.dnCards) {
-    				toggle_class(div, "dn", ctx.dnCards);
-    			}
     		},
 
     		i: function intro(local) {
@@ -10638,7 +10784,7 @@ var app = (function () {
     	};
     }
 
-    // (73:24)       <p>...waiting</p>     {:then blogData}
+    // (75:24)       <p>...waiting</p>     {:then blogData}
     function create_pending_block_1(ctx) {
     	var p;
 
@@ -10646,7 +10792,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$c, 73, 5, 1822);
+    			add_location(p, file$c, 75, 5, 1901);
     		},
 
     		m: function mount(target, anchor) {
@@ -10665,7 +10811,7 @@ var app = (function () {
     	};
     }
 
-    // (112:4) {:catch error}
+    // (114:4) {:catch error}
     function create_catch_block(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -10674,7 +10820,7 @@ var app = (function () {
     			p = element("p");
     			t = text$1(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$c, 112, 5, 3564);
+    			add_location(p, file$c, 114, 5, 3692);
     		},
 
     		m: function mount(target, anchor) {
@@ -10694,7 +10840,7 @@ var app = (function () {
     	};
     }
 
-    // (96:4) {:then blogData}
+    // (98:4) {:then blogData}
     function create_then_block(ctx) {
     	var div3, div0, t0, div1, t1, div2, h2, a, t2_value = ctx.blogData.feed.title, t2, a_href_value, current;
 
@@ -10734,18 +10880,20 @@ var app = (function () {
     			a = element("a");
     			t2 = text$1(t2_value);
     			attr(div0, "class", "w-two-thirds-l self-center-l w-100");
-    			add_location(div0, file$c, 97, 8, 2875);
+    			toggle_class(div0, "dn", ctx.dnCards);
+    			add_location(div0, file$c, 99, 8, 2967);
+    			attr(div1, "class", "self-center w-90 pa3");
     			toggle_class(div1, "dn", ctx.dnFlexPost);
-    			add_location(div1, file$c, 104, 8, 3216);
-    			attr(a, "class", "black-80");
+    			add_location(div1, file$c, 106, 8, 3309);
+    			attr(a, "class", "black-80 w-100 ml3 ml0-l w-75 f5 f3-m f3-l");
     			attr(a, "href", a_href_value = ctx.blogData.feed.link);
-    			toggle_class(a, "dn", ctx.dnCards);
-    			add_location(a, file$c, 108, 15, 3414);
-    			add_location(h2, file$c, 108, 10, 3409);
-    			attr(div2, "class", "items-end-l w-third-l w-100 flex flex-column h-100");
-    			add_location(div2, file$c, 107, 8, 3334);
+    			add_location(a, file$c, 110, 15, 3527);
+    			add_location(h2, file$c, 110, 10, 3522);
+    			attr(div2, "class", "w-third-l w-100 h-100");
+    			toggle_class(div2, "dn", ctx.dnCards);
+    			add_location(div2, file$c, 109, 8, 3456);
     			attr(div3, "class", "bt w-100 flex flex-row-l flex-column-reverse justify-center");
-    			add_location(div3, file$c, 96, 6, 2792);
+    			add_location(div3, file$c, 98, 6, 2884);
     		},
 
     		m: function mount(target, anchor) {
@@ -10768,7 +10916,7 @@ var app = (function () {
     		},
 
     		p: function update(changed, ctx) {
-    			if (changed.dnCards || changed.flexPromise) {
+    			if (changed.flexPromise) {
     				each_value = ctx.blogData.items;
 
     				for (var i = 0; i < each_value.length; i += 1) {
@@ -10790,6 +10938,10 @@ var app = (function () {
     				check_outros();
     			}
 
+    			if (changed.dnCards) {
+    				toggle_class(div0, "dn", ctx.dnCards);
+    			}
+
     			var blogpost_changes = {};
     			if (changed.viewFlexPost) blogpost_changes.post = ctx.viewFlexPost;
     			blogpost.$set(blogpost_changes);
@@ -10799,7 +10951,7 @@ var app = (function () {
     			}
 
     			if (changed.dnCards) {
-    				toggle_class(a, "dn", ctx.dnCards);
+    				toggle_class(div2, "dn", ctx.dnCards);
     			}
     		},
 
@@ -10832,7 +10984,7 @@ var app = (function () {
     	};
     }
 
-    // (99:7) {#each blogData.items as post}
+    // (101:7) {#each blogData.items as post}
     function create_each_block$2(ctx) {
     	var div, t, current;
 
@@ -10854,8 +11006,7 @@ var app = (function () {
     			div = element("div");
     			blogcard.$$.fragment.c();
     			t = space();
-    			toggle_class(div, "dn", ctx.dnCards);
-    			add_location(div, file$c, 99, 10, 2973);
+    			add_location(div, file$c, 101, 10, 3084);
     		},
 
     		m: function mount(target, anchor) {
@@ -10874,10 +11025,6 @@ var app = (function () {
     			if (changed.flexPromise) blogcard_changes.link = ctx.post.link;
     			if (changed.flexPromise) blogcard_changes.date = ctx.post.pubDate;
     			blogcard.$set(blogcard_changes);
-
-    			if (changed.dnCards) {
-    				toggle_class(div, "dn", ctx.dnCards);
-    			}
     		},
 
     		i: function intro(local) {
@@ -10902,7 +11049,7 @@ var app = (function () {
     	};
     }
 
-    // (94:24)       <p>...waiting</p>     {:then blogData}
+    // (96:24)       <p>...waiting</p>     {:then blogData}
     function create_pending_block(ctx) {
     	var p;
 
@@ -10910,7 +11057,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$c, 94, 5, 2747);
+    			add_location(p, file$c, 96, 5, 2839);
     		},
 
     		m: function mount(target, anchor) {
@@ -10978,18 +11125,18 @@ var app = (function () {
 
     			info_1.block.c();
     			attr(div0, "class", "h3 h4-ns w-100");
-    			add_location(div0, file$c, 66, 2, 1585);
+    			add_location(div0, file$c, 68, 2, 1650);
     			attr(h1, "class", "w-75");
     			toggle_class(h1, "dn", ctx.dnCards);
-    			add_location(h1, file$c, 68, 4, 1662);
+    			add_location(h1, file$c, 70, 4, 1727);
     			attr(div1, "class", "flex justify-center");
-    			add_location(div1, file$c, 67, 2, 1622);
-    			attr(div2, "class", "w-80");
-    			add_location(div2, file$c, 71, 4, 1773);
+    			add_location(div1, file$c, 69, 2, 1687);
+    			attr(div2, "class", "w-90 w-80-m w-80-l");
+    			add_location(div2, file$c, 73, 4, 1838);
     			attr(div3, "class", "w-100 h-75 flex justify-center");
-    			add_location(div3, file$c, 70, 2, 1724);
-    			attr(div4, "class", "flex flex-column w-100 h-100");
-    			add_location(div4, file$c, 65, 0, 1540);
+    			add_location(div3, file$c, 72, 2, 1789);
+    			attr(div4, "class", "flex flex-column w-100 h-100 mb5");
+    			add_location(div4, file$c, 67, 0, 1601);
     		},
 
     		l: function claim(nodes) {
@@ -11075,11 +11222,14 @@ var app = (function () {
     	};
     }
 
-    function instance$9($$self, $$props, $$invalidate) {
+    function instance$a($$self, $$props, $$invalidate) {
     	
 
       let viewWeb3Post;
       let viewFlexPost;
+      let dnCards = false;
+      let dnWeb3Post = true;
+      let dnFlexPost = true;
 
       const getWeb3Blog = async () => {
         let response = await axios$1.get('https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/web3-australia');
@@ -11094,31 +11244,6 @@ var app = (function () {
       };
 
       let web3Promise = getWeb3Blog();
-      let dnCards = false;
-      let dnWeb3Post = true;
-      let dnFlexPost = true;
-
-      const openFlexPost = (event) => {
-        $$invalidate('viewFlexPost', viewFlexPost = event.detail.post);
-        $$invalidate('dnCards', dnCards = !dnCards);
-        $$invalidate('dnFlexPost', dnFlexPost = !dnFlexPost);
-      };
-
-       const openWeb3Post = (event) => {
-        $$invalidate('viewWeb3Post', viewWeb3Post = event.detail.post);
-        $$invalidate('dnCards', dnCards = !dnCards);
-        $$invalidate('dnWeb3Post', dnWeb3Post = !dnWeb3Post);
-      };
-
-      const closeFlexPost = () => {
-        $$invalidate('dnCards', dnCards = !dnCards);
-        $$invalidate('dnFlexPost', dnFlexPost = !dnFlexPost);
-      };
-
-       const closeWeb3Post = () => {
-        $$invalidate('dnCards', dnCards = !dnCards);
-        $$invalidate('dnWeb3Post', dnWeb3Post = !dnWeb3Post);
-      };
 
       const getFlexBlog = async () => {
         let response = await axios$1.get('https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/flex-dapps');
@@ -11134,25 +11259,49 @@ var app = (function () {
 
       let flexPromise = getFlexBlog();
 
+        const openFlexPost = (event) => {
+        $$invalidate('viewFlexPost', viewFlexPost = event.detail.post);
+        $$invalidate('dnCards', dnCards = !dnCards);
+        $$invalidate('dnFlexPost', dnFlexPost = !dnFlexPost);
+        window.scrollTo(0, 0);
+      };
+
+       const openWeb3Post = (event) => {
+        $$invalidate('viewWeb3Post', viewWeb3Post = event.detail.post);
+        $$invalidate('dnCards', dnCards = !dnCards);
+        $$invalidate('dnWeb3Post', dnWeb3Post = !dnWeb3Post);
+        window.scrollTo(0, 0);
+      };
+
+      const closeFlexPost = () => {
+        $$invalidate('dnCards', dnCards = !dnCards);
+        $$invalidate('dnFlexPost', dnFlexPost = !dnFlexPost);
+      };
+
+       const closeWeb3Post = () => {
+        $$invalidate('dnCards', dnCards = !dnCards);
+        $$invalidate('dnWeb3Post', dnWeb3Post = !dnWeb3Post);
+      };
+
     	return {
     		viewWeb3Post,
     		viewFlexPost,
-    		web3Promise,
     		dnCards,
     		dnWeb3Post,
     		dnFlexPost,
+    		web3Promise,
+    		flexPromise,
     		openFlexPost,
     		openWeb3Post,
     		closeFlexPost,
-    		closeWeb3Post,
-    		flexPromise
+    		closeWeb3Post
     	};
     }
 
     class Blogs extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$9, create_fragment$d, safe_not_equal, []);
+    		init(this, options, instance$a, create_fragment$d, safe_not_equal, []);
     	}
     }
 
@@ -11200,45 +11349,50 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "Submit";
     			attr(input0, "name", "bot-field");
-    			add_location(input0, file$d, 3, 50, 191);
-    			add_location(label0, file$d, 3, 6, 147);
+    			add_location(input0, file$d, 3, 50, 203);
+    			add_location(label0, file$d, 3, 6, 159);
     			attr(p, "class", "dn");
-    			add_location(p, file$d, 2, 4, 126);
+    			add_location(p, file$d, 2, 4, 138);
     			attr(label1, "for", "email");
-    			add_location(label1, file$d, 5, 4, 239);
+    			add_location(label1, file$d, 5, 4, 251);
+    			attr(input1, "class", "w-100");
     			attr(input1, "type", "text");
     			attr(input1, "name", "email");
     			attr(input1, "id", "email");
-    			add_location(input1, file$d, 6, 4, 282);
+    			add_location(input1, file$d, 6, 4, 294);
     			attr(label2, "for", "topic");
-    			add_location(label2, file$d, 7, 4, 330);
+    			add_location(label2, file$d, 7, 4, 356);
     			option0.__value = "Apply for rmoney";
     			option0.value = option0.__value;
-    			add_location(option0, file$d, 9, 6, 416);
+    			add_location(option0, file$d, 9, 6, 456);
     			option1.__value = "another option";
     			option1.value = option1.__value;
-    			add_location(option1, file$d, 10, 6, 472);
+    			add_location(option1, file$d, 10, 6, 512);
     			option2.__value = "Become Involved";
     			option2.value = option2.__value;
-    			add_location(option2, file$d, 11, 6, 527);
+    			add_location(option2, file$d, 11, 6, 567);
     			option3.__value = "generic option";
     			option3.value = option3.__value;
-    			add_location(option3, file$d, 12, 6, 587);
+    			add_location(option3, file$d, 12, 6, 627);
     			option4.__value = "General Enquiry";
     			option4.value = option4.__value;
-    			add_location(option4, file$d, 13, 6, 642);
+    			add_location(option4, file$d, 13, 6, 682);
+    			attr(select, "class", "w-100");
     			attr(select, "name", "topic");
     			attr(select, "id", "topic");
-    			add_location(select, file$d, 8, 4, 377);
+    			add_location(select, file$d, 8, 4, 403);
     			attr(label3, "for", "enquiry");
-    			add_location(label3, file$d, 15, 4, 717);
+    			add_location(label3, file$d, 15, 4, 757);
+    			attr(textarea, "class", "w-100");
     			attr(textarea, "name", "enquiry");
     			attr(textarea, "id", "enquiry");
     			attr(textarea, "cols", "30");
     			attr(textarea, "rows", "10");
-    			add_location(textarea, file$d, 16, 4, 764);
+    			add_location(textarea, file$d, 16, 4, 804);
+    			attr(button, "class", "w-100");
     			attr(button, "type", "submit");
-    			add_location(button, file$d, 17, 4, 838);
+    			add_location(button, file$d, 17, 4, 892);
+    			attr(form, "class", "w-90");
     			attr(form, "method", "POST");
     			attr(form, "netlify", "");
     			attr(form, "action", "/thanks");
@@ -11345,7 +11499,7 @@ var app = (function () {
     const file$f = "src/App.svelte";
 
     function create_fragment$g(ctx) {
-    	var link, t0, div1, t1, div0, t2, current;
+    	var link, t0, div2, div0, t1, t2, div1, t3, current;
 
     	var navbar = new NavBar({
     		props: { class: "w-100" },
@@ -11366,20 +11520,24 @@ var app = (function () {
     		c: function create() {
     			link = element("link");
     			t0 = space();
-    			div1 = element("div");
-    			navbar.$$.fragment.c();
-    			t1 = space();
+    			div2 = element("div");
     			div0 = element("div");
-    			router.$$.fragment.c();
+    			t1 = space();
+    			navbar.$$.fragment.c();
     			t2 = space();
+    			div1 = element("div");
+    			router.$$.fragment.c();
+    			t3 = space();
     			footer.$$.fragment.c();
     			attr(link, "rel", "stylesheet");
     			attr(link, "href", "https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css");
     			add_location(link, file$f, 1, 1, 15);
-    			attr(div0, "class", "w-100");
-    			add_location(div0, file$f, 35, 2, 792);
-    			attr(div1, "class", "black-80 lh-copy h-100 w-100 flex flex-row flex-wrap");
-    			add_location(div1, file$f, 33, 0, 698);
+    			attr(div0, "class", "h4 w-100");
+    			add_location(div0, file$f, 34, 1, 766);
+    			attr(div1, "class", "w-100");
+    			add_location(div1, file$f, 36, 2, 822);
+    			attr(div2, "class", "black-80 lh-copy h-100 w-100 flex flex-row flex-wrap");
+    			add_location(div2, file$f, 33, 0, 698);
     		},
 
     		l: function claim(nodes) {
@@ -11389,13 +11547,15 @@ var app = (function () {
     		m: function mount(target, anchor) {
     			append(document.head, link);
     			insert(target, t0, anchor);
-    			insert(target, div1, anchor);
-    			mount_component(navbar, div1, null);
-    			append(div1, t1);
-    			append(div1, div0);
-    			mount_component(router, div0, null);
-    			append(div1, t2);
-    			mount_component(footer, div1, null);
+    			insert(target, div2, anchor);
+    			append(div2, div0);
+    			append(div2, t1);
+    			mount_component(navbar, div2, null);
+    			append(div2, t2);
+    			append(div2, div1);
+    			mount_component(router, div1, null);
+    			append(div2, t3);
+    			mount_component(footer, div2, null);
     			current = true;
     		},
 
@@ -11428,7 +11588,7 @@ var app = (function () {
 
     			if (detaching) {
     				detach(t0);
-    				detach(div1);
+    				detach(div2);
     			}
 
     			destroy_component(navbar);
@@ -11440,7 +11600,7 @@ var app = (function () {
     	};
     }
 
-    function instance$a($$self) {
+    function instance$b($$self) {
     	
 
     	
@@ -11465,7 +11625,7 @@ var app = (function () {
     class App extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$a, create_fragment$g, safe_not_equal, []);
+    		init(this, options, instance$b, create_fragment$g, safe_not_equal, []);
     	}
     }
 

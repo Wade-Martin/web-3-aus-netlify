@@ -1,7 +1,6 @@
-@import url('https://fonts.googleapis.com/css?family=Space+Mono:400,400i,700,700i&display=swap');footer.svelte-1qbfbsc{box-shadow:0 -0.5rem 1rem rgba(0, 0, 0, .05)}
-nav.svelte-68dx9x{box-shadow:0 0.5rem 1rem rgba(0, 0, 0, .05);height:9%}a.svelte-68dx9x{text-decoration:none;color:#212529}
-svg.svelte-iap7jv{z-index:-5;transform:scale(1.15, 1.15)
-  }.grid.svelte-iap7jv{display:grid;grid-template-columns:1fr 95%}.text-grid.svelte-iap7jv{display:grid;grid-template-columns:1fr 60% 1fr}
+@import url('https://fonts.googleapis.com/css?family=Space+Mono:400,400i,700,700i&display=swap');footer.svelte-imifa9{width:100vw;box-shadow:0 -0.5rem 1rem rgba(0, 0, 0, .05)}
+.h-5.svelte-1e6b5ke{height:8.5rem}
+svg.svelte-ov17uu{z-index:-5}.grid.svelte-ov17uu{display:grid;grid-template-columns:1fr 95%}
 .active.svelte-ydus66{border-bottom:.25rem solid  rgba( 0, 0, 0, .9 )}
 
 /*# sourceMappingURL=bundle.css.map */
