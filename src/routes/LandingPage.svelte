@@ -1,5 +1,5 @@
 <script>
-  import { draw } from 'svelte/transition';
+  import { fade, draw } from 'svelte/transition';
   import { onMount } from 'svelte';
   
   let visible = false;
@@ -22,7 +22,7 @@
 
 </style>
 
-<main class="w-100">
+<main transition:fade class="w-100">
   {#if visible}
     <svg class="absolute o-50 w-100 h5 h-50-m h-75-l" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet">
       <defs>

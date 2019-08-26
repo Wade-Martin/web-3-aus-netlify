@@ -1,4 +1,5 @@
 <script>
+  import { fade } from 'svelte/transition';
   import Melbourne from './Melbourne.svelte';
   import Sydney from './Sydney.svelte';
   import Brisbane from './Brisbane.svelte';
@@ -27,7 +28,7 @@
 }
 </style>
 
-<div class="w-100 h-100 flex">
+<div transition:fade class="w-100 h-100 flex">
   <div class="w-100 flex flex-column h-100">
     <div class="w-100 flex flex-column justify-center items-center">
       <h1>Our Events</h1>

@@ -1,8 +1,9 @@
 <script>
+  import { fade } from 'svelte/transition';
   import ProfileGrid from './ProfileGrid.svelte'
 </script>
 
-<div class="w-100 flex flex-column items-center">
+<div transition:fade class="w-100 flex flex-column items-center">
  <div class="h2-m h3-l w-100"></div>
   <div class="flex-column w-90 flex">
     <p class="b w-100 flex f4 f3-m f3-l">Committee of Management</p>

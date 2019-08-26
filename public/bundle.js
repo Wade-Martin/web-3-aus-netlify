@@ -393,62 +393,6 @@ var app = (function () {
             }
         };
     }
-    function create_out_transition(node, fn, params) {
-        let config = fn(node, params);
-        let running = true;
-        let animation_name;
-        const group = outros;
-        group.r += 1;
-        function go() {
-            const { delay = 0, duration = 300, easing = identity, tick = noop, css } = config || null_transition;
-            if (css)
-                animation_name = create_rule(node, 1, 0, duration, delay, easing, css);
-            const start_time = now() + delay;
-            const end_time = start_time + duration;
-            add_render_callback(() => dispatch(node, false, 'start'));
-            loop(now => {
-                if (running) {
-                    if (now >= end_time) {
-                        tick(0, 1);
-                        dispatch(node, false, 'end');
-                        if (!--group.r) {
-                            // this will result in `end()` being called,
-                            // so we don't need to clean up here
-                            run_all(group.c);
-                        }
-                        return false;
-                    }
-                    if (now >= start_time) {
-                        const t = easing((now - start_time) / duration);
-                        tick(1 - t, t);
-                    }
-                }
-                return running;
-            });
-        }
-        if (is_function(config)) {
-            wait().then(() => {
-                // @ts-ignore
-                config = config();
-                go();
-            });
-        }
-        else {
-            go();
-        }
-        return {
-            end(reset) {
-                if (reset && config.tick) {
-                    config.tick(1, 0);
-                }
-                if (running) {
-                    if (animation_name)
-                        delete_rule(node, animation_name);
-                    running = false;
-                }
-            }
-        };
-    }
     function create_bidirectional_transition(node, fn, params, intro) {
         let config = fn(node, params);
         let t = intro ? 0 : 1;
@@ -1584,140 +1528,140 @@ var app = (function () {
     			path22 = svg_element("path");
     			path23 = svg_element("path");
     			attr(path0, "d", "M0 0h1920v1080H0z");
-    			add_location(path0, file$2, 29, 10, 530);
+    			add_location(path0, file$2, 29, 10, 552);
     			attr(clipPath0, "id", "a");
-    			add_location(clipPath0, file$2, 28, 8, 502);
+    			add_location(clipPath0, file$2, 28, 8, 524);
     			attr(path1, "d", "M0 0h1920v1080H0z");
-    			add_location(path1, file$2, 32, 10, 616);
+    			add_location(path1, file$2, 32, 10, 638);
     			attr(clipPath1, "id", "b");
-    			add_location(clipPath1, file$2, 31, 8, 588);
-    			add_location(defs, file$2, 27, 6, 487);
+    			add_location(clipPath1, file$2, 31, 8, 610);
+    			add_location(defs, file$2, 27, 6, 509);
     			attr(path2, "fill", "none");
     			attr(path2, "stroke", "#070506");
     			attr(path2, "stroke-miterlimit", "10");
     			attr(path2, "d", "M1195.26293945 218.46099854l57.26599884     278.16699218-57.26599884 278.16699219");
-    			add_location(path2, file$2, 38, 12, 801);
+    			add_location(path2, file$2, 38, 12, 823);
     			attr(path3, "fill", "none");
     			attr(path3, "stroke", "#070506");
     			attr(path3, "stroke-miterlimit", "10");
     			attr(path3, "d", "M1195.26293945 218.46099854l41.62599945     279.18299222-41.62599945 277.15099215");
-    			add_location(path3, file$2, 39, 12, 988);
+    			add_location(path3, file$2, 39, 12, 1010);
     			attr(path4, "fill", "none");
     			attr(path4, "stroke", "#070506");
     			attr(path4, "stroke-miterlimit", "10");
     			attr(path4, "d", "M1195.26293945 218.46099854l25.98600006     280.19899225-25.98600006 276.13499212");
-    			add_location(path4, file$2, 40, 12, 1175);
+    			add_location(path4, file$2, 40, 12, 1197);
     			attr(path5, "fill", "none");
     			attr(path5, "stroke", "#070506");
     			attr(path5, "stroke-miterlimit", "10");
     			attr(path5, "d", "M1195.26293945 218.46099854l10.34599972     281.21499228-10.34599972 275.11899209");
-    			add_location(path5, file$2, 41, 12, 1362);
+    			add_location(path5, file$2, 41, 12, 1384);
     			attr(g0, "display", "block");
-    			add_location(g0, file$2, 37, 10, 769);
+    			add_location(g0, file$2, 37, 10, 791);
     			attr(path6, "fill", "none");
     			attr(path6, "stroke", "#070506");
     			attr(path6, "stroke-miterlimit", "10");
     			attr(path6, "d", "M724.71299744 852.57098389l-79.44999695-226.38799286    79.07499695-324.69599152");
-    			add_location(path6, file$2, 44, 12, 1594);
+    			add_location(path6, file$2, 44, 12, 1616);
     			attr(path7, "fill", "none");
     			attr(path7, "stroke", "#070506");
     			attr(path7, "stroke-miterlimit", "10");
     			attr(path7, "d", "M724.71300125 852.57098389L658.9109993    616.40699005l65.55200195-315.23200226");
-    			add_location(path7, file$2, 45, 12, 1780);
+    			add_location(path7, file$2, 45, 12, 1802);
     			attr(path8, "fill", "none");
     			attr(path8, "stroke", "#070506");
     			attr(path8, "stroke-miterlimit", "10");
     			attr(path8, "d", "M724.71300125 852.57098389l-52.15200043-245.939991    51.96430016-305.51899338");
-    			add_location(path8, file$2, 46, 12, 1965);
+    			add_location(path8, file$2, 46, 12, 1987);
     			attr(path9, "fill", "none");
     			attr(path9, "stroke", "#070506");
     			attr(path9, "stroke-miterlimit", "10");
     			attr(path9, "d", "M724.71300316 852.57098389l-38.50400162-255.71699143    38.25400162-295.61699295");
-    			add_location(path9, file$2, 47, 12, 2149);
+    			add_location(path9, file$2, 47, 12, 2171);
     			attr(path10, "fill", "none");
     			attr(path10, "stroke", "#070506");
     			attr(path10, "stroke-miterlimit", "10");
     			attr(path10, "d", "M724.94700432 852.70199585l-24.8543001-265.491992     24.2290001-285.71699238");
-    			add_location(path10, file$2, 48, 12, 2335);
+    			add_location(path10, file$2, 48, 12, 2357);
     			attr(path11, "fill", "none");
     			attr(path11, "stroke", "#070506");
     			attr(path11, "stroke-miterlimit", "10");
     			attr(path11, "d", "M724.71300077 852.57098389L713.50700045     577.3019917l10.70600032-275.56499219");
-    			add_location(path11, file$2, 49, 12, 2518);
+    			add_location(path11, file$2, 49, 12, 2540);
     			attr(g1, "display", "block");
-    			add_location(g1, file$2, 43, 10, 1562);
+    			add_location(g1, file$2, 43, 10, 1584);
     			attr(path12, "fill", "none");
     			attr(path12, "stroke", "#070506");
     			attr(path12, "stroke-miterlimit", "10");
     			attr(path12, "d", "M888.685997     551.78199387c-40.413002-29.35100174-75.8880081-55.11500168-75.8880081-55.11500168l191.50300597-139.08399964L1195.80430085     218.5v556.33398438l-191.50300598-139.08399964s-62.13199997-45.12499237-115.61499786-83.96799087");
-    			add_location(path12, file$2, 52, 12, 2749);
+    			add_location(path12, file$2, 52, 12, 2771);
     			attr(path13, "fill", "none");
     			attr(path13, "stroke", "#070506");
     			attr(path13, "stroke-miterlimit", "10");
     			attr(path13, "d", "M912.33499908 400.83200073c28.6739998-11.9449997    82.09999848-34.20199585 82.09999848-34.20199585l180.03999328-116.50100708 11.4630127 255.58400294-9.47801208    255.07299474-182.0249939-115.98999023-99.8043003-41.57700348-91.69800568-97.50600103 91.69800567-97.50430056s7.1870041-2.99399566    17.70500183-7.37599945");
-    			add_location(path13, file$2, 53, 12, 3092);
+    			add_location(path13, file$2, 53, 12, 3114);
     			attr(path14, "fill", "none");
     			attr(path14, "stroke", "#070506");
     			attr(path14, "stroke-miterlimit", "10");
     			attr(path14, "d", "M900.52199554 390.02400208c32.94099808-5.62399292     84.04699762-14.34899903 84.04699762-14.34899903l168.57799476-93.91700744 22.92401123 233.00000757-22.75500489     231.27899938-168.7470011-92.19499206-111.26699884-18.99501038-80.23600006-120.08899694 80.23600006-120.08699793s11.55599976-1.97299957    27.22000122-4.64700317");
-    			add_location(path14, file$2, 54, 12, 3517);
+    			add_location(path14, file$2, 54, 12, 3539);
     			attr(path15, "fill", "none");
     			attr(path15, "stroke", "#070506");
     			attr(path15, "stroke-miterlimit", "10");
     			attr(path15, "d", "M891.50299835 382.29430037c35.87499619 1.04800415     83.1979975 2.43099975 83.1979975 2.43099975l157.1160055-71.33399963 34.3869934 210.41699927-34.3869934    210.42000634-157.1160055-71.33601379-122.72900336 3.5880127-68.77300262-142.67200525 68.77300262-142.66899817s17.63300324.51499939 39.53100586    1.15499878");
-    			add_location(path15, file$2, 55, 12, 3951);
+    			add_location(path15, file$2, 55, 12, 3973);
     			attr(path16, "fill", "none");
     			attr(path16, "stroke", "#070506");
     			attr(path16, "stroke-miterlimit", "10");
     			attr(path16, "d", "M884.16400146 378.03599548c37.39899827 7.29299927     80.67099708 15.73199463 80.67099708 15.73199463l145.6529928-48.75300598 45.8430061 187.83600562-45.8430061    187.83800561-145.6529928-48.75401306-134.19100135 26.17100525-57.31100464-165.2549978 57.31100464-165.25200599s25.05899811 4.88700867   53.52000427  10.43701172");
-    			add_location(path16, file$2, 56, 12, 4373);
+    			add_location(path16, file$2, 56, 12, 4395);
     			attr(path17, "fill", "none");
     			attr(path17, "stroke", "#070506");
     			attr(path17, "stroke-miterlimit", "10");
     			attr(path17, "d", "M877.0289917 376.72698975c38.03500366 12.7310028    77.94300244 26.08799743 77.94300244 26.08799743l134.19099426-26.16900635 57.31201172 165.25200599-57.31201172   165.2549978-134.19099426-26.17100525-145.65400696 48.75401306-45.84899902-187.83800561 45.84899902-187.83600562s33.08200836 11.07299805    67.71400452 22.66500855");
-    			add_location(path17, file$2, 57, 12, 4803);
+    			add_location(path17, file$2, 57, 12, 4825);
     			attr(path18, "fill", "none");
     			attr(path18, "stroke", "#070506");
     			attr(path18, "stroke-miterlimit", "10");
     			attr(path18, "d", "M869.3160019 377.4520111c38.33300399 17.40499879    75.7860031 34.44300367 75.7860031 34.44300367l122.72899628-3.58700561 68.77300263 142.66999816-68.77300263    142.67199707-122.72899628-3.58799743-157.11599731 71.33599853-34.38600159-210.41999817 34.38600159-210.41900634s41.14899445 18.68301391  81.3299942  36.92601013");
-    			add_location(path18, file$2, 58, 12, 5235);
+    			add_location(path18, file$2, 58, 12, 5257);
     			attr(path19, "fill", "none");
     			attr(path19, "stroke", "#070506");
     			attr(path19, "stroke-miterlimit", "10");
     			attr(path19, "d", "M860.6210022 379.33799744c38.68499756 21.55200195     74.61499841 41.56900024 74.61499841 41.56900024l111.26699774 18.9960022 80.23500824 120.08799743-80.23500824 120.08799744-111.26699774    18.9960022-168.57799585 93.91799927-22.92500305-233.0019989 22.92500305-233.0019989s48.85399628 27.21800231 93.96299744 52.34899902");
-    			add_location(path19, file$2, 59, 12, 5663);
+    			add_location(path19, file$2, 59, 12, 5685);
     			attr(path20, "fill", "none");
     			attr(path20, "stroke", "#070506");
     			attr(path20, "stroke-miterlimit", "10");
     			attr(path20, "d", "M850.73999786 381.66299438c39.33499909 25.45199585    74.62899726 48.2899933 74.62899726 48.2899933l99.80430085 41.57800292 91.69799805 97.5049967-91.69799805 97.5069967-99.80430085   41.57699586-180.04100745 116.50201416-11.46099853-255.58600672 11.46099853-255.58299963s55.90700531 36.17599487 105.4120102 68.24300671");
-    			add_location(path20, file$2, 60, 12, 6092);
+    			add_location(path20, file$2, 60, 12, 6114);
     			attr(path21, "fill", "none");
     			attr(path21, "stroke", "#070506");
     			attr(path21, "stroke-miterlimit", "10");
     			attr(path21, "d", "M1031.1190033 522.96901321c40.41200256 29.35100174    75.88700866 55.11500168 75.88700866 55.11500168L915.50300598 717.16700745 724 856.25100708V578.08401489 299.91702271l191.50300598   139.08299255s62.13199997 45.125 115.61599732 83.96899795M1130.86299706     817.42898178c-3.67100144-6.06900024-6.21500206-10.27430017-6.21500206-10.27430017h65.63400268l-32.81700134    54.25400162s-17.08799935-28.24300083-26.60199928-43.98000145");
-    			add_location(path21, file$2, 61, 12, 6517);
+    			add_location(path21, file$2, 61, 12, 6539);
     			attr(path22, "fill", "none");
     			attr(path22, "stroke", "#070506");
     			attr(path22, "stroke-miterlimit", "10");
     			attr(path22, "d", "M1128.74299622    809.6359849c-2.49399949-1.51430016-4.09500122-2.48430043-4.09500122-2.48430043m65.63400268 0l-32.81600134   19.88430078s-19.92199953-12.07430034-28.72300012-17.40300035");
-    			add_location(path22, file$2, 62, 12, 7054);
+    			add_location(path22, file$2, 62, 12, 7076);
     			attr(path23, "fill", "none");
     			attr(path23, "stroke", "#070506");
     			attr(path23, "stroke-miterlimit", "10");
     			attr(path23, "d", "M1128.74299622    812.15501213c-2.49399949-3.04599953-4.09500122-5-4.09500122-5m65.63400268 0l-32.81600134    40.06399918s-19.92199953-24.32099963-28.72300012-35.06399918");
-    			add_location(path23, file$2, 63, 12, 7346);
+    			add_location(path23, file$2, 63, 12, 7368);
     			attr(g2, "display", "block");
-    			add_location(g2, file$2, 51, 10, 2717);
+    			add_location(g2, file$2, 51, 10, 2739);
     			attr(g3, "clip-path", "url(#b)");
     			attr(g3, "display", "block");
-    			add_location(g3, file$2, 36, 8, 718);
+    			add_location(g3, file$2, 36, 8, 740);
     			attr(g4, "clip-path", "url(#a)");
-    			add_location(g4, file$2, 35, 6, 686);
+    			add_location(g4, file$2, 35, 6, 708);
     			attr(svg, "class", "absolute o-50 w-100 h5 h-50-m h-75-l svelte-ov17uu");
     			attr(svg, "xmlns", "http://www.w3.org/2000/svg");
     			attr(svg, "viewBox", "0 0 1920 1080");
     			attr(svg, "preserveAspectRatio", "xMidYMid meet");
-    			add_location(svg, file$2, 26, 4, 334);
+    			add_location(svg, file$2, 26, 4, 356);
     		},
 
     		m: function mount(target, anchor) {
@@ -1923,7 +1867,7 @@ var app = (function () {
     }
 
     function create_fragment$3(ctx) {
-    	var main, t0, div6, div2, div0, t1, div1, h1, t2, br, t3, t4, div5, article, div3, p0, t6, div4, p1, t8, p2, t10, p3;
+    	var main, t0, div6, div2, div0, t1, div1, h1, t2, br, t3, t4, div5, article, div3, p0, t6, div4, p1, t8, p2, t10, p3, main_transition, current;
 
     	var if_block = (ctx.visible) && create_if_block();
 
@@ -1957,31 +1901,31 @@ var app = (function () {
     			t10 = space();
     			p3 = element("p");
     			p3.textContent = "Promote the prevention of consumer data misuse, including mass surveillance and invasion of privacy by global technology companies and governments.";
-    			add_location(div0, file$2, 72, 4, 7791);
-    			add_location(br, file$2, 74, 33, 7914);
+    			add_location(div0, file$2, 72, 4, 7813);
+    			add_location(br, file$2, 74, 33, 7936);
     			attr(h1, "class", "black-90");
-    			add_location(h1, file$2, 74, 5, 7886);
+    			add_location(h1, file$2, 74, 5, 7908);
     			attr(div1, "class", "flex f3 f2-m f1-l flex-column justify-center content-center");
-    			add_location(div1, file$2, 73, 4, 7807);
+    			add_location(div1, file$2, 73, 4, 7829);
     			attr(div2, "class", "grid h-50 mt2 h-75-l  ml2-ns ml4-m ml6-l mb3 mb4-m mb5-l svelte-ov17uu");
-    			add_location(div2, file$2, 71, 2, 7716);
+    			add_location(div2, file$2, 71, 2, 7738);
     			attr(p0, "class", "f4 f2-m f2-l w-100 tc");
-    			add_location(p0, file$2, 80, 8, 8184);
+    			add_location(p0, file$2, 80, 8, 8206);
     			attr(div3, "class", "flex w-100 w-70-l items-center justify center");
-    			add_location(div3, file$2, 79, 6, 8116);
-    			add_location(p1, file$2, 83, 8, 8358);
-    			add_location(p2, file$2, 84, 7, 8460);
-    			add_location(p3, file$2, 85, 7, 8563);
+    			add_location(div3, file$2, 79, 6, 8138);
+    			add_location(p1, file$2, 83, 8, 8380);
+    			add_location(p2, file$2, 84, 7, 8482);
+    			add_location(p3, file$2, 85, 7, 8585);
     			attr(div4, "class", "flex flex-column w-90 w-80-l items-center justify-center f5 f3-m f3-l tc");
-    			add_location(div4, file$2, 82, 6, 8263);
+    			add_location(div4, file$2, 82, 6, 8285);
     			attr(article, "class", "flex w-100 mb3 mb4-m mb5 flex-column justify-center items-center");
-    			add_location(article, file$2, 78, 4, 8026);
+    			add_location(article, file$2, 78, 4, 8048);
     			attr(div5, "class", "w-100 flex flex-column justify-center items-center");
-    			add_location(div5, file$2, 77, 2, 7957);
+    			add_location(div5, file$2, 77, 2, 7979);
     			attr(div6, "class", "flex flex-column w-100 h-100");
-    			add_location(div6, file$2, 70, 0, 7671);
+    			add_location(div6, file$2, 70, 0, 7693);
     			attr(main, "class", "w-100");
-    			add_location(main, file$2, 24, 0, 293);
+    			add_location(main, file$2, 24, 0, 299);
     		},
 
     		l: function claim(nodes) {
@@ -2013,6 +1957,7 @@ var app = (function () {
     			append(div4, p2);
     			append(div4, t10);
     			append(div4, p3);
+    			current = true;
     		},
 
     		p: function update(changed, ctx) {
@@ -2032,10 +1977,23 @@ var app = (function () {
     		},
 
     		i: function intro(local) {
+    			if (current) return;
     			transition_in(if_block);
+
+    			add_render_callback(() => {
+    				if (!main_transition) main_transition = create_bidirectional_transition(main, fade, {}, true);
+    				main_transition.run(1);
+    			});
+
+    			current = true;
     		},
 
-    		o: noop,
+    		o: function outro(local) {
+    			if (!main_transition) main_transition = create_bidirectional_transition(main, fade, {}, false);
+    			main_transition.run(0);
+
+    			current = false;
+    		},
 
     		d: function destroy(detaching) {
     			if (detaching) {
@@ -2043,6 +2001,10 @@ var app = (function () {
     			}
 
     			if (if_block) if_block.d();
+
+    			if (detaching) {
+    				if (main_transition) main_transition.end();
+    			}
     		}
     	};
     }
@@ -2595,7 +2557,7 @@ var app = (function () {
     const file$4 = "src/routes/Humans.svelte";
 
     function create_fragment$5(ctx) {
-    	var div3, div0, t0, div1, p0, t2, p1, p2, t4, div2, current;
+    	var div3, div0, t0, div1, p0, t2, p1, p2, t4, div2, div3_transition, current;
 
     	var profilegrid = new ProfileGrid({ $$inline: true });
 
@@ -2615,18 +2577,18 @@ var app = (function () {
     			div2 = element("div");
     			profilegrid.$$.fragment.c();
     			attr(div0, "class", "h2-m h3-l w-100");
-    			add_location(div0, file$4, 5, 1, 120);
+    			add_location(div0, file$4, 6, 1, 180);
     			attr(p0, "class", "b w-100 flex f4 f3-m f3-l");
-    			add_location(p0, file$4, 7, 4, 198);
+    			add_location(p0, file$4, 8, 4, 258);
     			attr(p1, "class", "f5 f4-m f3-l w-100 w-90");
-    			add_location(p1, file$4, 8, 4, 267);
-    			add_location(p2, file$4, 8, 177, 440);
+    			add_location(p1, file$4, 9, 4, 327);
+    			add_location(p2, file$4, 9, 177, 500);
     			attr(div1, "class", "flex-column w-90 flex");
-    			add_location(div1, file$4, 6, 2, 158);
+    			add_location(div1, file$4, 7, 2, 218);
     			attr(div2, "class", "w-90 w-80-l");
-    			add_location(div2, file$4, 10, 2, 455);
+    			add_location(div2, file$4, 11, 2, 515);
     			attr(div3, "class", "w-100 flex flex-column items-center");
-    			add_location(div3, file$4, 4, 0, 69);
+    			add_location(div3, file$4, 5, 0, 113);
     		},
 
     		l: function claim(nodes) {
@@ -2654,11 +2616,20 @@ var app = (function () {
     			if (current) return;
     			transition_in(profilegrid.$$.fragment, local);
 
+    			add_render_callback(() => {
+    				if (!div3_transition) div3_transition = create_bidirectional_transition(div3, fade, {}, true);
+    				div3_transition.run(1);
+    			});
+
     			current = true;
     		},
 
     		o: function outro(local) {
     			transition_out(profilegrid.$$.fragment, local);
+
+    			if (!div3_transition) div3_transition = create_bidirectional_transition(div3, fade, {}, false);
+    			div3_transition.run(0);
+
     			current = false;
     		},
 
@@ -2668,6 +2639,10 @@ var app = (function () {
     			}
 
     			destroy_component(profilegrid);
+
+    			if (detaching) {
+    				if (div3_transition) div3_transition.end();
+    			}
     		}
     	};
     }
@@ -4200,7 +4175,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (40:5) {#each cities as city}
+    // (41:5) {#each cities as city}
     function create_each_block$1(ctx) {
     	var div, t0_value = ctx.city.name, t0, t1, div_id_value, dispose;
 
@@ -4212,7 +4187,7 @@ var app = (function () {
     			attr(div, "class", "f5 f4-m f3-l ma1 dim pointer lh-copy svelte-ydus66");
     			attr(div, "id", div_id_value = ctx.city.name);
     			toggle_class(div, "active", ctx.current === ctx.city.name);
-    			add_location(div, file$9, 40, 8, 1281);
+    			add_location(div, file$9, 41, 8, 1341);
     			dispose = listen(div, "click", ctx.handleClick);
     		},
 
@@ -4239,7 +4214,7 @@ var app = (function () {
     }
 
     function create_fragment$a(ctx) {
-    	var div4, div3, div0, h1, t1, p, t3, div2, div1, t4, current_1;
+    	var div4, div3, div0, h1, t1, p, t3, div2, div1, t4, div4_transition, current_1;
 
     	var each_value = ctx.cities;
 
@@ -4279,19 +4254,19 @@ var app = (function () {
 
     			t4 = space();
     			if (switch_instance) switch_instance.$$.fragment.c();
-    			add_location(h1, file$9, 32, 6, 767);
+    			add_location(h1, file$9, 33, 6, 827);
     			attr(p, "class", "f5 f4-m f3-l tc mb4-l w-80-l w-90");
-    			add_location(p, file$9, 33, 5, 792);
+    			add_location(p, file$9, 34, 5, 852);
     			attr(div0, "class", "w-100 flex flex-column justify-center items-center");
-    			add_location(div0, file$9, 31, 4, 696);
+    			add_location(div0, file$9, 32, 4, 756);
     			attr(div1, "class", "w-90  w-75-m w-50-l flex justify-between");
-    			add_location(div1, file$9, 38, 4, 1188);
+    			add_location(div1, file$9, 39, 4, 1248);
     			attr(div2, "class", "w-100 flex justify-center items-center");
-    			add_location(div2, file$9, 37, 4, 1131);
+    			add_location(div2, file$9, 38, 4, 1191);
     			attr(div3, "class", "w-100 flex flex-column h-100");
-    			add_location(div3, file$9, 30, 2, 649);
+    			add_location(div3, file$9, 31, 2, 709);
     			attr(div4, "class", "w-100 h-100 flex");
-    			add_location(div4, file$9, 29, 0, 616);
+    			add_location(div4, file$9, 30, 0, 660);
     		},
 
     		l: function claim(nodes) {
@@ -4370,11 +4345,20 @@ var app = (function () {
     			if (current_1) return;
     			if (switch_instance) transition_in(switch_instance.$$.fragment, local);
 
+    			add_render_callback(() => {
+    				if (!div4_transition) div4_transition = create_bidirectional_transition(div4, fade, {}, true);
+    				div4_transition.run(1);
+    			});
+
     			current_1 = true;
     		},
 
     		o: function outro(local) {
     			if (switch_instance) transition_out(switch_instance.$$.fragment, local);
+
+    			if (!div4_transition) div4_transition = create_bidirectional_transition(div4, fade, {}, false);
+    			div4_transition.run(0);
+
     			current_1 = false;
     		},
 
@@ -4386,6 +4370,10 @@ var app = (function () {
     			destroy_each(each_blocks, detaching);
 
     			if (switch_instance) destroy_component(switch_instance);
+
+    			if (detaching) {
+    				if (div4_transition) div4_transition.end();
+    			}
     		}
     	};
     }
@@ -10404,7 +10392,7 @@ var app = (function () {
     const file$a = "src/routes/BlogCard.svelte";
 
     function create_fragment$b(ctx) {
-    	var div3, div0, t0, br, t1, t2, div1, img, t3, div2, t4, dispose;
+    	var div3, div0, t0, br, t1, t2, div1, img, t3, div2, t4, div3_transition, current, dispose;
 
     	return {
     		c: function create() {
@@ -10419,19 +10407,19 @@ var app = (function () {
     			t3 = space();
     			div2 = element("div");
     			t4 = text$1(ctx.title);
-    			add_location(br, file$a, 23, 105, 594);
+    			add_location(br, file$a, 24, 105, 654);
     			attr(div0, "class", "flex ml2-l items-start items-center-ns h3 h4-m h4-l f5 f3-m f3-l ph1 ph2-ns ph3-m");
-    			add_location(div0, file$a, 23, 2, 491);
+    			add_location(div0, file$a, 24, 2, 551);
     			attr(img, "class", "w-100");
     			attr(img, "src", ctx.poster);
     			attr(img, "alt", "blog poster image");
-    			add_location(img, file$a, 25, 4, 694);
+    			add_location(img, file$a, 26, 4, 754);
     			attr(div1, "class", "w-100 ph1-ns overflow-hidden h4 h5-m h5-l self-center");
-    			add_location(div1, file$a, 24, 2, 622);
+    			add_location(div1, file$a, 25, 2, 682);
     			attr(div2, "class", "lh-title ml2-l flex items-center h4 f5 f4-m f3-l overflow-hidden ph1 ph2-ns ph3-m");
-    			add_location(div2, file$a, 27, 2, 762);
+    			add_location(div2, file$a, 28, 2, 822);
     			attr(div3, "class", "w-100 w-90-l flex flex-column shadow-3 mv4 pointer");
-    			add_location(div3, file$a, 22, 0, 402);
+    			add_location(div3, file$a, 23, 0, 446);
     			dispose = listen(div3, "click", ctx.returnPost);
     		},
 
@@ -10451,28 +10439,44 @@ var app = (function () {
     			append(div3, t3);
     			append(div3, div2);
     			append(div2, t4);
+    			current = true;
     		},
 
     		p: function update(changed, ctx) {
-    			if (changed.author) {
+    			if (!current || changed.author) {
     				set_data(t0, ctx.author);
     			}
 
-    			if (changed.poster) {
+    			if (!current || changed.poster) {
     				attr(img, "src", ctx.poster);
     			}
 
-    			if (changed.title) {
+    			if (!current || changed.title) {
     				set_data(t4, ctx.title);
     			}
     		},
 
-    		i: noop,
-    		o: noop,
+    		i: function intro(local) {
+    			if (current) return;
+    			add_render_callback(() => {
+    				if (!div3_transition) div3_transition = create_bidirectional_transition(div3, fade, {}, true);
+    				div3_transition.run(1);
+    			});
+
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			if (!div3_transition) div3_transition = create_bidirectional_transition(div3, fade, {}, false);
+    			div3_transition.run(0);
+
+    			current = false;
+    		},
 
     		d: function destroy(detaching) {
     			if (detaching) {
     				detach(div3);
+    				if (div3_transition) div3_transition.end();
     			}
 
     			dispose();
@@ -10601,7 +10605,7 @@ var app = (function () {
     const file$b = "src/routes/BlogPost.svelte";
 
     function create_fragment$c(ctx) {
-    	var div, button, t1, p, t2_value = ctx.post.title, t2, t3, article, raw_value = `${ctx.post.content}`, div_intro, div_outro, current, dispose;
+    	var div, button, t1, p, t2_value = ctx.post.title, t2, t3, article, raw_value = `${ctx.post.content}`, div_transition, current, dispose;
 
     	return {
     		c: function create() {
@@ -10613,11 +10617,11 @@ var app = (function () {
     			t2 = text$1(t2_value);
     			t3 = space();
     			article = element("article");
-    			add_location(button, file$b, 13, 2, 227);
+    			add_location(button, file$b, 13, 2, 226);
     			attr(p, "class", "f4 f3-m f3-l");
-    			add_location(p, file$b, 14, 2, 291);
+    			add_location(p, file$b, 14, 2, 290);
     			attr(article, "class", " self-center overflow-scroll overflow-scroll-ls overflow-auto-m overflow-auto-l");
-    			add_location(article, file$b, 15, 2, 334);
+    			add_location(article, file$b, 15, 2, 333);
     			attr(div, "class", "w-100 w-90-m w-90-l");
     			add_location(div, file$b, 12, 0, 174);
     			dispose = listen(button, "click", ctx.click_handler);
@@ -10652,18 +10656,16 @@ var app = (function () {
     		i: function intro(local) {
     			if (current) return;
     			add_render_callback(() => {
-    				if (div_outro) div_outro.end(1);
-    				if (!div_intro) div_intro = create_in_transition(div, fade, {});
-    				div_intro.start();
+    				if (!div_transition) div_transition = create_bidirectional_transition(div, fade, {}, true);
+    				div_transition.run(1);
     			});
 
     			current = true;
     		},
 
     		o: function outro(local) {
-    			if (div_intro) div_intro.invalidate();
-
-    			div_outro = create_out_transition(div, fade, {});
+    			if (!div_transition) div_transition = create_bidirectional_transition(div, fade, {}, false);
+    			div_transition.run(0);
 
     			current = false;
     		},
@@ -10671,7 +10673,7 @@ var app = (function () {
     		d: function destroy(detaching) {
     			if (detaching) {
     				detach(div);
-    				if (div_outro) div_outro.end();
+    				if (div_transition) div_transition.end();
     			}
 
     			dispose();
@@ -10740,7 +10742,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (93:4) {:catch error}
+    // (94:4) {:catch error}
     function create_catch_block_1(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -10749,7 +10751,7 @@ var app = (function () {
     			p = element("p");
     			t = text$1(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$c, 93, 5, 2755);
+    			add_location(p, file$c, 94, 5, 2799);
     		},
 
     		m: function mount(target, anchor) {
@@ -10769,7 +10771,7 @@ var app = (function () {
     	};
     }
 
-    // (77:4) {:then blogData}
+    // (78:4) {:then blogData}
     function create_then_block_1(ctx) {
     	var div3, div0, t0, div1, t1, div2, h2, a, t2_value = ctx.blogData.feed.title, t2, a_href_value, current;
 
@@ -10810,19 +10812,19 @@ var app = (function () {
     			t2 = text$1(t2_value);
     			attr(div0, "class", "w-100 w-two-thirds-l self-center-l");
     			toggle_class(div0, "dn", ctx.dnCards);
-    			add_location(div0, file$c, 78, 8, 2030);
+    			add_location(div0, file$c, 79, 8, 2074);
     			attr(div1, "class", "self-center w-90 pa3");
     			toggle_class(div1, "dn", ctx.dnWeb3Post);
-    			add_location(div1, file$c, 85, 8, 2372);
+    			add_location(div1, file$c, 86, 8, 2416);
     			attr(a, "class", "black-80 w-100 ml3 ml0-l w-75 f5 f3-m f3-l");
     			attr(a, "href", a_href_value = ctx.blogData.feed.link);
-    			add_location(a, file$c, 89, 15, 2590);
-    			add_location(h2, file$c, 89, 10, 2585);
+    			add_location(a, file$c, 90, 15, 2634);
+    			add_location(h2, file$c, 90, 10, 2629);
     			attr(div2, "class", "w-third-l w-100 h-100");
     			toggle_class(div2, "dn", ctx.dnCards);
-    			add_location(div2, file$c, 88, 8, 2519);
+    			add_location(div2, file$c, 89, 8, 2563);
     			attr(div3, "class", "bt w-100 flex flex-row-l flex-column-reverse justify-center");
-    			add_location(div3, file$c, 77, 6, 1947);
+    			add_location(div3, file$c, 78, 6, 1991);
     		},
 
     		m: function mount(target, anchor) {
@@ -10913,7 +10915,7 @@ var app = (function () {
     	};
     }
 
-    // (80:7) {#each blogData.items as post}
+    // (81:7) {#each blogData.items as post}
     function create_each_block_1(ctx) {
     	var div, t, current;
 
@@ -10935,7 +10937,7 @@ var app = (function () {
     			div = element("div");
     			blogcard.$$.fragment.c();
     			t = space();
-    			add_location(div, file$c, 80, 10, 2147);
+    			add_location(div, file$c, 81, 10, 2191);
     		},
 
     		m: function mount(target, anchor) {
@@ -10978,7 +10980,7 @@ var app = (function () {
     	};
     }
 
-    // (75:24)       <p>...waiting</p>     {:then blogData}
+    // (76:24)       <p>...waiting</p>     {:then blogData}
     function create_pending_block_1(ctx) {
     	var p;
 
@@ -10986,7 +10988,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$c, 75, 5, 1902);
+    			add_location(p, file$c, 76, 5, 1946);
     		},
 
     		m: function mount(target, anchor) {
@@ -11005,7 +11007,7 @@ var app = (function () {
     	};
     }
 
-    // (114:4) {:catch error}
+    // (115:4) {:catch error}
     function create_catch_block(ctx) {
     	var p, t_value = ctx.error.message, t;
 
@@ -11014,7 +11016,7 @@ var app = (function () {
     			p = element("p");
     			t = text$1(t_value);
     			set_style(p, "color", "red");
-    			add_location(p, file$c, 114, 5, 3693);
+    			add_location(p, file$c, 115, 5, 3737);
     		},
 
     		m: function mount(target, anchor) {
@@ -11034,7 +11036,7 @@ var app = (function () {
     	};
     }
 
-    // (98:4) {:then blogData}
+    // (99:4) {:then blogData}
     function create_then_block(ctx) {
     	var div3, div0, t0, div1, t1, div2, h2, a, t2_value = ctx.blogData.feed.title, t2, a_href_value, current;
 
@@ -11075,19 +11077,19 @@ var app = (function () {
     			t2 = text$1(t2_value);
     			attr(div0, "class", "w-two-thirds-l self-center-l w-100");
     			toggle_class(div0, "dn", ctx.dnCards);
-    			add_location(div0, file$c, 99, 8, 2968);
+    			add_location(div0, file$c, 100, 8, 3012);
     			attr(div1, "class", "self-center w-90 pa3");
     			toggle_class(div1, "dn", ctx.dnFlexPost);
-    			add_location(div1, file$c, 106, 8, 3310);
+    			add_location(div1, file$c, 107, 8, 3354);
     			attr(a, "class", "black-80 w-100 ml3 ml0-l w-75 f5 f3-m f3-l");
     			attr(a, "href", a_href_value = ctx.blogData.feed.link);
-    			add_location(a, file$c, 110, 15, 3528);
-    			add_location(h2, file$c, 110, 10, 3523);
+    			add_location(a, file$c, 111, 15, 3572);
+    			add_location(h2, file$c, 111, 10, 3567);
     			attr(div2, "class", "w-third-l w-100 h-100");
     			toggle_class(div2, "dn", ctx.dnCards);
-    			add_location(div2, file$c, 109, 8, 3457);
+    			add_location(div2, file$c, 110, 8, 3501);
     			attr(div3, "class", "bt w-100 flex flex-row-l flex-column-reverse justify-center");
-    			add_location(div3, file$c, 98, 6, 2885);
+    			add_location(div3, file$c, 99, 6, 2929);
     		},
 
     		m: function mount(target, anchor) {
@@ -11178,7 +11180,7 @@ var app = (function () {
     	};
     }
 
-    // (101:7) {#each blogData.items as post}
+    // (102:7) {#each blogData.items as post}
     function create_each_block$2(ctx) {
     	var div, t, current;
 
@@ -11200,7 +11202,7 @@ var app = (function () {
     			div = element("div");
     			blogcard.$$.fragment.c();
     			t = space();
-    			add_location(div, file$c, 101, 10, 3085);
+    			add_location(div, file$c, 102, 10, 3129);
     		},
 
     		m: function mount(target, anchor) {
@@ -11243,7 +11245,7 @@ var app = (function () {
     	};
     }
 
-    // (96:24)       <p>...waiting</p>     {:then blogData}
+    // (97:24)       <p>...waiting</p>     {:then blogData}
     function create_pending_block(ctx) {
     	var p;
 
@@ -11251,7 +11253,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "...waiting";
-    			add_location(p, file$c, 96, 5, 2840);
+    			add_location(p, file$c, 97, 5, 2884);
     		},
 
     		m: function mount(target, anchor) {
@@ -11319,18 +11321,18 @@ var app = (function () {
 
     			info_1.block.c();
     			attr(div0, "class", "h2-m h3-l w-100");
-    			add_location(div0, file$c, 68, 2, 1650);
+    			add_location(div0, file$c, 69, 2, 1694);
     			attr(h1, "class", "w-75");
     			toggle_class(h1, "dn", ctx.dnCards);
-    			add_location(h1, file$c, 70, 4, 1728);
+    			add_location(h1, file$c, 71, 4, 1772);
     			attr(div1, "class", "flex justify-center");
-    			add_location(div1, file$c, 69, 2, 1688);
+    			add_location(div1, file$c, 70, 2, 1732);
     			attr(div2, "class", "w-90 w-80-m w-80-l");
-    			add_location(div2, file$c, 73, 4, 1839);
+    			add_location(div2, file$c, 74, 4, 1883);
     			attr(div3, "class", "w-100 h-75 flex justify-center");
-    			add_location(div3, file$c, 72, 2, 1790);
+    			add_location(div3, file$c, 73, 2, 1834);
     			attr(div4, "class", "flex flex-column w-100 h-100 mb5");
-    			add_location(div4, file$c, 67, 0, 1601);
+    			add_location(div4, file$c, 68, 0, 1645);
     		},
 
     		l: function claim(nodes) {
@@ -11504,7 +11506,7 @@ var app = (function () {
     const file$d = "src/routes/Form.svelte";
 
     function create_fragment$e(ctx) {
-    	var div1, div0, t0, form, p, label0, t1, input0, t2, label1, t4, input1, t5, label2, t7, select, option0, option1, option2, option3, option4, t13, label3, t15, textarea, t16, button;
+    	var div1, div0, t0, form, p, label0, t1, input0, t2, label1, t4, input1, t5, label2, t7, select, option0, option1, option2, option3, option4, t13, label3, t15, textarea, t16, button, div1_transition, current;
 
     	return {
     		c: function create() {
@@ -11545,61 +11547,61 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "Submit";
     			attr(div0, "class", "h2 h3-l w-100 ");
-    			add_location(div0, file$d, 1, 2, 84);
+    			add_location(div0, file$d, 5, 2, 164);
     			attr(input0, "name", "bot-field");
-    			add_location(input0, file$d, 4, 50, 284);
-    			add_location(label0, file$d, 4, 6, 240);
+    			add_location(input0, file$d, 8, 50, 364);
+    			add_location(label0, file$d, 8, 6, 320);
     			attr(p, "class", "dn");
-    			add_location(p, file$d, 3, 4, 219);
+    			add_location(p, file$d, 7, 4, 299);
     			attr(label1, "class", "f4 f3-m f3-l");
     			attr(label1, "for", "email");
-    			add_location(label1, file$d, 6, 4, 332);
+    			add_location(label1, file$d, 10, 4, 412);
     			attr(input1, "class", "w-100");
     			attr(input1, "type", "text");
     			attr(input1, "name", "email");
     			attr(input1, "id", "email");
-    			add_location(input1, file$d, 7, 4, 396);
+    			add_location(input1, file$d, 11, 4, 476);
     			attr(label2, "class", "f4 f3-m f3-l");
     			attr(label2, "for", "topic");
-    			add_location(label2, file$d, 8, 4, 458);
+    			add_location(label2, file$d, 12, 4, 538);
     			option0.__value = "Apply for rmoney";
     			option0.value = option0.__value;
-    			add_location(option0, file$d, 10, 6, 582);
+    			add_location(option0, file$d, 14, 6, 662);
     			option1.__value = "another option";
     			option1.value = option1.__value;
-    			add_location(option1, file$d, 11, 6, 638);
+    			add_location(option1, file$d, 15, 6, 718);
     			option2.__value = "Become Involved";
     			option2.value = option2.__value;
-    			add_location(option2, file$d, 12, 6, 693);
+    			add_location(option2, file$d, 16, 6, 773);
     			option3.__value = "generic option";
     			option3.value = option3.__value;
-    			add_location(option3, file$d, 13, 6, 753);
+    			add_location(option3, file$d, 17, 6, 833);
     			option4.__value = "General Enquiry";
     			option4.value = option4.__value;
-    			add_location(option4, file$d, 14, 6, 808);
+    			add_location(option4, file$d, 18, 6, 888);
     			attr(select, "class", "f4 w-100");
     			attr(select, "name", "topic");
     			attr(select, "id", "topic");
-    			add_location(select, file$d, 9, 4, 526);
+    			add_location(select, file$d, 13, 4, 606);
     			attr(label3, "class", "f4 f3-m f3-l");
     			attr(label3, "for", "enquiry");
-    			add_location(label3, file$d, 16, 4, 883);
+    			add_location(label3, file$d, 20, 4, 963);
     			attr(textarea, "class", "w-100");
     			attr(textarea, "name", "enquiry");
     			attr(textarea, "id", "enquiry");
     			attr(textarea, "cols", "30");
     			attr(textarea, "rows", "15");
-    			add_location(textarea, file$d, 17, 4, 951);
+    			add_location(textarea, file$d, 21, 4, 1031);
     			attr(button, "class", "w-100 f4 f3-m f3-l pointer");
     			attr(button, "type", "submit");
-    			add_location(button, file$d, 18, 4, 1039);
+    			add_location(button, file$d, 22, 4, 1119);
     			attr(form, "class", " w-90 w-80-m w-60-l self-center h-100");
     			attr(form, "method", "POST");
     			attr(form, "netlify", "");
     			attr(form, "action", "/thanks");
-    			add_location(form, file$d, 2, 2, 121);
+    			add_location(form, file$d, 6, 2, 201);
     			attr(div1, "class", "vh-100 vh-75-m vh-75-l flex flex-column justify-center items-center");
-    			add_location(div1, file$d, 0, 0, 0);
+    			add_location(div1, file$d, 4, 0, 64);
     		},
 
     		l: function claim(nodes) {
@@ -11634,15 +11636,32 @@ var app = (function () {
     			append(form, textarea);
     			append(form, t16);
     			append(form, button);
+    			current = true;
     		},
 
     		p: noop,
-    		i: noop,
-    		o: noop,
+
+    		i: function intro(local) {
+    			if (current) return;
+    			add_render_callback(() => {
+    				if (!div1_transition) div1_transition = create_bidirectional_transition(div1, fade, {}, true);
+    				div1_transition.run(1);
+    			});
+
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			if (!div1_transition) div1_transition = create_bidirectional_transition(div1, fade, {}, false);
+    			div1_transition.run(0);
+
+    			current = false;
+    		},
 
     		d: function destroy(detaching) {
     			if (detaching) {
     				detach(div1);
+    				if (div1_transition) div1_transition.end();
     			}
     		}
     	};
