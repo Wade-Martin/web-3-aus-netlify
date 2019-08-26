@@ -1,5 +1,5 @@
 <div class="flex flex-column">
-  <div class="flex flex-column flex-row-m flex-row-l mb3">
+  <div class="flex flex-column flex-row-m flex-row-l mb4">
     <div class="flex h-100-l w-100 w-two-thirds-m w-two-thirds-l ph1 ph4-m ph5-l">
       <div class="flex w-60 w-100-m w-100-l flex-column">
         <h2 class="h-25">James Zaki</h2>
@@ -24,7 +24,7 @@
     </div>
   </div>
 
-  <div class="flex flex-column-reverse flex-row-m flex-row-l">
+  <div class="flex flex-column-reverse flex-row-m flex-row-l mb4">
     <div class="flex w-100 w-third-m w-third-l justify-center">
       <img class="dn db-m db-l self-center" src="https://web3australia.org/wp-content/uploads/2019/03/RJp9gIJl_400x400.jpg" alt="notw cover"/>
       <p class="db dn-m dn-l w-100 f6">
@@ -45,7 +45,7 @@
     </div>
   </div>
 
-  <div class="flex flex-column flex-row-m flex-row-l">
+  <div class="flex flex-column flex-row-m flex-row-l mb4">
     <div class="flex h-100-l w-100 w-two-thirds-m w-two-thirds-l ph1 ph4-m ph5-l">
       <div class="flex w-60 w-100-m w-100-l flex-column">
         <h2 class="h-25">Bok Khoo</h2>
@@ -66,7 +66,7 @@
     </div>
   </div>
 
-  <div class="flex flex-column-reverse flex-row-m flex-row-l">
+  <div class="flex flex-column-reverse flex-row-m flex-row-l mb4">
     <div class="flex w-100 w-third-m w-third-l justify-center">
       <img class="dn db-m db-l self-center" src="https://web3australia.org/wp-content/uploads/2019/03/tom.jpg" alt="notw cover"/>
       <p class="db dn-m dn-l w-100 f6">
@@ -87,7 +87,7 @@
     </div>
   </div>
 
-  <div class="flex flex-column flex-row-m flex-row-l">
+  <div class="flex flex-column flex-row-m flex-row-l mb4">
     <div class="flex h-100-l w-100 w-two-thirds-m w-two-thirds-l ph1 ph4-m ph5-l">
       <div class="flex w-60 w-100-m w-100-l flex-column">
         <h2 class="h-25">Bonnie Yiu</h2>
@@ -116,7 +116,7 @@
     </div>
   </div>
 
-  <div class="flex flex-column-reverse flex-row-m flex-row-l">
+  <div class="flex flex-column-reverse flex-row-m flex-row-l mb4">
     <div class="flex w-100 w-third-m w-third-l justify-center">
       <img class="dn db-m db-l self-center" src="https://web3australia.org/wp-content/uploads/2019/03/james.jpg" alt="notw cover"/>
       <p class="db dn-m dn-l w-100 f6">
@@ -137,7 +137,7 @@
     </div>
   </div>
 
-  <div class="flex flex-column flex-row-m flex-row-l">
+  <div class="flex flex-column flex-row-m flex-row-l mb4">
     <div class="flex h-100-l w-100 w-two-thirds-m w-two-thirds-l ph1 ph4-m ph5-l">
       <div class="flex w-60 w-100-m w-100-l flex-column">
         <h2 class="h-25">Alexander Ramsey</h2>
