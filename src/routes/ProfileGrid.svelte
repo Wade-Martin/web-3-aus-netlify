@@ -1,6 +1,6 @@
 <div class="flex flex-column">
-  <div class="flex flex-column flex-row-m flex-row-l">
-    <div class="flex h-100-l w-100 w-two-thirds-m w-two-thirds-l ph1 ph3-m ph3-l">
+  <div class="flex flex-column flex-row-m flex-row-l mb3">
+    <div class="flex h-100-l w-100 w-two-thirds-m w-two-thirds-l ph1 ph4-m ph5-l">
       <div class="flex w-60 w-100-m w-100-l flex-column">
         <h2 class="h-25">James Zaki</h2>
         <p class="f5 fw6 f4-m f3-l">Blockchain/IoT Engineer and Consultant</p>
@@ -31,7 +31,7 @@
          Ellie Rennie’s research spans internet studies, public policy, and political theory. In recent years she has been conducting qualitative   research to better understand how social norms influence internet adoption and use. She has an ongoing interest in civil society,         distributed governance systems, and social innovation.
       </p>
     </div> 
-    <div class="flex h-100-l w-100 w-two-thirds-m w-two-thirds-l ph1 ph3-m ph3-l">
+    <div class="flex h-100-l w-100 w-two-thirds-m w-two-thirds-l ph1 ph4-m ph5-l">
       <div class="db dn-m dn-l w-40 flex items-center justify-center mr2">
         <img src="https://web3australia.org/wp-content/uploads/2019/03/RJp9gIJl_400x400.jpg" alt="notw cover"/>  
       </div>
@@ -46,7 +46,7 @@
   </div>
 
   <div class="flex flex-column flex-row-m flex-row-l">
-    <div class="flex h-100-l w-100 w-two-thirds-m w-two-thirds-l ph1 ph3-m ph3-l">
+    <div class="flex h-100-l w-100 w-two-thirds-m w-two-thirds-l ph1 ph4-m ph5-l">
       <div class="flex w-60 w-100-m w-100-l flex-column">
         <h2 class="h-25">Bok Khoo</h2>
         <p class="f5 fw6 f4-m f3-l">Decentralised Future Fund</p>
@@ -73,7 +73,7 @@
          A Software Engineer for 5 years and Co-founder of Flex Dapps, Tom has been working with the Ethereum blockchain since 2016. He has a deep interest in everything decentralised and has run countless beginner and intermediate level workshops over the last 18 months. If you ask around for technical blockchain experts in Australia, Tom’s name is one that will pop up time and time again.
       </p>
     </div> 
-    <div class="flex h-100-l w-100 w-two-thirds-m w-two-thirds-l ph1 ph3-m ph3-l">
+    <div class="flex h-100-l w-100 w-two-thirds-m w-two-thirds-l ph1 ph4-m ph5-l">
       <div class="db dn-m dn-l w-40 flex items-center justify-center mr2">
         <img src="https://web3australia.org/wp-content/uploads/2019/03/tom.jpg" alt="notw cover"/>  
       </div>
@@ -88,7 +88,7 @@
   </div>
 
   <div class="flex flex-column flex-row-m flex-row-l">
-    <div class="flex h-100-l w-100 w-two-thirds-m w-two-thirds-l ph1 ph3-m ph3-l">
+    <div class="flex h-100-l w-100 w-two-thirds-m w-two-thirds-l ph1 ph4-m ph5-l">
       <div class="flex w-60 w-100-m w-100-l flex-column">
         <h2 class="h-25">Bonnie Yiu</h2>
         <p class="f5 fw6 f4-m f3-l">Co-Founder, Consulere</p>
@@ -123,7 +123,7 @@
          James is a web3 technology and privacy enthusiast, with specific expertise in cryptocurrency custodianship and the decentralised finance industry. Having worked in traditional financial services and with Melbourne based blockchain venture studio Typehuman, James now pursues his own interests in Web3.
       </p>
     </div> 
-    <div class="flex h-100-l w-100 w-two-thirds-m w-two-thirds-l ph1 ph3-m ph3-l">
+    <div class="flex h-100-l w-100 w-two-thirds-m w-two-thirds-l ph1 ph4-m ph5-l">
       <div class="db dn-m dn-l w-40 flex items-center justify-center mr2">
         <img src="https://web3australia.org/wp-content/uploads/2019/03/james.jpg" alt="notw cover"/>  
       </div>
@@ -138,7 +138,7 @@
   </div>
 
   <div class="flex flex-column flex-row-m flex-row-l">
-    <div class="flex h-100-l w-100 w-two-thirds-m w-two-thirds-l ph1 ph3-m ph3-l">
+    <div class="flex h-100-l w-100 w-two-thirds-m w-two-thirds-l ph1 ph4-m ph5-l">
       <div class="flex w-60 w-100-m w-100-l flex-column">
         <h2 class="h-25">Alexander Ramsey</h2>
         <p class="f5 fw6 f4-m f3-l">CEO & Co-Founder, Flex Dapps</p>
