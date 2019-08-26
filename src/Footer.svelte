@@ -2,12 +2,11 @@
   @import url('https://fonts.googleapis.com/css?family=Space+Mono:400,400i,700,700i&display=swap');
 
   footer {
-    width: 100vw;
     box-shadow: 0 -0.5rem 1rem rgba(0, 0, 0, .05);
   }
 </style>
 
-<footer class="bg-light-blue h4 flex justify-center items-center">
+<footer class="w-100 bottom-0 h4 flex justify-center items-center">
     <div class="w-80">
       <h4>Contact Us</h4>
       <p>

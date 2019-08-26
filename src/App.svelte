@@ -32,7 +32,7 @@
 
 
 <div class="black-80 lh-copy h-100 w-100 flex flex-row flex-wrap">
-	<div class="h4 w-100"></div>
+	<div class="h3 w-100"></div>
 	<NavBar class="w-100"/>
 		<div class="w-100">
 			<Router {routes} />

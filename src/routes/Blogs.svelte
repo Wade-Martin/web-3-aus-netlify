@@ -66,7 +66,7 @@
 </script>
 
 <div class="flex flex-column w-100 h-100 mb5">
-  <div class="h3 h4-ns w-100"></div>
+  <div class="h2-m h3-l w-100"></div>
   <div class="flex justify-center">  
     <h1 class:dn={dnCards} class="w-75">Our Blogs</h1>
   </div>
