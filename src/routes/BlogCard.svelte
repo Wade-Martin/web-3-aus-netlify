@@ -25,5 +25,5 @@
   <div class="w-100 ph1-ns overflow-hidden h4 h5-m h5-l self-center">
     <img class="w-100" src={poster} alt="blog poster image">
   </div>
-  <div class="lh-title ml2-l flex items-center h4 f5 f3-m f3-l overflow-hidden ph1 ph2-ns ph3-m">{title}</div>
+  <div class="lh-title ml2-l flex items-center h4 f5 f4-m f3-l overflow-hidden ph1 ph2-ns ph3-m">{title}</div>
 </div>

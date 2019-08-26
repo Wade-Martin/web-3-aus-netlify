@@ -10422,7 +10422,7 @@ var app = (function () {
     			add_location(img, file$a, 25, 4, 687);
     			attr(div1, "class", "w-100 ph1-ns overflow-hidden h4 h5-m h5-l self-center");
     			add_location(div1, file$a, 24, 2, 615);
-    			attr(div2, "class", "lh-title ml2-l flex items-center h4 f5 f3-m f3-l overflow-hidden ph1 ph2-ns ph3-m");
+    			attr(div2, "class", "lh-title ml2-l flex items-center h4 f5 f4-m f3-l overflow-hidden ph1 ph2-ns ph3-m");
     			add_location(div2, file$a, 27, 2, 755);
     			attr(div3, "class", " w-100 w-90-l flex flex-column shadow-3 mv4");
     			add_location(div3, file$a, 22, 0, 402);
