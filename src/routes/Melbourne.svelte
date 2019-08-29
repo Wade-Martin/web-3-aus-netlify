@@ -37,7 +37,7 @@
 
 {#if !loaded}
   <div class="w-100 h-100 flex f4 f3-m f2-l justify-center items center">
-    ....loading Melbourne Meetups.
+    ...loading Melbourne Meetups.
   </div>
 {:else}
   <div class="h-100">

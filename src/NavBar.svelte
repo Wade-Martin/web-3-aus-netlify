@@ -32,7 +32,7 @@
             </div>
           </div>
         </div>
-      <div class="dim h-100 w-90 w-75-l flex items-center justify-end justify-start-l"><a class="f5 f5-ns f3-m f3-l black-80 no-underline" href="/" use:link >Web3 Australia</a></div>
+      <div class="h-100 w-90 w-75-l flex items-center justify-end justify-start-l"><p class="f5 f5-ns f3-m f3-l black-80">Web3 Australia</p></div>
       <div class="w-100 h-100 items-center dn dn-ns dn-m flex-l justify-between">
         <div class="w-10"></div>
           <a class="dim ma1 black-80 no-underline" href="/" use:link>Home</a>

@@ -1,3 +1,3 @@
-<div class="h-100 w-100 f2 flex justify-center items-center">
-  Success! Thanks for getting in touch. ☺️
+<div class="vh-100 w-100 flex justify-center items-center">
+  <p class="f2">Success! Thanks for getting in touch. ☺️</p>
 </div>

@@ -42,7 +42,7 @@
 
 {#if !loaded}
   <div class="w-100 vh-100 flex f4 f3-m f2-l justify-center items center">
-    ....loading Brisbane Meetups.
+    ...loading Brisbane Meetups.
   </div>
 {:else}
   <div class="vh-100">

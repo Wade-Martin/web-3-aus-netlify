@@ -1161,7 +1161,7 @@ var app = (function () {
     const file = "src/NavBar.svelte";
 
     function create_fragment$1(ctx) {
-    	var nav, div8, div0, t0, div7, div3, div2, svg, path, t1, div1, a0, link_action, t3, a1, link_action_1, t5, a2, link_action_2, t7, a3, link_action_3, t9, a4, link_action_4, t11, div4, a5, link_action_5, t13, div6, div5, t14, a6, link_action_6, t16, a7, link_action_7, t18, a8, link_action_8, t20, a9, link_action_9, t22, a10, link_action_10, dispose;
+    	var nav, div8, div0, t0, div7, div3, div2, svg, path, t1, div1, a0, link_action, t3, a1, link_action_1, t5, a2, link_action_2, t7, a3, link_action_3, t9, a4, link_action_4, t11, div4, p, t13, div6, div5, t14, a5, link_action_5, t16, a6, link_action_6, t18, a7, link_action_7, t20, a8, link_action_8, t22, a9, link_action_9, dispose;
 
     	return {
     		c: function create() {
@@ -1192,26 +1192,26 @@ var app = (function () {
     			a4.textContent = "Contact Us";
     			t11 = space();
     			div4 = element("div");
-    			a5 = element("a");
-    			a5.textContent = "Web3 Australia";
+    			p = element("p");
+    			p.textContent = "Web3 Australia";
     			t13 = space();
     			div6 = element("div");
     			div5 = element("div");
     			t14 = space();
-    			a6 = element("a");
-    			a6.textContent = "Home";
+    			a5 = element("a");
+    			a5.textContent = "Home";
     			t16 = space();
-    			a7 = element("a");
-    			a7.textContent = "Events";
+    			a6 = element("a");
+    			a6.textContent = "Events";
     			t18 = space();
-    			a8 = element("a");
-    			a8.textContent = "Humans";
+    			a7 = element("a");
+    			a7.textContent = "Humans";
     			t20 = space();
-    			a9 = element("a");
-    			a9.textContent = "Blogs";
+    			a8 = element("a");
+    			a8.textContent = "Blogs";
     			t22 = space();
-    			a10 = element("a");
-    			a10.textContent = "Contact Us";
+    			a9 = element("a");
+    			a9.textContent = "Contact Us";
     			attr(div0, "class", "w-10");
     			add_location(div0, file, 18, 4, 375);
     			attr(path, "d", "M4,   10h24c1.104,0,2-0.896,2-2s-0.896-2-2-2H4C2.896,6,2,6.896,2,8S2.896,10,4,10z M28,14H4c-1.104,0-2,0.896-2,2  s0.896,2,2,2h24c1.104,0,2-0.896, 2-2S29.104,14,28,14z M28,22H4c-1.104,0-2,0.896-2,2s0.896,2,2,2h24c1.104,0,2-0.896,2-2  S29.104,22,28,22z");
@@ -1243,30 +1243,29 @@ var app = (function () {
     			add_location(div2, file, 21, 10, 499);
     			attr(div3, "class", "w-75 flex dn-l items-center");
     			add_location(div3, file, 20, 8, 447);
-    			attr(a5, "class", "f5 f5-ns f3-m f3-l black-80 no-underline");
-    			attr(a5, "href", "/");
-    			add_location(a5, file, 34, 87, 1754);
-    			attr(div4, "class", "dim h-100 w-90 w-75-l flex items-center justify-end justify-start-l");
+    			attr(p, "class", "f5 f5-ns f3-m f3-l black-80");
+    			add_location(p, file, 34, 83, 1750);
+    			attr(div4, "class", "h-100 w-90 w-75-l flex items-center justify-end justify-start-l");
     			add_location(div4, file, 34, 6, 1673);
     			attr(div5, "class", "w-10");
-    			add_location(div5, file, 36, 8, 1940);
+    			add_location(div5, file, 36, 8, 1904);
+    			attr(a5, "class", "dim ma1 black-80 no-underline");
+    			attr(a5, "href", "/");
+    			add_location(a5, file, 37, 10, 1939);
     			attr(a6, "class", "dim ma1 black-80 no-underline");
-    			attr(a6, "href", "/");
-    			add_location(a6, file, 37, 10, 1975);
+    			attr(a6, "href", "/Events");
+    			add_location(a6, file, 38, 10, 2017);
     			attr(a7, "class", "dim ma1 black-80 no-underline");
-    			attr(a7, "href", "/Events");
-    			add_location(a7, file, 38, 10, 2053);
+    			attr(a7, "href", "/Board");
+    			add_location(a7, file, 39, 10, 2103);
     			attr(a8, "class", "dim ma1 black-80 no-underline");
-    			attr(a8, "href", "/Board");
-    			add_location(a8, file, 39, 10, 2139);
+    			attr(a8, "href", "/Blogs");
+    			add_location(a8, file, 40, 10, 2188);
     			attr(a9, "class", "dim ma1 black-80 no-underline");
-    			attr(a9, "href", "/Blogs");
-    			add_location(a9, file, 40, 10, 2224);
-    			attr(a10, "class", "dim ma1 black-80 no-underline");
-    			attr(a10, "href", "/ContactForm");
-    			add_location(a10, file, 41, 10, 2308);
+    			attr(a9, "href", "/ContactForm");
+    			add_location(a9, file, 41, 10, 2272);
     			attr(div6, "class", "w-100 h-100 items-center dn dn-ns dn-m flex-l justify-between");
-    			add_location(div6, file, 35, 6, 1856);
+    			add_location(div6, file, 35, 6, 1820);
     			attr(div7, "class", "flex dn h-100 w-80");
     			add_location(div7, file, 19, 6, 406);
     			attr(div8, "class", "w-100 h-100 flex");
@@ -1308,26 +1307,25 @@ var app = (function () {
     			link_action_4 = link.call(null, a4) || {};
     			append(div7, t11);
     			append(div7, div4);
-    			append(div4, a5);
-    			link_action_5 = link.call(null, a5) || {};
+    			append(div4, p);
     			append(div7, t13);
     			append(div7, div6);
     			append(div6, div5);
     			append(div6, t14);
+    			append(div6, a5);
+    			link_action_5 = link.call(null, a5) || {};
+    			append(div6, t16);
     			append(div6, a6);
     			link_action_6 = link.call(null, a6) || {};
-    			append(div6, t16);
+    			append(div6, t18);
     			append(div6, a7);
     			link_action_7 = link.call(null, a7) || {};
-    			append(div6, t18);
+    			append(div6, t20);
     			append(div6, a8);
     			link_action_8 = link.call(null, a8) || {};
-    			append(div6, t20);
+    			append(div6, t22);
     			append(div6, a9);
     			link_action_9 = link.call(null, a9) || {};
-    			append(div6, t22);
-    			append(div6, a10);
-    			link_action_10 = link.call(null, a10) || {};
     		},
 
     		p: function update(changed, ctx) {
@@ -1358,7 +1356,6 @@ var app = (function () {
     			if (link_action_7 && typeof link_action_7.destroy === 'function') link_action_7.destroy();
     			if (link_action_8 && typeof link_action_8.destroy === 'function') link_action_8.destroy();
     			if (link_action_9 && typeof link_action_9.destroy === 'function') link_action_9.destroy();
-    			if (link_action_10 && typeof link_action_10.destroy === 'function') link_action_10.destroy();
     			dispose();
     		}
     	};
@@ -3541,20 +3538,20 @@ var app = (function () {
     			p = element("p");
     			p.textContent = "other melb meetup here";
     			attr(h10, "class", "f5 f4-m f3-l w-100 mt4 flex justify-center items-center");
-    			add_location(h10, file$6, 44, 6, 975);
+    			add_location(h10, file$6, 44, 6, 974);
     			attr(div0, "class", "flex flex-wrap-m flex-row-m flex-row-l flex-column justify-center-m");
-    			add_location(div0, file$6, 45, 6, 1082);
+    			add_location(div0, file$6, 45, 6, 1081);
     			attr(div1, "class", "flex flex-column justify-center items-center w-100");
-    			add_location(div1, file$6, 43, 4, 903);
+    			add_location(div1, file$6, 43, 4, 902);
     			attr(h11, "class", "f5 f4-m f3-l w-100 flex justify-center items-center h3");
-    			add_location(h11, file$6, 52, 6, 1354);
-    			add_location(p, file$6, 54, 7, 1499);
+    			add_location(h11, file$6, 52, 6, 1353);
+    			add_location(p, file$6, 54, 7, 1498);
     			attr(div2, "class", "flex flex-wrap h-100");
-    			add_location(div2, file$6, 53, 6, 1457);
+    			add_location(div2, file$6, 53, 6, 1456);
     			attr(div3, "class", "flex flex-column justify-center items-center w-100");
-    			add_location(div3, file$6, 51, 4, 1282);
+    			add_location(div3, file$6, 51, 4, 1281);
     			attr(div4, "class", "h-100");
-    			add_location(div4, file$6, 42, 2, 879);
+    			add_location(div4, file$6, 42, 2, 878);
     		},
 
     		m: function mount(target, anchor) {
@@ -3632,7 +3629,7 @@ var app = (function () {
     	return {
     		c: function create() {
     			div = element("div");
-    			div.textContent = "....loading Melbourne Meetups.";
+    			div.textContent = "...loading Melbourne Meetups.";
     			attr(div, "class", "w-100 h-100 flex f4 f3-m f2-l justify-center items center");
     			add_location(div, file$6, 38, 2, 753);
     		},
@@ -3842,21 +3839,21 @@ var app = (function () {
     			p1 = element("p");
     			p1.textContent = "other Sydney meetup here";
     			attr(h10, "class", "f5 f4-m f3-l w-100 flex justify-center items-center h3");
-    			add_location(h10, file$7, 49, 6, 1100);
-    			add_location(p0, file$7, 51, 7, 1236);
+    			add_location(h10, file$7, 49, 6, 1099);
+    			add_location(p0, file$7, 51, 7, 1235);
     			attr(div0, "class", "flex flex-wrap h-100");
-    			add_location(div0, file$7, 50, 6, 1194);
+    			add_location(div0, file$7, 50, 6, 1193);
     			attr(div1, "class", "flex flex-column justify-center items-center w-100 h-50");
-    			add_location(div1, file$7, 48, 4, 1023);
+    			add_location(div1, file$7, 48, 4, 1022);
     			attr(h11, "class", "f5 f4-m f3-l w-100 flex justify-center items-center h3");
-    			add_location(h11, file$7, 58, 6, 1463);
-    			add_location(p1, file$7, 60, 7, 1605);
+    			add_location(h11, file$7, 58, 6, 1462);
+    			add_location(p1, file$7, 60, 7, 1604);
     			attr(div2, "class", "flex flex-wrap h-100");
-    			add_location(div2, file$7, 59, 6, 1563);
+    			add_location(div2, file$7, 59, 6, 1562);
     			attr(div3, "class", "flex flex-column justify-center items-center w-100 h-50");
-    			add_location(div3, file$7, 57, 4, 1386);
+    			add_location(div3, file$7, 57, 4, 1385);
     			attr(div4, "class", "vh-100");
-    			add_location(div4, file$7, 47, 2, 998);
+    			add_location(div4, file$7, 47, 2, 997);
     		},
 
     		m: function mount(target, anchor) {
@@ -3889,7 +3886,7 @@ var app = (function () {
     	return {
     		c: function create() {
     			div = element("div");
-    			div.textContent = "....loading Sydney Meetups.";
+    			div.textContent = "...loading Sydney Meetups.";
     			attr(div, "class", "w-100 vh-100 flex f4 f3-m f2-l justify-center items center");
     			add_location(div, file$7, 43, 2, 874);
     		},
@@ -4017,21 +4014,21 @@ var app = (function () {
     			p1 = element("p");
     			p1.textContent = "other Brisbane meetup here";
     			attr(h10, "class", "f5 f4-m f3-l w-100 flex justify-center items-center h3");
-    			add_location(h10, file$8, 49, 6, 1098);
-    			add_location(p0, file$8, 51, 7, 1236);
+    			add_location(h10, file$8, 49, 6, 1097);
+    			add_location(p0, file$8, 51, 7, 1235);
     			attr(div0, "class", "flex flex-wrap h-100");
-    			add_location(div0, file$8, 50, 6, 1194);
+    			add_location(div0, file$8, 50, 6, 1193);
     			attr(div1, "class", "flex flex-column justify-center items-center w-100 h-50");
-    			add_location(div1, file$8, 48, 4, 1021);
+    			add_location(div1, file$8, 48, 4, 1020);
     			attr(h11, "class", "f5 f4-m f3-l w-100 flex justify-center items-center h3");
-    			add_location(h11, file$8, 58, 6, 1469);
-    			add_location(p1, file$8, 60, 7, 1613);
+    			add_location(h11, file$8, 58, 6, 1468);
+    			add_location(p1, file$8, 60, 7, 1612);
     			attr(div2, "class", "flex flex-wrap h-100");
-    			add_location(div2, file$8, 59, 6, 1571);
+    			add_location(div2, file$8, 59, 6, 1570);
     			attr(div3, "class", "flex flex-column justify-center items-center w-100 h-50");
-    			add_location(div3, file$8, 57, 4, 1392);
+    			add_location(div3, file$8, 57, 4, 1391);
     			attr(div4, "class", "vh-100");
-    			add_location(div4, file$8, 47, 2, 996);
+    			add_location(div4, file$8, 47, 2, 995);
     		},
 
     		m: function mount(target, anchor) {
@@ -4064,7 +4061,7 @@ var app = (function () {
     	return {
     		c: function create() {
     			div = element("div");
-    			div.textContent = "....loading Brisbane Meetups.";
+    			div.textContent = "...loading Brisbane Meetups.";
     			attr(div, "class", "w-100 vh-100 flex f4 f3-m f2-l justify-center items center");
     			add_location(div, file$8, 43, 2, 870);
     		},
@@ -11549,56 +11546,55 @@ var app = (function () {
     			attr(div0, "class", "h2 h3-l w-100 ");
     			add_location(div0, file$d, 5, 2, 164);
     			attr(input0, "name", "bot-field");
-    			add_location(input0, file$d, 8, 50, 364);
-    			add_location(label0, file$d, 8, 6, 320);
+    			add_location(input0, file$d, 8, 50, 357);
+    			add_location(label0, file$d, 8, 6, 313);
     			attr(p, "class", "dn");
-    			add_location(p, file$d, 7, 4, 299);
+    			add_location(p, file$d, 7, 4, 292);
     			attr(label1, "class", "f4 f3-m f3-l");
     			attr(label1, "for", "email");
-    			add_location(label1, file$d, 10, 4, 412);
+    			add_location(label1, file$d, 10, 4, 405);
     			attr(input1, "class", "w-100");
     			attr(input1, "type", "text");
     			attr(input1, "name", "email");
     			attr(input1, "id", "email");
-    			add_location(input1, file$d, 11, 4, 476);
+    			add_location(input1, file$d, 11, 4, 469);
     			attr(label2, "class", "f4 f3-m f3-l");
     			attr(label2, "for", "topic");
-    			add_location(label2, file$d, 12, 4, 538);
+    			add_location(label2, file$d, 12, 4, 531);
     			option0.__value = "Apply for rmoney";
     			option0.value = option0.__value;
-    			add_location(option0, file$d, 14, 6, 662);
+    			add_location(option0, file$d, 14, 6, 655);
     			option1.__value = "another option";
     			option1.value = option1.__value;
-    			add_location(option1, file$d, 15, 6, 718);
+    			add_location(option1, file$d, 15, 6, 711);
     			option2.__value = "Become Involved";
     			option2.value = option2.__value;
-    			add_location(option2, file$d, 16, 6, 773);
+    			add_location(option2, file$d, 16, 6, 766);
     			option3.__value = "generic option";
     			option3.value = option3.__value;
-    			add_location(option3, file$d, 17, 6, 833);
+    			add_location(option3, file$d, 17, 6, 826);
     			option4.__value = "General Enquiry";
     			option4.value = option4.__value;
-    			add_location(option4, file$d, 18, 6, 888);
+    			add_location(option4, file$d, 18, 6, 881);
     			attr(select, "class", "f4 w-100");
     			attr(select, "name", "topic");
     			attr(select, "id", "topic");
-    			add_location(select, file$d, 13, 4, 606);
+    			add_location(select, file$d, 13, 4, 599);
     			attr(label3, "class", "f4 f3-m f3-l");
     			attr(label3, "for", "enquiry");
-    			add_location(label3, file$d, 20, 4, 963);
+    			add_location(label3, file$d, 20, 4, 956);
     			attr(textarea, "class", "w-100");
     			attr(textarea, "name", "enquiry");
     			attr(textarea, "id", "enquiry");
     			attr(textarea, "cols", "30");
     			attr(textarea, "rows", "15");
-    			add_location(textarea, file$d, 21, 4, 1031);
+    			add_location(textarea, file$d, 21, 4, 1024);
     			attr(button, "class", "w-100 f4 f3-m f3-l pointer");
     			attr(button, "type", "submit");
-    			add_location(button, file$d, 22, 4, 1119);
+    			add_location(button, file$d, 22, 4, 1112);
     			attr(form, "class", " w-90 w-80-m w-60-l self-center h-100");
     			attr(form, "method", "POST");
-    			attr(form, "netlify", "");
-    			attr(form, "action", "/thanks");
+    			attr(form, "action", "/#/Thanks");
     			add_location(form, file$d, 6, 2, 201);
     			attr(div1, "class", "vh-100 vh-75-m vh-75-l flex flex-column justify-center items-center");
     			add_location(div1, file$d, 4, 0, 64);
@@ -11679,13 +11675,16 @@ var app = (function () {
     const file$e = "src/routes/Thanks.svelte";
 
     function create_fragment$f(ctx) {
-    	var div;
+    	var div, p;
 
     	return {
     		c: function create() {
     			div = element("div");
-    			div.textContent = "Success! Thanks for getting in touch. ☺️";
-    			attr(div, "class", "h-100 w-100 f2 flex justify-center items-center");
+    			p = element("p");
+    			p.textContent = "Success! Thanks for getting in touch. ☺️";
+    			attr(p, "class", "f2");
+    			add_location(p, file$e, 1, 2, 62);
+    			attr(div, "class", "vh-100 w-100 flex justify-center items-center");
     			add_location(div, file$e, 0, 0, 0);
     		},
 
@@ -11695,6 +11694,7 @@ var app = (function () {
 
     		m: function mount(target, anchor) {
     			insert(target, div, anchor);
+    			append(div, p);
     		},
 
     		p: noop,

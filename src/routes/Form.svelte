@@ -4,7 +4,7 @@
 
 <div transition:fade class="vh-100 vh-75-m vh-75-l flex flex-column justify-center items-center">
   <div class="h2 h3-l w-100 "></div>
-  <form class=" w-90 w-80-m w-60-l self-center h-100" method="POST" netlify  action="/thanks"> 
+  <form class=" w-90 w-80-m w-60-l self-center h-100" method="POST" action="/#/Thanks"> 
     <p class="dn">
       <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
     </p>
